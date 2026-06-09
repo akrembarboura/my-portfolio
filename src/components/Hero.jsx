@@ -7,7 +7,7 @@ const HERO_IMAGE = imageAkrem
 
 export default function Hero() {
   const typedText = useTypewriter(typewriterPhrases)
-  const [projectsRef, projectsCount] = useStatCounter(10)
+  const [projectsRef, projectsCount] = useStatCounter(5)
   const [yearsRef, yearsCount] = useStatCounter(2)
   const [techRef, techCount] = useStatCounter(9)
 
@@ -23,7 +23,7 @@ export default function Hero() {
               <span className="dot" />
               Available for opportunities
             </div>
-            <p className="hero-greeting">// Hello World 👋</p>
+            <p className="hero-greeting">// Hello World </p>
             <h1 className="hero-name">Akrem<br />Barboura</h1>
             <p className="hero-role">
               I'm a <span className="typewriter">{typedText}</span>

@@ -13,12 +13,12 @@ import Footer from './components/Footer'
 export default function App() {
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('theme')
-    return saved ? saved === 'dark' : true
+    return saved ? saved === 'light' : true
   })
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light')
-    localStorage.setItem('theme', darkMode ? 'dark' : 'light')
+    localStorage.setItem('theme', darkMode ? 'light' : 'dark')
   }, [darkMode])
 
   const toggleTheme = () => setDarkMode((prev) => !prev)

@@ -27,7 +27,7 @@ export default function About() {
               <img src={ABOUT_IMAGE} alt="Akrem Barboura working" />
             </div>
             <div className="about-img-badge">
-              <span className="num">10+</span>
+              <span className="num">5+</span>
               <span className="lbl">Projects Shipped</span>
             </div>
           </div>
