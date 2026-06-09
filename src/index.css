@@ -1,3 +1,6 @@
+
+
+
 /* ===== THEME VARIABLES ===== */
 :root[data-theme="dark"] {
   --bg-0: #020817;
@@ -483,59 +486,151 @@ section { padding: 6rem 0; }
 @keyframes scrollAnim { 0% { top: -100%; } 100% { top: 100%; } }
 
 /* ===== ABOUT SECTION ===== */
+
 .about-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 5rem; align-items: center;
-}
-.about-image-wrap { position: relative; }
-.about-img-frame {
-  position: relative; border-radius: 20px; overflow: hidden;
-  aspect-ratio: 4/5;
-  border: 1px solid var(--border);
-}
-.about-img-frame img {
-  width: 100%; height: 100%; object-fit: cover; object-position: top;
-  transition: transform 0.5s ease;
-}
-.about-img-frame:hover img { transform: scale(1.04); }
-.about-img-deco-1 {
-  position: absolute; top: -16px; left: -16px; right: 30px; bottom: 30px;
-  border: 1px solid var(--border); border-radius: 20px; z-index: -1;
-}
-.about-img-badge {
-  position: absolute; bottom: -20px; right: -20px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #fff; border-radius: 16px;
-  padding: 1rem 1.25rem; text-align: center;
-  box-shadow: 0 8px 32px var(--accent-glow);
-}
-.about-img-badge .num {
-  font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800;
-  line-height: 1; display: block;
-}
-.about-img-badge .lbl {
-  font-size: 0.7rem; font-weight: 500; opacity: 0.9;
-}
-.about-desc {
-  font-size: 1rem; color: var(--text-2); line-height: 1.85;
-  margin-bottom: 1.25rem;
-}
-.about-highlights {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 0.75rem; margin: 2rem 0;
-}
-.highlight-item {
-  display: flex; align-items: center; gap: 0.6rem;
-  font-size: 0.875rem; color: var(--text-2);
-}
-.highlight-item .dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--accent); flex-shrink: 0;
-}
-.about-actions {
-  display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
 }
 
+/* RESPONSIVE FIX */
+@media (max-width: 768px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    text-align: center;
+  }
+
+  .about-actions {
+    justify-content: center;
+  }
+
+  .about-highlights {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* IMAGE */
+.about-image-wrap {
+  position: relative;
+}
+
+.about-img-frame {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--border);
+  background: var(--bg-1);
+}
+
+.about-img-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.5s ease;
+  will-change: transform;
+}
+
+.about-img-frame:hover img {
+  transform: scale(1.05);
+}
+
+/* DECOR FRAME */
+.about-img-deco-1 {
+  position: absolute;
+  top: -16px;
+  left: -16px;
+  right: 30px;
+  bottom: 30px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  z-index: -1;
+}
+
+/* BADGE */
+.about-img-badge {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  text-align: center;
+  box-shadow: 0 8px 32px var(--accent-glow);
+}
+
+/* MOBILE FIX BADGE */
+@media (max-width: 768px) {
+  .about-img-badge {
+    bottom: 10px;
+    right: 10px;
+  }
+}
+
+.about-img-badge .num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  display: block;
+}
+
+.about-img-badge .lbl {
+  font-size: 0.7rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* TEXT */
+.about-desc {
+  font-size: 1rem;
+  color: var(--text-2);
+  line-height: 1.85;
+  margin-bottom: 1.25rem;
+  max-width: 600px;
+  background: red !important;
+}
+
+/* HIGHLIGHTS */
+.about-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin: 2rem 0;
+}
+
+.highlight-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  color: var(--text-2);
+  transition: transform 0.2s ease;
+}
+
+.highlight-item:hover {
+  transform: translateX(4px);
+}
+
+.highlight-item .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ACTIONS */
+.about-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
 /* ===== SKILLS SECTION ===== */
 .skills-section { background: var(--bg-1); }
 .skills-categories {
