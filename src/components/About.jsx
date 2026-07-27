@@ -68,7 +68,7 @@ export default function About() {
               color: 'var(--accent)',
               fontWeight: 500,
             }}>
-              🚀 Currently looking for opportunities to grow as a Full-Stack Developer.
+              Currently looking for opportunities to grow as a Full-Stack Developer.
             </p>
 
             {/* Action buttons */}
