@@ -31,7 +31,7 @@ export default function Contact() {
     setErrorMessage('')
 
     const { error } = await supabase
-      .from('leads')
+      .from('contact_messages')
       .insert([
         {
           name: `${formData.firstName} ${formData.lastName}`.trim(),

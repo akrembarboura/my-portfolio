@@ -41,7 +41,7 @@ export default function NotificationsMenu() {
     notificationsService.list().then(setItems);
 
     const channel = supabase.channel('leads-notifications')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'leads' }, () => {
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'contact_messages' }, () => {
         notificationsService.list().then(setItems);
       })
       .subscribe();

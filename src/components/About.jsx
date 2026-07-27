@@ -77,7 +77,7 @@ export default function About() {
                 View Projects ↗
               </Link>
               <Link to="/contact" className="btn btn-secondary">
-                Contact Me 💬
+                Contact Me
               </Link>
               <button
                 onClick={handleDownloadCV}

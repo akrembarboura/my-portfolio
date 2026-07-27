@@ -40,7 +40,7 @@ export default function DashboardPage() {
           supabase.from('projects').select('*', { count: 'exact', head: true }),
           supabase.from('portfolio_images').select('*', { count: 'exact', head: true }),
           supabase.from('testimonials').select('*', { count: 'exact', head: true }),
-          supabase.from('leads').select('*').order('created_at', { ascending: false }).limit(500),
+          supabase.from('contact_messages').select('*').order('created_at', { ascending: false }).limit(500),
         ]);
 
         const leadsData = lds.data ?? [];

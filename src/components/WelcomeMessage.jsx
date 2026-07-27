@@ -14,8 +14,8 @@ export default function WelcomeMessage() {
     const [message, setMessage] = useState('');
 
     useEffect(() => {
-        // Changed to V5 so it resets for your testing right now!
-        const hasSeen = sessionStorage.getItem('hasSeenWelcomeV5');
+        // Changed to V6 so it resets for your testing right now!
+        const hasSeen = sessionStorage.getItem('hasSeenWelcomeV6');
 
         if (!hasSeen) {
             const randomMsg = messages[Math.floor(Math.random() * messages.length)];
@@ -26,7 +26,7 @@ export default function WelcomeMessage() {
                 setIsVisible(true);
                 // FIX: Move sessionStorage here! 
                 // Now React Strict Mode won't falsely mark it as seen before the timer finishes.
-                sessionStorage.setItem('hasSeenWelcomeV5', 'true');
+                sessionStorage.setItem('hasSeenWelcomeV6', 'true');
             }, 2000);
 
             const hideTimer = setTimeout(() => {
