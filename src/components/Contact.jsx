@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import useScrollReveal from '../hooks/useScrollReveal'
 import ContactInfoItem from './ContactInfoItem'
-import contactInfo from '../data/contact'
+import contactInfo from '../data/contact.jsx'
 import { supabase } from '../supabaseClient'
 
 export default function Contact() {

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import useScrollReveal from '../hooks/useScrollReveal'
 import SkillBar from './SkillBar'
-import skills from '../data/skills'
+import skills from '../data/skills.jsx'
 
 export default function Skills() {
   const [animated, setAnimated] = useState(false)
