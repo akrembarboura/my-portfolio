@@ -36,7 +36,7 @@ export default function Contact() {
         {
           name: `${formData.firstName} ${formData.lastName}`.trim(),
           email: formData.email,
-          project_type: formData.subject,
+          projectType: formData.subject,
           message: formData.message
           // status & created_at handled automatically by DB defaults
         }
