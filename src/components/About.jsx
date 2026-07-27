@@ -1,76 +1,111 @@
 import useScrollReveal from '../hooks/useScrollReveal'
-import Button from './Button'
-import imageAkrem from '../assets/ChatGPT Image Aug 8, 2025, 06_18_27 PM.png'
-
-const ABOUT_IMAGE = imageAkrem
-
-const highlights = [
-  'Full Stack Development',
-  'RESTful API Design',
-  'React & Next.js',
-  'MongoDB & Mongoose',
-  'JWT Authentication',
-  'Docker & Deployment',
-  'Git & Version Control',
-]
+import imageAkrem from '../assets/akrempicture.png'
+import { Link } from 'react-router-dom'
+import HeroAvatar from './HeroAvatar'
 
 export default function About() {
-  const ref = useScrollReveal()
+  const imageRef = useScrollReveal()
+  const textRef = useScrollReveal()
+
+  const handleDownloadCV = () => {
+    const link = document.createElement('a')
+    link.href = '/cv-akrem-barboura.pdf'
+    link.download = 'Akrem-Barboura-CV.pdf'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   return (
     <section id="about">
       <div className="container">
         <div className="about-grid">
-          <div className="about-image-wrap" ref={ref}>
-            <div className="about-img-deco-1" />
-            <div className="about-img-frame">
-              <img src={ABOUT_IMAGE} alt="Akrem Barboura working" />
-            </div>
-            <div className="about-img-badge">
-              <span className="num">5+</span>
-              <span className="lbl">Projects Shipped</span>
-            </div>
-          </div>
 
-          <div className="about-text reveal-right">
+          {/* ── Text Column ── */}
+          <div className="about-text reveal-right" ref={textRef}>
             <p className="section-label">About Me</p>
-            <h2 className="section-title">
-              Passionate Builder,<br />react builder
-            </h2>
-            <p className="about-desc">
-              I'm a Full Stack / MERN Stack Developer based in Tunisia 🇹🇳, with a deep
-              passion for building modern web applications that are not only functional but
-              also beautifully crafted. I specialize in the MongoDB, Express, React, Node.js
-            </p>
-            <p className="about-desc">
-              I enjoy turning complex problems into elegant solutions. Whether it's
-              architecting scalable REST APIs, building interactive UIs with React, or
-              optimizing database queries — I care deeply about performance, code quality,
-              and developer experience.
-            </p>
-            <p className="about-desc">
-              When I'm not coding, you'll find me exploring new technologies, contributing
-              to open source, or leveling up my skills through personal projects.
-            </p>
 
-            <div className="about-highlights">
-              {highlights.map((item) => (
-                <div key={item} className="highlight-item">
-                  <span className="dot" />
-                  {item}
-                </div>
-              ))}
+            {/* ── "Available" badge ── */}
+            <div className="rounded-full bg-slate-800/50 border border-slate-700 w-fit mb-4 px-3 py-1 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-sm text-slate-300">Available for opportunities</span>
             </div>
 
+            <h2 className="section-title">
+              Hi, I'm&nbsp;
+              <span style={{
+                background: 'linear-gradient(135deg,var(--accent),var(--accent-2))',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}>
+                Akrem Barboura
+              </span>
+              &nbsp;
+            </h2>
+
+            <p className="about-desc" style={{ fontSize: '1.0625rem', fontWeight: 500, color: 'var(--text-1)', marginBottom: '0.5rem' }}>
+              Junior Full-Stack Developer building modern, scalable web applications.
+            </p>
+
+            <p className="about-desc">
+              I specialize in <strong>React</strong>, <strong>TypeScript</strong>, <strong>Node.js</strong>, and
+              modern backend technologies. I transform ideas into <em>responsive</em>, <em>performant</em>, and
+              production-ready applications.
+            </p>
+
+            <p className="about-desc">
+              Based in Tunisia&nbsp;🇹🇳, I care deeply about crafting elegant UIs backed by clean, scalable APIs.
+              Whether it's architecting REST services, optimizing database queries, or building pixel-perfect interfaces —
+              I deliver end-to-end.
+            </p>
+
+            <p className="about-desc" style={{
+              background: 'var(--tag-bg)',
+              border: '1px solid var(--border-strong)',
+              borderRadius: '10px',
+              padding: '0.75rem 1rem',
+              color: 'var(--accent)',
+              fontWeight: 500,
+            }}>
+              🚀 Currently looking for opportunities to grow as a Full-Stack Developer.
+            </p>
+
+            {/* Action buttons */}
             <div className="about-actions">
-              <Button variant="primary" href="#" onClick={() => alert('CV download coming soon!')}>
+              <Link to="/projects" className="btn btn-primary">
+                View Projects ↗
+              </Link>
+              <Link to="/contact" className="btn btn-secondary">
+                Contact Me 💬
+              </Link>
+              <button
+                onClick={handleDownloadCV}
+                className="btn btn-secondary"
+                style={{ cursor: 'pointer' }}
+                aria-label="Download CV"
+              >
                 Download CV ↓
-              </Button>
-              <Button variant="secondary" href="https://github.com/akrembarboura" target="_blank" rel="noopener noreferrer">
-                GitHub Profile
-              </Button>
+              </button>
             </div>
           </div>
+
+          {/* ── Image Column: HeroAvatar with orbital icons ── */}
+          <div
+            ref={imageRef}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <HeroAvatar
+              src={imageAkrem}
+              alt="Akrem Barboura — Full-Stack Developer"
+              size={440}
+            />
+          </div>
+
         </div>
       </div>
     </section>

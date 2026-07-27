@@ -1,4 +1,4 @@
-// Skills data — each category has an icon class and a list of skills
+
 const skills = [
   {
     category: 'Frontend',
@@ -23,11 +23,12 @@ const skills = [
     ],
   },
   {
-    category: 'Database',
+    category: 'Database & BaaS',
     icon: '🗄️',
     iconClass: 'db',
     items: [
       { name: 'MongoDB', level: 85, icon: '🍃' },
+      { name: 'Supabase', level: 80, icon: '⚡' },
       { name: 'Mongoose ODM', level: 82, icon: '📖' },
       { name: 'Aggregation Pipelines', level: 70, icon: '🔧' },
       { name: 'Redis (Caching)', level: 55, icon: '⚡' },

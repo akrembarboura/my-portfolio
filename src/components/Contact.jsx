@@ -2,21 +2,54 @@ import { useState } from 'react'
 import useScrollReveal from '../hooks/useScrollReveal'
 import ContactInfoItem from './ContactInfoItem'
 import contactInfo from '../data/contact'
+import { supabase } from '../supabaseClient'
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false)
   const [sending, setSending] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    subject: '',
+    message: ''
+  })
+
   const headerRef = useScrollReveal()
   const formRef = useScrollReveal()
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setSending(true)
-    // Simulated form submission
-    setTimeout(() => {
-      setSending(false)
+    setErrorMessage('')
+
+    const { error } = await supabase
+      .from('leads')
+      .insert([
+        {
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          email: formData.email,
+          project_type: formData.subject,
+          message: formData.message
+          // status & created_at handled automatically by DB defaults
+        }
+      ])
+
+    setSending(false)
+
+    if (error) {
+      console.error('Error submitting lead:', error)
+      setErrorMessage('Failed to send message. Please try again later.')
+    } else {
       setSubmitted(true)
-    }, 1500)
+    }
   }
 
   return (
@@ -45,7 +78,7 @@ export default function Contact() {
             ))}
 
             <div className="code-block" style={{ marginTop: '1rem' }}>
-{`// Let's connect!
+              {`// Let's connect!
 const developer = {
   name: 'Akrem Barboura',
   location: 'Tunisia 🇹🇳',
@@ -61,30 +94,75 @@ const developer = {
                 <h3 className="form-title">Send a Message 💬</h3>
                 <p className="form-sub">I'll get back to you within 24 hours.</p>
 
+                {errorMessage && (
+                  <p style={{ color: '#ff6b6b', marginBottom: '1rem', fontSize: '0.9rem' }}>
+                    {errorMessage}
+                  </p>
+                )}
+
                 <div className="form-row">
                   <div className="form-group">
                     <label className="form-label">First Name</label>
-                    <input className="form-input" type="text" placeholder="John" />
+                    <input
+                      className="form-input"
+                      type="text"
+                      name="firstName"
+                      placeholder="John"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                   <div className="form-group">
                     <label className="form-label">Last Name</label>
-                    <input className="form-input" type="text" placeholder="Doe" />
+                    <input
+                      className="form-input"
+                      type="text"
+                      name="lastName"
+                      placeholder="Doe"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Email Address</label>
-                  <input className="form-input" type="email" placeholder="john@example.com" />
+                  <input
+                    className="form-input"
+                    type="email"
+                    name="email"
+                    placeholder="john@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Subject</label>
-                  <input className="form-input" type="text" placeholder="Project Inquiry / Collaboration" />
+                  <input
+                    className="form-input"
+                    type="text"
+                    name="subject"
+                    placeholder="Project Inquiry / Collaboration"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
 
                 <div className="form-group">
                   <label className="form-label">Message</label>
-                  <textarea className="form-textarea" placeholder="Tell me about your project or idea..." />
+                  <textarea
+                    className="form-textarea"
+                    name="message"
+                    placeholder="Tell me about your project or idea..."
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                  />
                 </div>
 
                 <button
