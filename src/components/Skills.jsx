@@ -1,51 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import useScrollReveal from '../hooks/useScrollReveal'
 import SkillBar from './SkillBar'
-import { supabase } from '../supabaseClient'
+import skills from '../data/skills'
 
 export default function Skills() {
   const [animated, setAnimated] = useState(false)
-  const [skills, setSkills] = useState([])
   const sectionRef = useRef(null)
-
-  useEffect(() => {
-    async function fetchSkills() {
-      const { data: categoriesData } = await supabase
-        .from('skill_categories')
-        .select(`
-          id,
-          name,
-          icon,
-          icon_class,
-          order_index,
-          skills (
-            id,
-            name,
-            level,
-            icon,
-            order_index
-          )
-        `)
-        .order('order_index', { ascending: true })
-
-      if (categoriesData) {
-        const mappedSkills = categoriesData.map(cat => ({
-          category: cat.name,
-          icon: cat.icon,
-          iconClass: cat.icon_class,
-          items: (cat.skills || [])
-            .sort((a, b) => a.order_index - b.order_index)
-            .map(skill => ({
-              name: skill.name,
-              level: skill.level,
-              icon: skill.icon
-            }))
-        }))
-        setSkills(mappedSkills)
-      }
-    }
-    fetchSkills()
-  }, [])
 
   // Trigger skill bar animations once the section is visible
   useEffect(() => {
@@ -117,4 +77,3 @@ function SkillCategory({ category, animated }) {
     </div>
   )
 }
-
