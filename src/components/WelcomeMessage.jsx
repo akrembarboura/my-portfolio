@@ -14,31 +14,23 @@ export default function WelcomeMessage() {
     const [message, setMessage] = useState('');
 
     useEffect(() => {
-        // Changed to V6 so it resets for your testing right now!
-        const hasSeen = sessionStorage.getItem('hasSeenWelcomeV6');
+        const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+        setMessage(randomMsg);
 
-        if (!hasSeen) {
-            const randomMsg = messages[Math.floor(Math.random() * messages.length)];
-            setMessage(randomMsg);
+        // Wait 2 full seconds for the site loader to finish vanishing
+        const showTimer = setTimeout(() => {
+            setIsVisible(true);
+        }, 2000);
 
-            // Wait 2 full seconds for the site loader to finish vanishing
-            const showTimer = setTimeout(() => {
-                setIsVisible(true);
-                // FIX: Move sessionStorage here! 
-                // Now React Strict Mode won't falsely mark it as seen before the timer finishes.
-                sessionStorage.setItem('hasSeenWelcomeV6', 'true');
-            }, 2000);
+        const hideTimer = setTimeout(() => {
+            setIsAnimatingOut(true);
+            setTimeout(() => setIsVisible(false), 500);
+        }, 6500);
 
-            const hideTimer = setTimeout(() => {
-                setIsAnimatingOut(true);
-                setTimeout(() => setIsVisible(false), 500);
-            }, 6500);
-
-            return () => {
-                clearTimeout(showTimer);
-                clearTimeout(hideTimer);
-            };
-        }
+        return () => {
+            clearTimeout(showTimer);
+            clearTimeout(hideTimer);
+        };
     }, []);
 
     if (!isVisible) return null;
