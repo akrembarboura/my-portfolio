@@ -273,6 +273,7 @@ export interface Lead {
   message: string | null;
   source_page?: string | null;
   sourcePage?: string | null;
+  location?: string | null;
   client_location?: string | null;
   status: LeadStatus;
   created_at?: string;

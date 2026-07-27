@@ -247,9 +247,9 @@ export default function LeadsPage() {
                   <MapPin size={16} className="text-slate-400" /> {viewLead.project_type}
                 </div>
               )}
-              {viewLead.client_location && (
-                <a href={`https://www.google.com/maps?q=${encodeURIComponent(viewLead.client_location)}`} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
-                  <MapPin size={16} /> Position GPS
+              {viewLead.location && (
+                <a href={`https://www.google.com/maps?q=${encodeURIComponent(viewLead.location)}`} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 hover:underline">
+                  <MapPin size={16} /> GPS / Locus: {viewLead.location.length > 20 ? viewLead.location.substring(0, 20) + '...' : viewLead.location}
                 </a>
               )}
               <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">

@@ -1,0 +1,169 @@
+﻿{
+  "total_count": 2,
+  "check_runs": [
+    {
+      "id": 89957832843,
+      "name": "Supabase Preview",
+      "node_id": "CR_kwDOS06Yqs8AAAAU8eeYiw",
+      "head_sha": "903332d392d2860d0d63ff86c79450c83de0542d",
+      "external_id": "",
+      "url": "https://api.github.com/repos/akrembarboura/my-portfolio/check-runs/89957832843",
+      "html_url": "https://github.com/akrembarboura/my-portfolio/runs/89957832843",
+      "details_url": "https://supabase.com/dashboard/project/wzutjuvyipnesyrwvubm",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-07-27T10:58:37Z",
+      "completed_at": "2026-07-27T10:58:41Z",
+      "output": {
+        "title": "Supabase Preview",
+        "summary": "```\nRemote migration versions not found in local migrations directory.\n```",
+        "text": null,
+        "annotations_count": 0,
+        "annotations_url": "https://api.github.com/repos/akrembarboura/my-portfolio/check-runs/89957832843/annotations"
+      },
+      "check_suite": {
+        "id": 81988908080
+      },
+      "app": {
+        "id": 330661,
+        "client_id": "Iv1.b91a6d8eaa272168",
+        "slug": "supabase",
+        "node_id": "A_kwHOAz8kpM4ABQul",
+        "owner": {
+          "login": "supabase",
+          "id": 54469796,
+          "node_id": "MDEyOk9yZ2FuaXphdGlvbjU0NDY5Nzk2",
+          "avatar_url": "https://avatars.githubusercontent.com/u/54469796?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/supabase",
+          "html_url": "https://github.com/supabase",
+          "followers_url": "https://api.github.com/users/supabase/followers",
+          "following_url": "https://api.github.com/users/supabase/following{/other_user}",
+          "gists_url": "https://api.github.com/users/supabase/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/supabase/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/supabase/subscriptions",
+          "organizations_url": "https://api.github.com/users/supabase/orgs",
+          "repos_url": "https://api.github.com/users/supabase/repos",
+          "events_url": "https://api.github.com/users/supabase/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/supabase/received_events",
+          "type": "Organization",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "name": "Supabase",
+        "description": "Supabase for GitHub automatically runs your migrations when pull requests are merged and launches preview databases for new pull requests.\r\n\r\nFor more information, see our [documentation](https://supabase.com/docs/guides/platform/branching).",
+        "external_url": "https://supabase.com/docs/guides/platform/branching",
+        "html_url": "https://github.com/apps/supabase",
+        "created_at": "2023-05-08T02:39:16Z",
+        "updated_at": "2025-03-20T11:11:20Z",
+        "permissions": {
+          "actions": "write",
+          "checks": "write",
+          "contents": "read",
+          "metadata": "read",
+          "pull_requests": "write",
+          "workflows": "write"
+        },
+        "events": [
+          "pull_request",
+          "push",
+          "repository"
+        ]
+      },
+      "pull_requests": [
+
+      ]
+    },
+    {
+      "id": 89948877049,
+      "name": "Vercel Preview Comments",
+      "node_id": "CR_kwDOS06Yqs8AAAAU8V7w-Q",
+      "head_sha": "903332d392d2860d0d63ff86c79450c83de0542d",
+      "external_id": "",
+      "url": "https://api.github.com/repos/akrembarboura/my-portfolio/check-runs/89948877049",
+      "html_url": "https://github.com/akrembarboura/my-portfolio/runs/89948877049",
+      "details_url": "https://vercel.com/github",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-07-27T10:15:23Z",
+      "completed_at": "2026-07-27T10:15:23Z",
+      "output": {
+        "title": "Ô£à No unresolved feedback",
+        "summary": "­ƒÆ¼ 0 unresolved, 0 resolved. [Go to feedback](https://vercel.live/open-feedback/my-portfolio-git-main-karmabarca17s-projects.vercel.app?via=pr-comment-feedback-link)",
+        "text": null,
+        "annotations_count": 0,
+        "annotations_url": "https://api.github.com/repos/akrembarboura/my-portfolio/check-runs/89948877049/annotations"
+      },
+      "check_suite": {
+        "id": 81988907681
+      },
+      "app": {
+        "id": 8329,
+        "client_id": "Iv1.9d7d662ea00b8481",
+        "slug": "vercel",
+        "node_id": "MDM6QXBwODMyOQ==",
+        "owner": {
+          "login": "vercel",
+          "id": 14985020,
+          "node_id": "MDEyOk9yZ2FuaXphdGlvbjE0OTg1MDIw",
+          "avatar_url": "https://avatars.githubusercontent.com/u/14985020?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/vercel",
+          "html_url": "https://github.com/vercel",
+          "followers_url": "https://api.github.com/users/vercel/followers",
+          "following_url": "https://api.github.com/users/vercel/following{/other_user}",
+          "gists_url": "https://api.github.com/users/vercel/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/vercel/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/vercel/subscriptions",
+          "organizations_url": "https://api.github.com/users/vercel/orgs",
+          "repos_url": "https://api.github.com/users/vercel/repos",
+          "events_url": "https://api.github.com/users/vercel/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/vercel/received_events",
+          "type": "Organization",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "name": "Vercel",
+        "description": "Vercel for GitHub automatically deploys your PRs to Vercel.\r\nPreview every PR live, without any configuration required.\r\n\r\nFor more information, see our [documentation](https://vercel.com/docs/github?utm_source=github&utm_medium=marketplace&utm_campaign=vercel-app).\r\n\r\n![](https://assets.vercel.com/image/upload/v1597943727/front/github/github-comment-monorepo.png)",
+        "external_url": "https://vercel.com/github",
+        "html_url": "https://github.com/apps/vercel",
+        "created_at": "2018-01-19T21:51:06Z",
+        "updated_at": "2026-04-20T23:42:30Z",
+        "permissions": {
+          "actions": "read",
+          "administration": "write",
+          "checks": "write",
+          "contents": "write",
+          "deployments": "write",
+          "emails": "read",
+          "issues": "write",
+          "members": "read",
+          "metadata": "read",
+          "pull_requests": "write",
+          "repository_hooks": "write",
+          "statuses": "write",
+          "workflows": "write"
+        },
+        "events": [
+          "branch_protection_rule",
+          "check_run",
+          "delete",
+          "deployment",
+          "issue_comment",
+          "membership",
+          "pull_request",
+          "pull_request_review",
+          "pull_request_review_comment",
+          "pull_request_review_thread",
+          "push",
+          "repository",
+          "status",
+          "team"
+        ]
+      },
+      "pull_requests": [
+
+      ]
+    }
+  ]
+}

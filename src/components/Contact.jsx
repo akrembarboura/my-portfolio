@@ -8,11 +8,13 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false)
   const [sending, setSending] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [gettingLocation, setGettingLocation] = useState(false)
 
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
+    location: '',
     subject: '',
     message: ''
   })
@@ -23,6 +25,28 @@ export default function Contact() {
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser")
+      return
+    }
+    setGettingLocation(true)
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setFormData(prev => ({
+          ...prev,
+          location: `${position.coords.latitude}, ${position.coords.longitude}`
+        }))
+        setGettingLocation(false)
+      },
+      (error) => {
+        console.error("Error getting location:", error)
+        alert("Unable to retrieve your location")
+        setGettingLocation(false)
+      }
+    )
   }
 
   const handleSubmit = async (e) => {
@@ -36,6 +60,7 @@ export default function Contact() {
         {
           name: `${formData.firstName} ${formData.lastName}`.trim(),
           email: formData.email,
+          location: formData.location,
           projectType: formData.subject,
           message: formData.message
           // status & created_at handled automatically by DB defaults
@@ -164,6 +189,46 @@ const developer = {
                     required
                   />
                 </div>
+
+                <button
+                  type="button"
+                  onClick={handleGetLocation}
+                  disabled={gettingLocation || formData.location !== ''}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem',
+                    width: '100%',
+                    padding: '0.875rem 1.5rem',
+                    borderRadius: '8px',
+                    fontSize: '1rem',
+                    fontWeight: 500,
+                    marginBottom: '1rem',
+                    transition: 'all 0.2s ease',
+                    cursor: formData.location ? 'default' : 'pointer',
+                    background: formData.location ? 'rgba(16, 185, 129, 0.1)' : 'var(--bg-2)',
+                    border: formData.location ? '1px solid #10b981' : '1px solid var(--border-color)',
+                    color: formData.location ? '#10b981' : 'var(--text-1)'
+                  }}
+                >
+                  {gettingLocation ? (
+                    <>
+                      <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
+                      Requesting Permission...
+                    </>
+                  ) : formData.location ? (
+                    <>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                      Location Attached
+                    </>
+                  ) : (
+                    <>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
+                      Attach My Location (Optional)
+                    </>
+                  )}
+                </button>
 
                 <button
                   type="submit"

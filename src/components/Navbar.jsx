@@ -37,8 +37,15 @@ export default function Navbar({ darkMode, onToggleTheme }) {
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 h-[70px] bg-nav backdrop-blur-xl border-b border-border-light transition-all duration-300 ${scrolled ? 'shadow-xl' : ''}`}>
         <div className="max-w-[1200px] h-full mx-auto px-8 flex items-center justify-between">
-          <a href="#" className="font-syne font-extrabold text-[1.4rem] tracking-tight bg-gradient-to-br from-accent to-accent-2 bg-clip-text text-transparent">
-            Akrem.
+          <a href="#" className="flex items-center gap-3 group transition-transform duration-300 hover:scale-[1.02]">
+            <img
+              src="/akrempicture.png"
+              alt="Akrem Barboura"
+              className="w-[42px] h-[42px] rounded-full object-cover border-[1.5px] border-accent/70 shadow-[0_0_15px_var(--accent-glow)] group-hover:border-accent group-hover:shadow-[0_0_20px_var(--accent-glow)] transition-all duration-300"
+            />
+            <span className="hidden sm:block font-syne font-bold text-[1.2rem] tracking-tight bg-gradient-to-br from-text-1 to-text-2 bg-clip-text text-transparent group-hover:from-accent group-hover:to-accent-2 transition-all duration-300">
+              Akrem.
+            </span>
           </a>
 
           <ul className="hidden md:flex items-center gap-8 list-none">
