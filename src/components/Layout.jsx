@@ -26,7 +26,7 @@ export default function Layout() {
             <Navbar darkMode={darkMode} onToggleTheme={toggleTheme} />
 
             {/* Dynamic content renders here based on the route */}
-            <main className="overflow-x-hidden">
+            <main>
                 <Outlet />
             </main>
 
