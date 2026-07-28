@@ -25,7 +25,7 @@ export const AuthContext = createContext<AuthContextValue | undefined>(undefined
 
 function formatUser(supabaseUser: User | null): ExtendedAdminUser | null {
   if (!supabaseUser) return null;
-  const email = supabaseUser.email || 'admin@rnv-peinture.fr';
+  const email = supabaseUser.email || 'admin@portfolio.local';
   const name = supabaseUser.user_metadata?.name || supabaseUser.user_metadata?.full_name || email.split('@')[0] || 'Administrateur';
   const role = supabaseUser.user_metadata?.role || 'Admin';
   const avatarUrl = supabaseUser.user_metadata?.avatar_url || supabaseUser.user_metadata?.avatarUrl || undefined;

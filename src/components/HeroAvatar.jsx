@@ -10,9 +10,9 @@
  *  - size      {number}  Container size in px (default 320)
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-// ── SVG Icons ──────────────────────────────────────────────────────────────
+// ── SVG Icons
 const GitHubIcon = () => (
     <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2Z" />
@@ -56,20 +56,29 @@ const CodeIcon = () => (
 // angleDeg: degrees along the circle. 0° = right, -90° = top, 90° = bottom.
 // The arc spans from roughly -70° to +70° (right-side bow).
 const ORBIT_ITEMS = [
-    { angleDeg: -75, label: 'GitHub', href: 'https://github.com/akrembarboura', icon: <GitHubIcon />, color: '#6e7681' },
-    { angleDeg: -40, label: 'LinkedIn', href: 'https://linkedin.com/in/akrem-barboura', icon: <LinkedInIcon />, color: '#0a66c2' },
-    { angleDeg: -8, label: 'Twitter', href: 'https://twitter.com/', icon: <TwitterIcon />, color: '#1d9bf0' },
-    { angleDeg: 24, label: 'Email', href: 'mailto:akrembarboura@gmail.com', icon: <MailIcon />, color: '#ea4335' },
-    { angleDeg: 55, label: 'Download CV', href: '/cv-akrem-barboura.pdf', download: true, icon: <DownloadIcon />, color: '#3b82f6' },
-    { angleDeg: 82, label: 'Portfolio', href: 'https://github.com/akrembarboura', icon: <CodeIcon />, color: '#8b5cf6' },
+    { angleDeg: -100, label: 'GitHub', href: 'https://github.com/akrembarboura', icon: <GitHubIcon />, color: '#6e7681' },
+    { angleDeg: -60, label: 'LinkedIn', href: 'https://linkedin.com/in/akrem-barboura', icon: <LinkedInIcon />, color: '#0a66c2' },
+    { angleDeg: -20, label: 'Twitter', href: 'https://twitter.com/', icon: <TwitterIcon />, color: '#1d9bf0' },
+    { angleDeg: 20, label: 'Email', href: 'mailto:akrembarboura@gmail.com', icon: <MailIcon />, color: '#ea4335' },
+    { angleDeg: 60, label: 'Download CV', href: '/cv-akrem-barboura.pdf', download: true, icon: <DownloadIcon />, color: '#3b82f6' },
+    { angleDeg: 100, label: 'Portfolio', href: 'https://github.com/akrembarboura', icon: <CodeIcon />, color: '#8b5cf6' },
 ]
-
-const BADGE_SIZE = 40   // px — width/height of each icon badge
-const ORBIT_EXTRA = 52  // px extra radius past the circle edge
 
 // ── Component ───────────────────────────────────────────────────────────────
 export default function HeroAvatar({ src, alt = 'Profile photo', size = 300 }) {
     const [hovered, setHovered] = useState(null)
+    const [isMobile, setIsMobile] = useState(false)
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
+
+    const BADGE_SIZE = isMobile ? 32 : 40
+    const ORBIT_EXTRA = isMobile ? 32 : 52
+
     const radius = size / 2 + ORBIT_EXTRA
     const half = size / 2
 

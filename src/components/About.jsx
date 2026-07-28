@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import useScrollReveal from '../hooks/useScrollReveal'
 import imageAkrem from '../assets/akrempicture.png'
 import { Link } from 'react-router-dom'
@@ -6,6 +7,16 @@ import HeroAvatar from './HeroAvatar'
 export default function About() {
   const imageRef = useScrollReveal()
   const textRef = useScrollReveal()
+  const [avatarSize, setAvatarSize] = useState(440)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setAvatarSize(window.innerWidth < 768 ? 220 : 440)
+    }
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const handleDownloadCV = () => {
     const link = document.createElement('a')
@@ -102,7 +113,7 @@ export default function About() {
             <HeroAvatar
               src={imageAkrem}
               alt="Akrem Barboura — Full-Stack Developer"
-              size={440}
+              size={avatarSize}
             />
           </div>
 

@@ -82,6 +82,7 @@ export default function CustomCursor() {
       {/* Dot cursor — instant response */}
       <div
         ref={cursorRef}
+        className="cursor"
         style={{
           position: 'fixed',
           top: 0,
@@ -104,6 +105,7 @@ export default function CustomCursor() {
       {/* Ring cursor — smooth lerp trail */}
       <div
         ref={ringRef}
+        className="cursor-ring"
         style={{
           position: 'fixed',
           top: 0,
