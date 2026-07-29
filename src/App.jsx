@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Layout from './components/Layout';
 import About from './pages/About';
 import Skills from './pages/Skills';
@@ -10,6 +11,7 @@ import AdminDashboard from './pages/AdminDashboard';
 function App() {
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <Analytics />
       <Routes>
         <Route path="/" element={<Layout />}>
           {/* About is the home / index page */}
