@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import navLinks from '../data/navLinks'
+import { Sun, Moon } from 'lucide-react'
 
 export default function Navbar({ darkMode, onToggleTheme }) {
   const [scrolled, setScrolled] = useState(false)
@@ -11,7 +12,7 @@ export default function Navbar({ darkMode, onToggleTheme }) {
     const onScroll = () => {
       setScrolled(window.scrollY > 20)
 
-      // Find which section is currently in view
+
       // Find which section is currently in view ONLY if on homepage
       if (window.location.pathname === '/' || window.location.pathname === '') {
         const sectionIds = navLinks.map((l) => l.href.replace('/#', ''))
@@ -70,7 +71,7 @@ export default function Navbar({ darkMode, onToggleTheme }) {
               onClick={onToggleTheme}
               aria-label="Toggle theme"
             >
-              {darkMode ? '\u2600\ufe0f' : '\ud83c\udf19'}
+              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
             <Link to="/contact" className="hidden md:inline-block px-5 py-2 bg-gradient-to-br from-accent to-accent-2 text-white rounded-lg text-[0.875rem] font-semibold border-none cursor-pointer transition-all duration-200 shadow-[0_0_20px_var(--accent-glow)] hover:opacity-90 hover:-translate-y-px hover:shadow-[0_4px_24px_var(--accent-glow)]">
               Let's Talk
