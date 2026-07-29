@@ -11,11 +11,9 @@ const messages = [
 export default function WelcomeMessage() {
     const [isVisible, setIsVisible] = useState(false);
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
-    const [message, setMessage] = useState('');
+    const [message] = useState(() => messages[Math.floor(Math.random() * messages.length)]);
 
     useEffect(() => {
-        const randomMsg = messages[Math.floor(Math.random() * messages.length)];
-        setMessage(randomMsg);
 
         // Wait 2 full seconds for the site loader to finish vanishing
         const showTimer = setTimeout(() => {
