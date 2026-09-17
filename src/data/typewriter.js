@@ -1,10 +1,9 @@
 // Phrases that rotate in the hero typewriter effect
 const typewriterPhrases = [
+  'Full Stack Developer',
   'MERN Stack Developer',
-  'Full Stack Engineer',
-  'React Enthusiast',
-  'API Architect',
-  'Problem Solver',
+  'React + Node.js Engineer',
+  'Building for the web',
 ];
 
 export default typewriterPhrases;

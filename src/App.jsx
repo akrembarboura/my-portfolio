@@ -1,11 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import Layout from './components/Layout';
-import About from './pages/About';
-import Skills from './pages/Skills';
-import Experience from './pages/Experience';
-import Projects from './pages/Projects';
-import Contact from './pages/Contact';
+import Home from './pages/Home';
 import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
@@ -14,12 +10,8 @@ function App() {
       <Analytics />
       <Routes>
         <Route path="/" element={<Layout />}>
-          {/* About is the home / index page */}
-          <Route index element={<About />} />
-          <Route path="skills" element={<Skills />} />
-          <Route path="experience" element={<Experience />} />
-          <Route path="projects" element={<Projects />} />
-          <Route path="contact" element={<Contact />} />
+          {/* Single-page: all sections live on the index route */}
+          <Route index element={<Home />} />
         </Route>
         {/* Independent Admin Route (No public header/footer) */}
         <Route path="admin/*" element={<AdminDashboard />} />

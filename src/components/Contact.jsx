@@ -8,6 +8,7 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false)
   const [sending, setSending] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [locationError, setLocationError] = useState('')
   const [gettingLocation, setGettingLocation] = useState(false)
 
   const [formData, setFormData] = useState({
@@ -28,8 +29,9 @@ export default function Contact() {
   }
 
   const handleGetLocation = () => {
+    setLocationError('')
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser")
+      setLocationError("Geolocation is not supported by your browser")
       return
     }
     setGettingLocation(true)
@@ -43,7 +45,7 @@ export default function Contact() {
       },
       (error) => {
         console.error("Error getting location:", error)
-        alert("Unable to retrieve your location")
+        setLocationError("Unable to retrieve your location")
         setGettingLocation(false)
       }
     )
@@ -63,7 +65,6 @@ export default function Contact() {
           location: formData.location,
           projectType: formData.subject,
           message: formData.message
-          // status & created_at handled automatically by DB defaults
         }
       ])
 
@@ -85,7 +86,7 @@ export default function Contact() {
           <h2 className="section-title">
             Let's Build Something<br />Together
           </h2>
-          <p className="section-sub">
+          <p className="section-sub" style={{ maxWidth: '600px' }}>
             I'm currently open to new opportunities. Whether you have a project in
             mind, want to collaborate, or just want to say hi — my inbox is always open.
           </p>
@@ -93,30 +94,15 @@ export default function Contact() {
 
         <div className="contact-grid">
           <div className="contact-info">
-            <div className="availability-badge">
-              <span className="dot" />
-              Open to work — Available now
-            </div>
-
             {contactInfo.map((item) => (
               <ContactInfoItem key={item.id} {...item} />
             ))}
-
-            <div className="code-block" style={{ marginTop: '1rem' }}>
-              {`// Let's connect!
-const developer = {
-  name: 'Akrem Barboura',
-  location: 'Tunisia 🇹🇳',
-  stack: ['MERN'],
-  available: true
-};`}
-            </div>
           </div>
 
           <div className="contact-form" ref={formRef}>
             {!submitted ? (
               <form id="formContent" onSubmit={handleSubmit}>
-                <h3 className="form-title">Send a Message 💬</h3>
+                <h3 className="form-title" style={{ fontSize: '1.125rem' }}>Start a conversation</h3>
                 <p className="form-sub">I'll get back to you within 24 hours.</p>
 
                 {errorMessage && (
@@ -190,60 +176,66 @@ const developer = {
                   />
                 </div>
 
-                <button
-                  type="button"
-                  onClick={handleGetLocation}
-                  disabled={gettingLocation || formData.location !== ''}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.5rem',
-                    width: '100%',
-                    padding: '0.875rem 1.5rem',
-                    borderRadius: '8px',
-                    fontSize: '1rem',
-                    fontWeight: 500,
-                    marginBottom: '1rem',
-                    transition: 'all 0.2s ease',
-                    cursor: formData.location ? 'default' : 'pointer',
-                    background: formData.location ? 'rgba(16, 185, 129, 0.1)' : 'var(--bg-2)',
-                    border: formData.location ? '1px solid #10b981' : '1px solid var(--border-color)',
-                    color: formData.location ? '#10b981' : 'var(--text-1)'
-                  }}
-                >
-                  {gettingLocation ? (
-                    <>
-                      <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
-                      Requesting Permission...
-                    </>
-                  ) : formData.location ? (
-                    <>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-                      Location Attached
-                    </>
-                  ) : (
-                    <>
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
-                      Attach My Location (Optional)
-                    </>
-                  )}
-                </button>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
+                  <button
+                    type="submit"
+                    className="form-submit"
+                    disabled={sending}
+                    style={sending ? { opacity: 0.7, pointerEvents: 'none', margin: 0 } : { margin: 0 }}
+                  >
+                    {sending ? 'Sending...' : 'Send Message ✈️'}
+                  </button>
 
-                <button
-                  type="submit"
-                  className="form-submit"
-                  disabled={sending}
-                  style={sending ? { opacity: 0.7, pointerEvents: 'none' } : {}}
-                >
-                  {sending ? 'Sending...' : 'Send Message ✈️'}
-                </button>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <button
+                      type="button"
+                      onClick={handleGetLocation}
+                      disabled={gettingLocation || formData.location !== ''}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        background: 'transparent',
+                        border: 'none',
+                        color: formData.location ? '#10b981' : 'var(--text-3)',
+                        fontSize: '0.85rem',
+                        cursor: formData.location ? 'default' : 'pointer',
+                        transition: 'color 0.2s',
+                        textDecoration: formData.location ? 'none' : 'underline'
+                      }}
+                    >
+                      {gettingLocation ? (
+                        <>
+                          <svg className="animate-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56" /></svg>
+                          Requesting...
+                        </>
+                      ) : formData.location ? (
+                        <>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                          Location Attached
+                        </>
+                      ) : (
+                        <>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" /><circle cx="12" cy="10" r="3" /></svg>
+                          Attach My Location (Optional)
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  {locationError && (
+                    <p style={{ color: '#ff6b6b', fontSize: '0.8rem', textAlign: 'center', margin: 0 }}>
+                      {locationError}
+                    </p>
+                  )}
+                </div>
               </form>
             ) : (
               <div className="form-success">
-                <span className="success-icon">✅</span>
-                <h3>Message Sent! 🎉</h3>
-                <p>Thanks for reaching out. I'll be in touch within 24 hours.</p>
+                <span className="success-icon" style={{ display: 'inline-block', color: 'var(--brand-green)', marginBottom: '1rem' }}>
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                </span>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: 'var(--text-1)' }}>Message Sent!</h3>
+                <p style={{ color: 'var(--text-3)' }}>Thanks for reaching out. I'll be in touch within 24 hours.</p>
               </div>
             )}
           </div>
@@ -251,4 +243,4 @@ const developer = {
       </div>
     </section>
   )
-}
+}

@@ -1,7 +1,6 @@
 <div align="center">
-  <img src="public/akrempicture.png" alt="Akrem Barboura Logo" width="120" style="border-radius: 50%; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);" />
-
-  # 🌟 Akrem Barboura — Full-Stack Developer Portfolio
+  <img src="public/akrempicture.webp" alt="Akrem Barboura Logo" width="120" style="border-radius: 50%; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);" />
+  <h1 style="margin: 0;">Akrem Barboura</h1> — Full-Stack Developer Portfolio
 
   A premium, high-performance portfolio and content management system built with **React**, **Vite**, **Tailwind CSS**, and **Supabase**.
 

@@ -6,10 +6,7 @@ export default function TimelineItem({ type, typeBadge, role, date, org, descrip
     <div className="timeline-item">
       <div className="timeline-dot" />
       <div className="timeline-card">
-        <div className="timeline-type">
-          {type}
-          <span className="timeline-type-badge">{typeBadge}</span>
-        </div>
+
         <div className="timeline-top">
           <h3 className="timeline-role">{role}</h3>
           <span className="timeline-date">{date}</span>

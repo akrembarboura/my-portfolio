@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react'
 import useScrollReveal from '../hooks/useScrollReveal'
-import imageAkrem from '../assets/akrempicture.png'
-import { Link } from 'react-router-dom'
+import imageAkrem from '../assets/akrempicture.webp'
 import HeroAvatar from './HeroAvatar'
+import useTypewriter from '../hooks/useTypewriter'
+import typewriterPhrases from '../data/typewriter'
 
 export default function About() {
   const imageRef = useScrollReveal()
   const textRef = useScrollReveal()
   const [avatarSize, setAvatarSize] = useState(440)
+  const typedText = useTypewriter(typewriterPhrases)
 
   useEffect(() => {
     const handleResize = () => {
@@ -36,60 +38,38 @@ export default function About() {
           <div className="about-text reveal-right" ref={textRef}>
             <p className="section-label">About Me</p>
 
-            {/* ── "Available" badge ── */}
-            <div className="rounded-full bg-slate-800/50 border border-slate-700 w-fit mb-4 px-3 py-1 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-sm text-slate-300">Available for opportunities</span>
-            </div>
-
             <h2 className="section-title">
-              Hi, I'm&nbsp;
-              <span style={{
-                background: 'linear-gradient(135deg,var(--accent),var(--accent-2))',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}>
-                Akrem Barboura
+              A developer who builds&nbsp;
+              <span className="text-accent italic font-serif">
+                end&#8209;to&#8209;end
               </span>
-              &nbsp;
             </h2>
 
-            <p className="about-desc" style={{ fontSize: '1.0625rem', fontWeight: 500, color: 'var(--text-1)', marginBottom: '0.5rem' }}>
-              Junior Full-Stack Developer building modern, scalable web applications.
+            <p className="text-[clamp(1rem,1.2vw,1.25rem)] text-text-2 mb-7 min-h-[2em] mt-4 font-mono text-[0.9em]">
+              {'>'} I'm a <span className="text-text-1 font-semibold">{typedText}</span>
+              <span className="inline-block w-[6px] h-[1em] bg-accent ml-[4px] align-text-bottom animate-pulse" />
             </p>
 
             <p className="about-desc">
-              I specialize in <strong>React</strong>, <strong>TypeScript</strong>, <strong>Node.js</strong>, and
-              modern backend technologies. I transform ideas into <em>responsive</em>, <em>performant</em>, and
-              production-ready applications.
+              I specialize in <strong>React</strong>, <strong>Node.js</strong>, <strong>TypeScript</strong>, and
+              MongoDB — writing code that connects clean user interfaces to well-structured APIs.
+              I care about both sides of the stack equally.
             </p>
 
             <p className="about-desc">
-              Based in Tunisia&nbsp;🇹🇳, I care deeply about crafting elegant UIs backed by clean, scalable APIs.
-              Whether it's architecting REST services, optimizing database queries, or building pixel-perfect interfaces —
-              I deliver end-to-end.
+              Based in Tunisia&nbsp;🇹🇳 and open to remote. Whether it's architecting
+              a REST API, designing a database schema, or shipping a pixel-perfect UI —
+              I handle it independently and deliver on time.
             </p>
 
-            <p className="about-desc" style={{
-              background: 'var(--tag-bg)',
-              border: '1px solid var(--border-strong)',
-              borderRadius: '10px',
-              padding: '0.75rem 1rem',
-              color: 'var(--accent)',
-              fontWeight: 500,
-            }}>
-              Currently looking for opportunities to grow as a Full-Stack Developer.
-            </p>
-
-            {/* Action buttons */}
+            {/* Action buttons — clear primary / secondary hierarchy */}
             <div className="about-actions">
-              <Link to="/projects" className="btn btn-primary">
+              <a href="#projects" className="btn btn-primary">
                 View Projects ↗
-              </Link>
-              <Link to="/contact" className="btn btn-secondary">
+              </a>
+              <a href="#contact" className="btn btn-secondary">
                 Contact Me
-              </Link>
+              </a>
               <button
                 onClick={handleDownloadCV}
                 className="btn btn-secondary"

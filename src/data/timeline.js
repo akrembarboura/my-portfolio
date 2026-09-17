@@ -2,25 +2,21 @@
 const timeline = [
   {
     id: 1,
-    type: '💼 Experience',
-    typeBadge: 'Work',
-    role: 'MERN Stack Developer — Freelance',
-    date: '2025 — Present',
-    org: 'Self-Employed · Remote 🌐',
+    role: 'Freelance Full-Stack Developer',
+    date: '2024 — Present',
+    org: 'Remote',
     description:
-      'Designing and developing full-stack web applications for clients across various industries. Delivering end-to-end solutions from database design and RESTful API development to responsive React frontends. Managing project scopes, client communication, and deployment pipelines independently.',
-    tags: ['React', 'Node.js', 'MongoDB', 'Express', 'Tailwind CSS'],
+      'Built and shipped full-stack web apps for clients. Handled everything from database schema to deployment. Projects include custom CMS solutions with Supabase auth, media libraries, and API integrations.',
+    tags: ['React', 'Node.js', 'MongoDB', 'PostgreSQL', 'Tailwind CSS'],
   },
   {
-    id: 3,
-    type: '📚 Training',
-    typeBadge: 'Self-Taught',
-    role: 'Full Stack Web Development — Self-Directed',
-    date: '2025 — present',
-    org: 'Online Platforms & Personal Projects',
+    id: 2,
+    role: 'Full Stack Development',
+    date: '2023 — 2024',
+    org: 'Self-Directed Architecture Study',
     description:
-      'Completed an intensive, self-directed full stack web development curriculum covering React, Node.js, Express, and MongoDB. Built 15+ projects including e-commerce apps, REST APIs, real-time chat systems, and portfolio websites. Earned multiple certifications in JavaScript and MERN stack development.',
-    tags: ['MERN Stack', 'JavaScript', 'REST APIs', '5+ Projects'],
+      'Mastered the MERN stack through intensive project-based building. Focused on robust backend architecture (Node/Express), database modeling (MongoDB), and state management in React.',
+    tags: ['Architecture', 'API Design', 'State Management'],
   },
 ];
 
