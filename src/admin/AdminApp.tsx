@@ -10,16 +10,13 @@ import { PageLoader } from './components/ui';
 
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
-const ServicesPage = lazy(() => import('./pages/ServicesPage'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
-const PortfolioPage = lazy(() => import('./pages/PortfolioPage'));
-const TestimonialsPage = lazy(() => import('./pages/TestimonialsPage'));
-const LeadsPage = lazy(() => import('./pages/LeadsPage'));
 const HeroPage = lazy(() => import('./pages/HeroPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const SeoPage = lazy(() => import('./pages/SeoPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const MediaLibraryPage = lazy(() => import('./pages/MediaLibraryPage'));
+const ContactsPage = lazy(() => import('./pages/ContactsPage'));
 
 export default function AdminApp() {
   return (
@@ -56,16 +53,13 @@ export default function AdminApp() {
                 {/* 3. Nested Child Routes (No need for a second <Routes> block) */}
                 {/* 'index' means this loads exactly at '/admin' */}
                 <Route index element={<DashboardPage />} />
-                <Route path="services" element={<ServicesPage />} />
                 <Route path="projects" element={<ProjectsPage />} />
-                <Route path="portfolio" element={<PortfolioPage />} />
-                <Route path="testimonials" element={<TestimonialsPage />} />
-                <Route path="leads" element={<LeadsPage />} />
                 <Route path="hero" element={<HeroPage />} />
                 <Route path="about" element={<AboutPage />} />
                 <Route path="seo" element={<SeoPage />} />
                 <Route path="media" element={<MediaLibraryPage />} />
                 <Route path="settings" element={<SettingsPage />} />
+                <Route path="contacts" element={<ContactsPage />} />
 
                 {/* Catch-all for bad admin URLs (e.g., /admin/fake-page) */}
                 <Route path="*" element={<Navigate to="/admin" replace />} />

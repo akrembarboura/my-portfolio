@@ -13,21 +13,14 @@ import {
 } from '../services/projects';
 import type { Project, ProjectInput } from '../types';
 
-const CATEGORIES = [
-  'Peinture intérieure',
-  'Peinture extérieure',
-  'Plâtrerie',
-  'Finitions',
-];
-
 const empty: ProjectInput = {
+  num: '01',
+  icon: '',
   title: '',
   description: '',
-  before_image: '',
-  after_image: '',
-  category: 'Peinture intérieure',
-  completion_date: '',
-  location: '',
+  tags: [],
+  github: '',
+  demo: '',
   sort_order: 0,
   status: 'active',
 };
@@ -68,15 +61,15 @@ export default function ProjectsPage() {
   const openEdit = (p: Project) => {
     setEditing(p);
     setForm({
+      num: p.num ?? '01',
+      icon: p.icon ?? '',
       title: p.title,
       description: p.description ?? '',
-      before_image: p.before_image ?? '',
-      after_image: p.after_image ?? '',
-      category: p.category ?? 'Peinture intérieure',
-      completion_date: p.completion_date ?? '',
-      location: p.location ?? '',
-      sort_order: p.sort_order,
-      status: p.status,
+      tags: p.tags ?? [],
+      github: p.github ?? '',
+      demo: p.demo ?? '',
+      sort_order: p.sort_order ?? 0,
+      status: p.status ?? 'active',
     });
     setModalOpen(true);
   };
@@ -147,14 +140,14 @@ export default function ProjectsPage() {
   const filtered = items.filter(
     (p) =>
       p.title.toLowerCase().includes(search.toLowerCase()) ||
-      (p.category ?? '').toLowerCase().includes(search.toLowerCase())
+      p.tags?.some(tag => tag.toLowerCase().includes(search.toLowerCase()))
   );
 
   return (
     <div>
       <PageHeader
-        title="Projets"
-        subtitle="Gérez les chantiers et rénovations affichés sur le site."
+        title="Projets (Portfolio)"
+        subtitle="Gérez les projets affichés sur votre portfolio développeur."
         action={
           <button onClick={openCreate} className="admin-btn-primary">
             <Plus size={16} /> Ajouter
@@ -173,7 +166,7 @@ export default function ProjectsPage() {
           <EmptyState
             icon={FolderKanban}
             title="Aucun projet"
-            description="Ajoutez votre premier projet de rénovation."
+            description="Ajoutez votre premier projet à votre portfolio."
             action={
               <button onClick={openCreate} className="admin-btn-primary">
                 <Plus size={16} /> Ajouter un projet
@@ -194,37 +187,47 @@ export default function ProjectsPage() {
                 onDragOver={handleDragOver}
                 onDrop={() => handleDrop(p.id)}
               >
-                {/* After image preview */}
-                <div className="relative h-44 overflow-hidden bg-slate-100 dark:bg-slate-700">
-                  {p.after_image ? (
-                    <img
-                      src={p.after_image}
-                      alt={p.title}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-slate-400">
-                      <FolderKanban size={32} />
+                <div className="relative h-24 overflow-hidden bg-slate-100 dark:bg-slate-700 p-4">
+                  <div className="flex items-center gap-3">
+                    {p.icon && (
+                      <div className="text-3xl bg-white dark:bg-slate-800 p-2 rounded-lg shadow-sm">
+                        {p.icon}
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100 leading-tight">
+                        {p.title}
+                      </h3>
+                      <div className="text-xs text-slate-500 font-mono mt-1">N° {p.num}</div>
                     </div>
-                  )}
-                  <div className="absolute top-2 left-2 flex items-center gap-1 bg-slate-900/60 text-white text-xs px-2 py-1 rounded">
+                  </div>
+                  <div className="absolute top-2 right-2 flex items-center gap-1 bg-slate-900/60 text-white text-xs px-2 py-1 rounded">
                     <GripVertical size={12} /> Glisser
                   </div>
-                  <div className="absolute top-2 right-2">
-                    <Badge className="bg-gold-500/90 text-charcoal-900">{p.category}</Badge>
-                  </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">{p.title}</h3>
-                  <p className="text-sm text-slate-500 line-clamp-2 mb-2">{p.description}</p>
-                  <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
-                    <span>{p.location ?? '—'}</span>
-                    <span>{p.completion_date ?? '—'}</span>
-                  </div>
+                
+                <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+                  <p className="text-sm text-slate-500 line-clamp-2 mb-3">{p.description}</p>
+                  
+                  {p.tags && p.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {p.tags.slice(0, 3).map(tag => (
+                        <span key={tag} className="text-[10px] px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full">
+                          {tag}
+                        </span>
+                      ))}
+                      {p.tags.length > 3 && (
+                        <span className="text-[10px] px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-full">
+                          +{p.tags.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  )}
+
                   <div className="flex gap-2">
                     <button
                       onClick={() => openEdit(p)}
-                      className="admin-btn-ghost flex-1 !py-2"
+                      className="admin-btn-ghost flex-1 !py-2 text-xs"
                     >
                       <Pencil size={14} /> Modifier
                     </button>
@@ -250,79 +253,81 @@ export default function ProjectsPage() {
         size="lg"
       >
         <div className="space-y-4">
-          <div>
-            <label className="admin-label">Titre *</label>
-            <input
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-              className="admin-input"
-              placeholder="Rénovation d'un salon à Vénissieux"
-            />
+          <div className="grid grid-cols-4 gap-4">
+            <div className="col-span-1">
+              <label className="admin-label">Numéro</label>
+              <input
+                value={form.num}
+                onChange={(e) => setForm({ ...form, num: e.target.value })}
+                className="admin-input"
+                placeholder="01"
+              />
+            </div>
+            <div className="col-span-1">
+              <label className="admin-label">Icône (Emoji/Texte)</label>
+              <input
+                value={form.icon ?? ''}
+                onChange={(e) => setForm({ ...form, icon: e.target.value })}
+                className="admin-input"
+                placeholder="🚀"
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="admin-label">Titre *</label>
+              <input
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                className="admin-input"
+                placeholder="E-commerce Platform"
+              />
+            </div>
           </div>
+
           <div>
             <label className="admin-label">Description</label>
             <textarea
               rows={3}
-              value={form.description ?? ''}
+              value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               className="admin-input resize-none"
+              placeholder="Une courte description du projet..."
             />
           </div>
+
+          <div>
+            <label className="admin-label">Tags (Séparés par des virgules)</label>
+            <input
+              value={(form.tags || []).join(', ')}
+              onChange={(e) => setForm({ ...form, tags: e.target.value.split(',').map(t => t.trim()).filter(Boolean) })}
+              className="admin-input"
+              placeholder="React, Node.js, Tailwind"
+            />
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="admin-label">Image Avant (URL)</label>
+              <label className="admin-label">Lien GitHub</label>
               <input
-                value={form.before_image ?? ''}
-                onChange={(e) => setForm({ ...form, before_image: e.target.value || null })}
+                value={form.github ?? ''}
+                onChange={(e) => setForm({ ...form, github: e.target.value || null })}
                 className="admin-input"
-                placeholder="https://..."
+                placeholder="https://github.com/..."
               />
             </div>
             <div>
-              <label className="admin-label">Image Après (URL)</label>
+              <label className="admin-label">Lien Démo (Live)</label>
               <input
-                value={form.after_image ?? ''}
-                onChange={(e) => setForm({ ...form, after_image: e.target.value || null })}
+                value={form.demo ?? ''}
+                onChange={(e) => setForm({ ...form, demo: e.target.value || null })}
                 className="admin-input"
                 placeholder="https://..."
               />
             </div>
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="admin-label">Catégorie</label>
-              <select
-                value={form.category ?? ''}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
-                className="admin-input"
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="admin-label">Date de fin</label>
-              <input
-                type="date"
-                value={form.completion_date ?? ''}
-                onChange={(e) => setForm({ ...form, completion_date: e.target.value || null })}
-                className="admin-input"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="admin-label">Lieu</label>
-              <input
-                value={form.location ?? ''}
-                onChange={(e) => setForm({ ...form, location: e.target.value || null })}
-                className="admin-input"
-                placeholder="Vénissieux"
-              />
-            </div>
-            <div>
-              <label className="admin-label">Ordre</label>
+              <label className="admin-label">Ordre d'affichage</label>
               <input
                 type="number"
                 value={form.sort_order}
@@ -330,17 +335,17 @@ export default function ProjectsPage() {
                 className="admin-input"
               />
             </div>
-          </div>
-          <div>
-            <label className="admin-label">Statut</label>
-            <select
-              value={form.status}
-              onChange={(e) => setForm({ ...form, status: e.target.value as ProjectInput['status'] })}
-              className="admin-input"
-            >
-              <option value="active">Actif</option>
-              <option value="inactive">Inactif</option>
-            </select>
+            <div>
+              <label className="admin-label">Statut</label>
+              <select
+                value={form.status}
+                onChange={(e) => setForm({ ...form, status: e.target.value as ProjectInput['status'] })}
+                className="admin-input"
+              >
+                <option value="active">Actif</option>
+                <option value="inactive">Inactif</option>
+              </select>
+            </div>
           </div>
           <div className="flex gap-3 pt-2">
             <button onClick={() => setModalOpen(false)} className="admin-btn-ghost">

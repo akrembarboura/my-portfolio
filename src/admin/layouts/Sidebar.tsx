@@ -4,23 +4,27 @@ import {
   FolderKanban,
   Mail,
   Image as ImageIcon,
+  Images,
   Settings,
   FileText,
   User,
+  Users,
   Code2,
   X,
   MessageSquare,
+  Briefcase,
+  Star,
+  Inbox,
+  Search
 } from 'lucide-react';
 
 const NAV = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/admin/hero', label: 'Hero Section', icon: ImageIcon },
-  { to: '/admin/about', label: 'About Page', icon: User },
   { to: '/admin/projects', label: 'Projects', icon: FolderKanban },
-  { to: '/admin/leads', label: 'Contact Leads', icon: MessageSquare },
-  { to: '/admin/seo', label: 'SEO', icon: FileText },
+  { to: '/admin/contacts', label: 'Messages', icon: Inbox },
+  { to: '/admin/seo', label: 'SEO Settings', icon: Search },
   { to: '/admin/media', label: 'Media Library', icon: ImageIcon },
-  { to: '/admin/settings', label: 'Settings', icon: Settings },
+  { to: '/admin/settings', label: 'Global Settings', icon: Settings },
 ];
 
 interface SidebarProps {
@@ -34,38 +38,38 @@ export default function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-slate-900/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-bg-0/80 z-30 lg:hidden"
           onClick={onCloseMobile}
         />
       )}
 
       <aside
-        className={`fixed lg:sticky top-0 lg:top-4 left-0 z-40 h-screen lg:h-[calc(100vh-2rem)] w-[280px] bg-white/90 dark:bg-slate-900/60 backdrop-blur-xl border-r lg:border border-slate-200 dark:border-slate-700/60 lg:m-4 lg:rounded-2xl flex flex-col shadow-xl transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        className={`fixed lg:sticky top-0 lg:top-4 left-0 z-40 h-screen lg:h-[calc(100vh-2rem)] w-[280px] bg-background-1 border-r lg:border border-border-strong lg:m-4 lg:rounded-sm flex flex-col shadow-sm transition-transform duration-300 ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
           }`}
       >
         {/* Brand Logo */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200 dark:border-slate-700/60">
+        <div className="flex items-center justify-between px-6 py-6 border-b border-border-strong">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 flex-shrink-0">
-              <Code2 size={20} className="text-white" />
+            <div className="w-10 h-10 rounded-sm bg-text-1 flex items-center justify-center flex-shrink-0">
+              <Code2 size={20} className="text-background-0" />
             </div>
             <div>
-              <p className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight tracking-tight">
-                Akrem<span className="text-indigo-500">.</span>
+              <p className="text-lg font-bold text-text-1 leading-tight tracking-tight">
+                Akrem<span className="text-accent">.</span>
               </p>
-              <p className="text-[10px] tracking-[0.2em] uppercase text-slate-400 font-medium">Admin Panel</p>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-text-3 font-semibold mt-1">Admin Panel</p>
             </div>
           </div>
           <button
             onClick={onCloseMobile}
-            className="lg:hidden p-2 rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            className="lg:hidden p-2 rounded-sm text-text-3 hover:bg-background-2 transition"
           >
             <X size={20} />
           </button>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5">
+        <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1">
           {NAV.map((item) => (
             <NavLink
               key={item.to}
@@ -73,9 +77,9 @@ export default function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
               end={item.end}
               onClick={onCloseMobile}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${isActive
-                  ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200'
+                `flex items-center gap-3 px-3 py-3 rounded-sm text-sm font-semibold transition-all duration-200 ${isActive
+                  ? 'bg-text-1 text-background-0'
+                  : 'text-text-2 hover:bg-background-2 hover:text-text-1'
                 }`
               }
             >
@@ -86,10 +90,10 @@ export default function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
         </nav>
 
         {/* Footer */}
-        <div className="px-5 py-4 border-t border-slate-200 dark:border-slate-700/60">
+        <div className="px-5 py-4 border-t border-border-strong">
           <a
             href="/"
-            className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-indigo-500 transition"
+            className="flex items-center gap-1.5 text-xs font-semibold text-text-3 hover:text-accent transition"
           >
             ← Back to portfolio
           </a>

@@ -51,121 +51,40 @@ export interface Session {
   expiresAt?: number;
 }
 
-export type ServiceStatus = 'active' | 'inactive' | 'published' | 'draft';
-
-export interface Service {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  image: string | null;
-  sort_order?: number;
-  order?: number;
-  status: ServiceStatus;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export interface ServiceInput {
-  title: string;
-  description: string;
-  icon: string;
-  image: string | null;
-  sort_order?: number;
-  order?: number;
-  status: ServiceStatus;
-}
+// Legacy Service interfaces removed
 
 export type ProjectStatus = 'active' | 'inactive' | 'published' | 'draft';
 
 export interface Project {
-  id: string;
+  id: string; // UUID
+  num: string;
+  icon: string | null;
   title: string;
-  description: string | null;
-  before_image?: string | null;
-  beforeImage?: string | null;
-  after_image?: string | null;
-  afterImage?: string | null;
-  category: string | null;
-  completion_date?: string | null;
-  location?: string | null;
+  description: string;
+  tags: string[];
+  github: string | null;
+  demo: string | null;
   sort_order?: number;
   order?: number;
   status: ProjectStatus;
-  created_at?: string;
+  created_at?: string; // TIMESTAMPTZ
   updated_at?: string;
 }
 
 export interface ProjectInput {
+  num: string;
+  icon: string | null;
   title: string;
-  description: string | null;
-  before_image?: string | null;
-  beforeImage?: string | null;
-  after_image?: string | null;
-  afterImage?: string | null;
-  category: string | null;
-  completion_date?: string | null;
-  location?: string | null;
+  description: string;
+  tags: string[];
+  github: string | null;
+  demo: string | null;
   sort_order?: number;
   order?: number;
   status: ProjectStatus;
 }
 
-export interface PortfolioImage {
-  id: string;
-  title: string | null;
-  image_url?: string;
-  url?: string;
-  category: string | null;
-  sort_order?: number;
-  order?: number;
-  size?: number;
-  created_at?: string;
-  createdAt?: string;
-  updated_at?: string;
-  updatedAt?: string;
-}
-
-export interface PortfolioImageInput {
-  title: string | null;
-  image_url?: string;
-  url?: string;
-  category: string | null;
-  sort_order?: number;
-  order?: number;
-}
-
-export type GalleryImage = PortfolioImage;
-export type GalleryImageInput = PortfolioImageInput;
-
-export interface Testimonial {
-  id: string;
-  client_name?: string;
-  clientName?: string;
-  photo: string | null;
-  rating: number;
-  review: string | null;
-  company: string | null;
-  published?: boolean;
-  status?: string;
-  sort_order?: number;
-  order?: number;
-  created_at?: string;
-  createdAt?: string;
-}
-
-export interface TestimonialInput {
-  client_name?: string;
-  clientName?: string;
-  photo: string | null;
-  rating: number;
-  review: string | null;
-  company: string | null;
-  published?: boolean;
-  status?: string;
-  sort_order?: number;
-  order?: number;
-}
+// Legacy interfaces removed
 
 export interface HeroContent {
   id?: number | string;
@@ -217,13 +136,8 @@ export interface SiteSettings {
   address: string | null;
   phone: string | null;
   email: string | null;
-  siret: string | null;
-  ape_code?: string | null;
-  apeCode?: string | null;
   maps_embed?: string | null;
   mapsEmbed?: string | null;
-  opening_hours?: any;
-  openingHours?: any;
   social_facebook?: string | null;
   social_instagram?: string | null;
   social_linkedin?: string | null;
@@ -300,19 +214,6 @@ export interface ContactRequestInput {
 }
 
 // ── NEW DYNAMIC PORTFOLIO SCHEMA TYPES ──────────────────────────────
-
-export interface DynamicProject {
-  id: string; // UUID
-  num: string;
-  icon: string | null;
-  title: string;
-  description: string;
-  tags: string[];
-  github: string | null;
-  demo: string | null;
-  created_at: string; // TIMESTAMPTZ
-  updated_at: string;
-}
 
 export interface TimelineEntry {
   id: string; // UUID

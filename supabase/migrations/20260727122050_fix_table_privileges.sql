@@ -19,5 +19,3 @@ GRANT ALL ON TABLE public.seo_settings TO anon, authenticated, service_role;
 GRANT ALL ON TABLE public.site_settings TO anon, authenticated, service_role;
 GRANT ALL ON TABLE public.media_items TO anon, authenticated, service_role;
 
--- Also ensure usage on sequences if any
--- GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated, service_role;

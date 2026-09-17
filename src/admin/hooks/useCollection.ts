@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { Repository } from '../services/repository';
+import type { Repository } from '../services/supabaseRepository';
 import type { Timestamped } from '../types';
 import { useToast } from './useToast';
 

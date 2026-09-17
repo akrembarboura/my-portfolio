@@ -1,57 +1,7 @@
-import type {
-  ContactRequest,
-  ContactRequestInput,
-  GalleryImage,
-  GalleryImageInput,
-  MediaFile,
-  MediaFileInput,
-  Project,
-  ProjectInput,
-  Service,
-  ServiceInput,
-  Testimonial,
-  TestimonialInput,
-} from '../types';
-import { createRepository } from './repository';
-import {
-  seedContacts,
-  seedGallery,
-  seedMedia,
-  seedProjects,
-  seedServices,
-  seedTestimonials,
-} from './seed';
+import type { ContactRequest, ContactRequestInput } from '../types';
+import { createSupabaseRepository } from './supabaseRepository';
 
-export const servicesService = createRepository<Service, ServiceInput>(
-  'services',
-  seedServices,
-  'svc-'
-);
-
-export const projectsService = createRepository<Project, ProjectInput>(
-  'projects',
-  seedProjects,
-  'prj-'
-);
-
-export const galleryService = createRepository<GalleryImage, GalleryImageInput>(
-  'gallery',
-  seedGallery,
-  'gal-'
-);
-
-export const testimonialsService = createRepository<
-  Testimonial,
-  TestimonialInput
->('testimonials', seedTestimonials, 'tst-');
-
-export const contactsService = createRepository<
+export const contactsService = createSupabaseRepository<
   ContactRequest,
   ContactRequestInput
->('contacts', seedContacts, 'ctc-');
-
-export const mediaService = createRepository<MediaFile, MediaFileInput>(
-  'media',
-  seedMedia,
-  'med-'
-);
+>('contact_messages');
