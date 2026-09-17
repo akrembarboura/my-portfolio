@@ -6,8 +6,8 @@ import skills from '../data/skills.jsx'
 export default function Skills() {
   const [animated, setAnimated] = useState(false)
   const sectionRef = useRef(null)
+  const headerRef = useScrollReveal()
 
-  // Trigger skill bar animations once the section is visible
   useEffect(() => {
     const el = sectionRef.current
     if (!el) return
@@ -26,21 +26,19 @@ export default function Skills() {
     return () => observer.disconnect()
   }, [])
 
-  const headerRef = useScrollReveal()
-
   return (
-    <section id="skills" className="skills-section" ref={sectionRef}>
+    <section id="skills" className="py-16 md:py-24" ref={sectionRef}>
       <div className="container">
-        <div ref={headerRef}>
-          <p className="section-label">Technical Skills</p>
-          <h2 className="section-title">My Tech Stack</h2>
-          <p className="section-sub">
-            Technologies and tools I use to build scalable, modern web applications
-            from frontend to backend.
+        
+        <div ref={headerRef} className="mb-16">
+          <p className="section-label">Technical Stack</p>
+          <h2 className="section-title">Core Technologies</h2>
+          <p className="text-text-2 text-lg max-w-[600px] leading-relaxed">
+            I don't try to learn every framework. I focus deeply on a core stack that allows me to build robust, scalable applications from the database up to the user interface.
           </p>
         </div>
 
-        <div className="skills-categories">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-12 gap-y-16 border-t border-border-strong pt-12">
           {skills.map((cat) => (
             <SkillCategory
               key={cat.category}
@@ -49,6 +47,7 @@ export default function Skills() {
             />
           ))}
         </div>
+        
       </div>
     </section>
   )
@@ -58,12 +57,15 @@ function SkillCategory({ category, animated }) {
   const ref = useScrollReveal()
 
   return (
-    <div className="skill-category" ref={ref}>
-      <div className="skill-cat-header">
-        <div className={`skill-cat-icon ${category.iconClass}`}>{category.icon}</div>
-        <h3 className="skill-cat-name">{category.category}</h3>
+    <div className="flex flex-col gap-6" ref={ref}>
+      <div className="flex items-center gap-3 text-text-1 pb-4 border-b border-border-light">
+        <span className="text-accent">{category.icon}</span>
+        <h3 className="font-sans font-bold uppercase tracking-wider text-[0.85rem]">
+          {category.category}
+        </h3>
       </div>
-      <div className="skill-list">
+      
+      <div className="flex flex-col">
         {category.items.map((skill) => (
           <SkillBar
             key={skill.name}

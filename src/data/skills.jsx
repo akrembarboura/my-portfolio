@@ -1,57 +1,50 @@
-import {
-  FaPaintBrush, FaServer, FaDatabase, FaTools, FaLock, FaPlug, FaBook, FaWrench
-} from 'react-icons/fa';
-import {
-  SiReact, SiJavascript, SiTypescript, SiTailwindcss,
-  SiNodedotjs, SiExpress, SiMongodb, SiSupabase,
-  SiRedis, SiGithub, SiDocker, SiVercel, SiPostman
+import { FaLock, FaPlug, FaDatabase } from 'react-icons/fa';
+import { 
+  SiReact, SiJavascript, SiTypescript, SiTailwindcss, 
+  SiNodedotjs, SiExpress, SiMongodb, SiSupabase, 
+  SiGithub, SiDocker, SiVercel, SiPostman, 
+  SiNextdotjs, SiPostgresql, SiPrisma 
 } from 'react-icons/si';
 
-// Skills data — each category has an icon class and a list of skills
 const skills = [
   {
     category: 'Frontend',
-    icon: <FaPaintBrush className="w-5 h-5" />,
-    iconClass: 'fe',
+    icon: <SiReact className="w-5 h-5 text-[#61DAFB]" />,
     items: [
-      { name: 'React.js', level: 88, icon: <SiReact className="text-[#61DAFB]" /> },
-      { name: 'JavaScript (ES6+)', level: 85, icon: <SiJavascript className="text-[#F7DF1E]" /> },
-      { name: 'TypeScript', level: 72, icon: <SiTypescript className="text-[#3178C6]" /> },
-      { name: 'Tailwind CSS', level: 90, icon: <SiTailwindcss className="text-[#06B6D4]" /> },
+      { name: 'React.js', color: '#61DAFB', icon: <SiReact /> },
+      { name: 'Next.js', color: 'var(--text-1)', icon: <SiNextdotjs /> },
+      { name: 'TypeScript', color: '#3178C6', icon: <SiTypescript /> },
+      { name: 'Tailwind CSS', color: '#06B6D4', icon: <SiTailwindcss /> },
     ],
   },
   {
     category: 'Backend',
-    icon: <FaServer className="w-5 h-5" />,
-    iconClass: 'be',
+    icon: <SiNodedotjs className="w-5 h-5 text-[#339933]" />,
     items: [
-      { name: 'Node.js', level: 83, icon: <SiNodedotjs className="text-[#339933]" /> },
-      { name: 'Express.js', level: 82, icon: <SiExpress className="text-gray-300" /> },
-      { name: 'REST APIs / JWT', level: 80, icon: <FaLock className="text-yellow-500" /> },
-      { name: 'Socket.io', level: 68, icon: <FaPlug className="text-blue-400" /> },
+      { name: 'Node.js', color: '#339933', icon: <SiNodedotjs /> },
+      { name: 'Express.js', color: 'var(--text-1)', icon: <SiExpress /> },
+      { name: 'REST APIs', color: '#8fa3cc', icon: <FaLock /> },
+      { name: 'Authentication', color: '#8fa3cc', icon: <FaPlug /> },
     ],
   },
   {
-    category: 'Database & BaaS',
-    icon: <FaDatabase className="w-5 h-5" />,
-    iconClass: 'db',
+    category: 'Data',
+    icon: <FaDatabase className="w-5 h-5 text-[#336791]" />,
     items: [
-      { name: 'MongoDB', level: 85, icon: <SiMongodb className="text-[#47A248]" /> },
-      { name: 'Supabase', level: 80, icon: <SiSupabase className="text-[#3ECF8E]" /> },
-      { name: 'Mongoose ODM', level: 82, icon: <FaBook className="text-red-400" /> },
-      { name: 'Aggregation Pipelines', level: 70, icon: <FaWrench className="text-gray-400" /> },
-      { name: 'Redis (Caching)', level: 55, icon: <SiRedis className="text-[#DC382D]" /> },
+      { name: 'PostgreSQL', color: '#336791', icon: <SiPostgresql /> },
+      { name: 'Prisma', color: '#2D3748', icon: <SiPrisma /> },
+      { name: 'Supabase', color: '#3ECF8E', icon: <SiSupabase /> },
+      { name: 'MongoDB', color: '#47A248', icon: <SiMongodb /> },
     ],
   },
   {
-    category: 'Tools & DevOps',
-    icon: <FaTools className="w-5 h-5" />,
-    iconClass: 'tools',
+    category: 'Infrastructure',
+    icon: <SiGithub className="w-5 h-5 text-text-1" />,
     items: [
-      { name: 'Git & GitHub', level: 88, icon: <SiGithub className="text-white" /> },
-      { name: 'Docker', level: 70, icon: <SiDocker className="text-[#2496ED]" /> },
-      { name: 'Vercel / Netlify', level: 80, icon: <SiVercel className="text-white" /> },
-      { name: 'Postman / Testing', level: 75, icon: <SiPostman className="text-[#FF6C37]" /> },
+      { name: 'Docker', color: '#2496ED', icon: <SiDocker /> },
+      { name: 'Vercel', color: 'var(--text-1)', icon: <SiVercel /> },
+      { name: 'Git & GitHub', color: '#F05032', icon: <SiGithub /> },
+      { name: 'Testing', color: '#FF6C37', icon: <SiPostman /> },
     ],
   },
 ];
