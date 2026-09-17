@@ -13,6 +13,7 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "framer-motion": "^12.42.2",
+    "gsap": "^3.15.0",
     "lucide-react": "^1.27.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
@@ -33,6 +34,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "postcss": "^8.5.23",
+    "sharp": "^0.35.4",
     "tailwindcss": "^4.3.3",
     "vite": "^8.0.12"
   }
