@@ -13,50 +13,16 @@ export default function SpiderEffect() {
   const mainPathRef = useRef(null)
   const anchorPath1Ref = useRef(null)
   const anchorPath2Ref = useRef(null)
-  const [isDebug, setIsDebug] = useState(false)
-
-  useEffect(() => {
+  
+  // Calculate debug state synchronously during initialization to avoid setState in effect
+  const [isDebug] = useState(() => {
     if (typeof window !== 'undefined') {
-      setIsDebug(new URLSearchParams(window.location.search).get('spiderDebug') === '1')
+      return new URLSearchParams(window.location.search).get('spiderDebug') === '1'
     }
-  }, [])
+    return false
+  })
 
-  useEffect(() => {
-    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (isReducedMotion) return
-
-    // Session storage rule: play only once per session (unless debugging)
-    const hasPlayed = sessionStorage.getItem('spider-animation-played')
-    if (hasPlayed && !isDebug) return
-
-    const container = containerRef.current
-    if (!container) return
-
-    let ctx = gsap.context(() => {}, containerRef)
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            playAnimation(ctx)
-            if (!isDebug) {
-              sessionStorage.setItem('spider-animation-played', 'true')
-            }
-            observer.disconnect()
-          }
-        })
-      },
-      { threshold: 0.1 }
-    )
-
-    observer.observe(container)
-
-    return () => {
-      observer.disconnect()
-      ctx.revert()
-    }
-  }, [isDebug])
-
+  // Declare playAnimation before it is used
   const playAnimation = (ctx) => {
     ctx.add(() => {
       // The relative path the spider takes from its parent group origin (60,420)
@@ -133,6 +99,42 @@ export default function SpiderEffect() {
       })
     })
   }
+
+  useEffect(() => {
+    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (isReducedMotion) return
+
+    // Session storage rule: play only once per session (unless debugging)
+    const hasPlayed = sessionStorage.getItem('spider-animation-played')
+    if (hasPlayed && !isDebug) return
+
+    const container = containerRef.current
+    if (!container) return
+
+    let ctx = gsap.context(() => {}, containerRef)
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            playAnimation(ctx)
+            if (!isDebug) {
+              sessionStorage.setItem('spider-animation-played', 'true')
+            }
+            observer.disconnect()
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+
+    observer.observe(container)
+
+    return () => {
+      observer.disconnect()
+      ctx.revert()
+    }
+  }, [isDebug])
 
   const spiderColor = "#0f0f0f"
   const spiderStroke = "rgba(255,255,255,0.25)"

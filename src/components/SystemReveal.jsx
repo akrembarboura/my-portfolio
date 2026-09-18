@@ -2,14 +2,17 @@ import { useEffect, useState } from 'react'
 
 export default function SystemReveal({ onComplete }) {
   const [phase, setPhase] = useState(0)
-  const [shouldRender, setShouldRender] = useState(true)
+  // Handle reduced motion preference gracefully from the start
+  const [shouldRender, setShouldRender] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    }
+    return true
+  })
 
   useEffect(() => {
-    // 1. Accessibility & State Check
-    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    if (isReducedMotion) {
-      setShouldRender(false)
+    // 1. Accessibility Check
+    if (!shouldRender) {
       onComplete()
       return
     }
@@ -43,7 +46,7 @@ export default function SystemReveal({ onComplete }) {
       clearTimeout(t4)
       document.body.style.overflow = ''
     }
-  }, [onComplete])
+  }, [onComplete, shouldRender])
 
   if (!shouldRender) return null
 

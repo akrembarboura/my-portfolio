@@ -1,6 +1,6 @@
 import { FaLock, FaPlug, FaDatabase } from 'react-icons/fa';
 import { 
-  SiReact, SiJavascript, SiTypescript, SiTailwindcss, 
+  SiReact, SiTypescript, SiTailwindcss, 
   SiNodedotjs, SiExpress, SiMongodb, SiSupabase, 
   SiGithub, SiDocker, SiVercel, SiPostman, 
   SiNextdotjs, SiPostgresql, SiPrisma 

@@ -1,7 +1,7 @@
 import Tag from './Tag'
 
 // Single timeline entry (experience, education, or training)
-export default function TimelineItem({ type, typeBadge, role, date, org, description, tags }) {
+export default function TimelineItem({ role, date, org, description, tags }) {
   return (
     <div className="timeline-item">
       <div className="timeline-dot" />
