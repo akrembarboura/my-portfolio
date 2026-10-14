@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import navLinks from '../data/navLinks'
 import { Sun, Moon } from 'lucide-react'
+import LiquidFillButton from './LiquidFillButton'
 
 export default function Navbar({ darkMode, onToggleTheme }) {
   const [scrolled, setScrolled] = useState(false)
@@ -70,12 +71,12 @@ export default function Navbar({ darkMode, onToggleTheme }) {
             >
               {darkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
-            <a
+            <LiquidFillButton
               href="#contact"
-              className="hidden md:inline-flex btn btn-primary py-[0.55rem] px-6 text-[0.85rem] !rounded-full shadow-editorial hover:shadow-editorial-hover"
+              className="hidden md:inline-flex btn btn-primary py-[0.55rem] px-6 text-[0.85rem] !rounded-full shadow-editorial hover:shadow-editorial-hover hover:!translate-y-0"
             >
               Let's Talk
-            </a>
+            </LiquidFillButton>
             <button
               className="md:hidden flex flex-col gap-[5px] p-1 bg-none border-none cursor-pointer"
               onClick={() => setMobileOpen(!mobileOpen)}
