@@ -38,9 +38,9 @@ export default function Projects() {
         
         <div ref={headerRef}>
           <p className="section-label">Selected Work</p>
-          <h2 className="section-title">Professional Projects</h2>
+          <h2 className="section-title">Featured Projects</h2>
           <p className="section-sub">
-            Real products built for real businesses. These showcase full-stack architecture and client collaboration.
+            Real products built for real businesses. These showcase full-stack architecture, clean engineering, and production delivery.
           </p>
         </div>
 
@@ -48,13 +48,7 @@ export default function Projects() {
           {featuredProjects.map((project) => (
             <ProjectCard 
               key={project.id} 
-              num={project.id}
-              icon="💼" // Fallback icon for featured projects since they had images previously
-              title={project.title}
-              description={project.description}
-              tags={project.tags}
-              github={project.github}
-              demo={project.demo}
+              {...project}
             />
           ))}
         </div>
