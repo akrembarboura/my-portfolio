@@ -56,11 +56,7 @@ export default function About() {
               I care about both sides of the stack equally.
             </p>
 
-            <p className="about-desc">
-              Based in Tunisia&nbsp;🇹🇳 and open to remote. Whether it's architecting
-              a REST API, designing a database schema, or shipping a pixel-perfect UI —
-              I handle it independently and deliver on time.
-            </p>
+            
 
             {/* Action buttons — clear primary / secondary hierarchy */}
             <div className="about-actions">
