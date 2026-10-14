@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import SpiderEffect from './SpiderEffect'
 
 export default function HeroAvatar({ src, alt = 'Profile photo', size = 400 }) {
     const [isMobile, setIsMobile] = useState(false)
@@ -33,11 +32,9 @@ export default function HeroAvatar({ src, alt = 'Profile photo', size = 400 }) {
                 <img
                     src={src}
                     alt={alt}
-                    className="w-full h-full object-cover object-top filter grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out"
+                    className="w-full h-full object-cover object-top"
                 />
                 
-                {/* STRICTLY CONSTRAINED SPIDER ANIMATION */}
-                <SpiderEffect />
             </div>
         </div>
     )
