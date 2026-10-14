@@ -45,7 +45,7 @@ export default function About() {
               </span>
             </h2>
 
-            <p className="text-[clamp(1rem,1.2vw,1.25rem)] text-text-2 mb-7 min-h-[2em] mt-4 font-mono text-[0.9em]">
+            <p className="text-[clamp(1rem,1.2vw,1.25rem)] text-text-2 mb-7 min-h-[2em] mt-4 font-mono">
               {'>'} I'm a <span className="text-text-1 font-semibold">{typedText}</span>
               <span className="inline-block w-[6px] h-[1em] bg-accent ml-[4px] align-text-bottom animate-pulse" />
             </p>
@@ -71,9 +71,9 @@ export default function About() {
                 Contact Me
               </a>
               <button
+                type="button"
                 onClick={handleDownloadCV}
                 className="btn btn-secondary"
-                style={{ cursor: 'pointer' }}
                 aria-label="Download CV"
               >
                 Download CV ↓

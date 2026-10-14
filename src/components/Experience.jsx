@@ -11,10 +11,10 @@ export default function Experience() {
       <div className="container">
         <div ref={headerRef}>
           <p className="section-label">Journey</p>
-          <h2 className="section-title">Experience & Education</h2>
+          <h2 className="section-title">Experience & Background</h2>
           <p className="section-sub">
-            My professional journey and educational background that shaped my
-            development skills.
+            My professional journey and architectural focus that shaped my
+            full-stack development skills.
           </p>
         </div>
 

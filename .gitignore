@@ -27,3 +27,11 @@ dist-ssr
 .env
 .env.local
 *.env
+
+# Temporary logs and dumps
+*.txt
+audit.json
+lint.json
+backup_index.css
+*.bat
+optimize-images.cjs
