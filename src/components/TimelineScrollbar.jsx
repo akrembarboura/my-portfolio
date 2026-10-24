@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useMotionValue, useSpring } from 'framer-motion'
 
+// ============================================================================
+// CONSTANTS & DEFAULT CONFIGURATION
+// ============================================================================
+
 const DEFAULT_MILESTONES = [
   { id: 'about', label: 'About', ratio: 0.05 },
   { id: 'pipeline', label: 'Workflow', ratio: 0.22 },
@@ -10,50 +14,37 @@ const DEFAULT_MILESTONES = [
   { id: 'contact', label: 'Contact', ratio: 0.94 },
 ]
 
-export default function TimelineScrollbar() {
-  const containerRef = useRef(null)
-  const isDraggingRef = useRef(false)
-  const [isDragging, setIsDragging] = useState(false)
-  isDraggingRef.current = isDragging
+// ============================================================================
+// PURE MATHEMATICAL WAVE & PATH UTILITIES
+// ============================================================================
 
-  const [viewportHeight, setViewportHeight] = useState(() =>
-    typeof window !== 'undefined' ? window.innerHeight : 800
-  )
-  const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' ? window.innerWidth < 640 : false
-  )
+function getWaveDisplacement(y, centerY, maxDeflect, sigma) {
+  const dy = y - centerY
+  return maxDeflect * Math.exp(-(dy * dy) / (2 * sigma * sigma))
+}
 
-  const [scrollDirection, setScrollDirection] = useState('up')
-  const [milestones, setMilestones] = useState(DEFAULT_MILESTONES)
+function buildCurvedSpinePath(centerY, height, spineX, maxDeflect, halfSpan) {
+  const topWaveY = centerY - halfSpan
+  const bottomWaveY = centerY + halfSpan
+  const peakX = spineX - maxDeflect
+  const cpOffset1 = halfSpan * 0.48
+  const cpOffset2 = halfSpan * 0.42
 
-  // Real-time theme detection (dark vs light mode)
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof document !== 'undefined') {
-      return document.documentElement.getAttribute('data-theme') !== 'light'
-    }
-    return true
-  })
+  return [
+    `M ${spineX} 0`,
+    `L ${spineX} ${Math.max(0, topWaveY).toFixed(2)}`,
+    `C ${spineX} ${(topWaveY + cpOffset1).toFixed(2)}, ${peakX} ${(centerY - cpOffset2).toFixed(2)}, ${peakX} ${centerY.toFixed(2)}`,
+    `C ${peakX} ${(centerY + cpOffset2).toFixed(2)}, ${spineX} ${(bottomWaveY - cpOffset1).toFixed(2)}, ${spineX} ${Math.min(height, bottomWaveY).toFixed(2)}`,
+    `L ${spineX} ${height}`,
+  ].join(' ')
+}
 
-  useEffect(() => {
-    const checkTheme = () => {
-      const theme = document.documentElement.getAttribute('data-theme')
-      setIsDark(theme !== 'light')
-    }
-    checkTheme()
+// ============================================================================
+// HAPTIC AUDIO ENGINE (INSTANT AUTOPLAY UNLOCK & ZERO ASSETS)
+// ============================================================================
 
-    const observer = new MutationObserver(checkTheme)
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme', 'class']
-    })
-
-    return () => observer.disconnect()
-  }, [])
-
-  // ── SYNTHESIZED HAPTIC WEB AUDIO ENGINE ──
+function useHapticAudio() {
   const audioCtxRef = useRef(null)
-  const lastSoundYRef = useRef(0)
-  const lastMilestoneIdxRef = useRef(-1)
   const [soundEnabled, setSoundEnabled] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('portfolio_scroll_sound')
@@ -62,17 +53,15 @@ export default function TimelineScrollbar() {
     return true
   })
 
-  // Initialize or resume AudioContext safely on user gesture
+  // Initialize AudioContext safely
   const initAudio = useCallback(() => {
     if (typeof window === 'undefined') return null
     try {
       if (!audioCtxRef.current) {
         const AudioCtx = window.AudioContext || window.webkitAudioContext
-        if (AudioCtx) {
-          audioCtxRef.current = new AudioCtx()
-        }
+        if (AudioCtx) audioCtxRef.current = new AudioCtx()
       }
-      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+      if (audioCtxRef.current?.state === 'suspended') {
         audioCtxRef.current.resume()
       }
       return audioCtxRef.current
@@ -81,39 +70,82 @@ export default function TimelineScrollbar() {
     }
   }, [])
 
-  // Play micro mechanical haptic tick (ratchet feel)
-  const playTick = useCallback((pitch = 950) => {
-    if (!soundEnabled) return
-    const ctx = initAudio()
-    if (!ctx) return
-
-    try {
-      const now = ctx.currentTime
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-
-      osc.type = 'triangle'
-      osc.frequency.setValueAtTime(pitch, now)
-      osc.frequency.exponentialRampToValueAtTime(pitch * 0.45, now + 0.007)
-
-      gain.gain.setValueAtTime(0.032, now)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.007)
-
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-
-      osc.start(now)
-      osc.stop(now + 0.008)
-    } catch {
-      // Audio safety fallback
+  // Auto-unlock AudioContext on the very first user interaction (wheel, touch, click, key)
+  useEffect(() => {
+    const unlock = () => {
+      try {
+        if (!audioCtxRef.current) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext
+          if (AudioCtx) audioCtxRef.current = new AudioCtx()
+        }
+        if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+          audioCtxRef.current.resume()
+        }
+      } catch {
+        // Safe fallback
+      }
     }
-  }, [soundEnabled, initAudio])
 
-  // Play resonant milestone chime when entering a section
+    // Capture standard interaction gestures before the first scroll is processed
+    const events = ['wheel', 'touchstart', 'pointerdown', 'mousedown', 'keydown']
+    events.forEach((ev) => window.addEventListener(ev, unlock, { passive: true, capture: true }))
+
+    return () => {
+      events.forEach((ev) => window.removeEventListener(ev, unlock, { capture: true }))
+    }
+  }, [])
+
+  const toggleSound = useCallback(() => {
+    setSoundEnabled((prev) => {
+      const next = !prev
+      localStorage.setItem('portfolio_scroll_sound', String(next))
+      if (next) {
+        initAudio()
+      }
+      return next
+    })
+  }, [initAudio])
+
+  const playTick = useCallback(
+    (pitch = 950) => {
+      if (!soundEnabled) return
+      const ctx = initAudio()
+      if (!ctx) return
+      if (ctx.state === 'suspended') {
+        ctx.resume()
+      }
+
+      try {
+        const now = ctx.currentTime
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+
+        osc.type = 'triangle'
+        osc.frequency.setValueAtTime(pitch, now)
+        osc.frequency.exponentialRampToValueAtTime(pitch * 0.45, now + 0.007)
+
+        gain.gain.setValueAtTime(0.035, now)
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.007)
+
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+
+        osc.start(now)
+        osc.stop(now + 0.008)
+      } catch {
+        // Safe audio failure
+      }
+    },
+    [soundEnabled, initAudio]
+  )
+
   const playMilestoneChime = useCallback(() => {
     if (!soundEnabled) return
     const ctx = initAudio()
     if (!ctx) return
+    if (ctx.state === 'suspended') {
+      ctx.resume()
+    }
 
     try {
       const now = ctx.currentTime
@@ -122,7 +154,7 @@ export default function TimelineScrollbar() {
 
       osc.type = 'sine'
       osc.frequency.setValueAtTime(587.33, now) // D5
-      osc.frequency.exponentialRampToValueAtTime(880, now + 0.04) // Harmonic lift
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.04) // Harmonic A5
 
       gain.gain.setValueAtTime(0.05, now)
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08)
@@ -133,20 +165,74 @@ export default function TimelineScrollbar() {
       osc.start(now)
       osc.stop(now + 0.09)
     } catch {
-      // Audio safety fallback
+      // Safe audio failure
     }
   }, [soundEnabled, initAudio])
 
-  // Geometry dimensions: tight right-edge alignment
+  return { soundEnabled, toggleSound, initAudio, playTick, playMilestoneChime }
+}
+
+// ============================================================================
+// MAIN TIMELINE SCROLLBAR COMPONENT
+// ============================================================================
+
+export default function TimelineScrollbar() {
+  const containerRef = useRef(null)
+  const isDraggingRef = useRef(false)
+  const [isDragging, setIsDragging] = useState(false)
+  isDraggingRef.current = isDragging
+
+  // Viewport & screen responsiveness
+  const [viewportHeight, setViewportHeight] = useState(() =>
+    typeof window !== 'undefined' ? window.innerHeight : 800
+  )
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 640 : false
+  )
+
+  // Scroll state & milestones
+  const [scrollDirection, setScrollDirection] = useState('up')
+  const [milestones, setMilestones] = useState(DEFAULT_MILESTONES)
+
+  // Theme detection
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.getAttribute('data-theme') !== 'light'
+    }
+    return true
+  })
+
+  // Haptic Audio
+  const { soundEnabled, toggleSound, initAudio, playTick, playMilestoneChime } = useHapticAudio()
+  const lastSoundYRef = useRef(0)
+  const lastMilestoneIdxRef = useRef(-1)
+
+  // Listen for dark/light mode attribute changes
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = document.documentElement.getAttribute('data-theme')
+      setIsDark(theme !== 'light')
+    }
+    checkTheme()
+
+    const observer = new MutationObserver(checkTheme)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme', 'class'],
+    })
+    return () => observer.disconnect()
+  }, [])
+
+  // Geometry dimensions
   const trackHeight = viewportHeight
   const CONTAINER_WIDTH = isMobile ? 60 : 250
   const SPINE_X = isMobile ? 48 : 226
   const MAX_DEFLECT_X = isMobile ? 20 : 32
   const CURVE_HALF_SPAN = isMobile ? 56 : 74
   const GAUSSIAN_SIGMA = isMobile ? 28 : 36
-  const subdivisionsPerSegment = isMobile ? 3 : 6
+  const subdivisions = isMobile ? 3 : 6
 
-  // Window resize & milestone calibration
+  // Window resize & milestone position calibration
   useEffect(() => {
     const handleResize = () => {
       const winH = window.innerHeight || 800
@@ -172,50 +258,26 @@ export default function TimelineScrollbar() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Mathematical Gaussian wave displacement
-  const getWaveDisplacement = useCallback((y, centerY) => {
-    const dy = y - centerY
-    return MAX_DEFLECT_X * Math.exp(-(dy * dy) / (2 * GAUSSIAN_SIGMA * GAUSSIAN_SIGMA))
-  }, [MAX_DEFLECT_X, GAUSSIAN_SIGMA])
-
-  // Build curved spline path around active bulge
-  const buildCurvedSpinePath = useCallback((centerY, height) => {
-    const topWaveY = centerY - CURVE_HALF_SPAN
-    const bottomWaveY = centerY + CURVE_HALF_SPAN
-    const peakX = SPINE_X - MAX_DEFLECT_X
-    const cpOffset1 = CURVE_HALF_SPAN * 0.48
-    const cpOffset2 = CURVE_HALF_SPAN * 0.42
-
-    return [
-      `M ${SPINE_X} 0`,
-      `L ${SPINE_X} ${Math.max(0, topWaveY).toFixed(2)}`,
-      `C ${SPINE_X} ${(topWaveY + cpOffset1).toFixed(2)}, ${peakX} ${(centerY - cpOffset2).toFixed(2)}, ${peakX} ${centerY.toFixed(2)}`,
-      `C ${peakX} ${(centerY + cpOffset2).toFixed(2)}, ${SPINE_X} ${(bottomWaveY - cpOffset1).toFixed(2)}, ${SPINE_X} ${Math.min(height, bottomWaveY).toFixed(2)}`,
-      `L ${SPINE_X} ${height}`,
-    ].join(' ')
-  }, [SPINE_X, MAX_DEFLECT_X, CURVE_HALF_SPAN])
-
-  // Motion physics
+  // Spring motion physics for smooth 120 FPS interpolation
   const initialY = 0.08 * trackHeight
   const targetY = useMotionValue(initialY)
   const smoothY = useSpring(targetY, { stiffness: 220, damping: 26, mass: 0.55 })
   const [renderY, setRenderY] = useState(initialY)
 
-  // Spring animation change listener & audio trigger
+  // Handle spring changes: trigger haptic ticks and milestone chime
   useEffect(() => {
     return smoothY.on('change', (latest) => {
       setRenderY(latest)
 
-      // Play haptic tick every 24px of smooth displacement
+      // Audio tick every 24px of travel
       const diff = Math.abs(latest - lastSoundYRef.current)
       if (diff >= 24) {
         const isScrollingDown = latest >= lastSoundYRef.current
-        const pitch = isScrollingDown ? 1020 : 860
-        playTick(pitch)
+        playTick(isScrollingDown ? 1020 : 860)
         lastSoundYRef.current = latest
       }
 
-      // Check proximity to milestone markers for resonant chime
+      // Check milestone entry
       for (let i = 0; i < milestones.length; i++) {
         const mY = milestones[i].ratio * trackHeight
         if (Math.abs(latest - mY) < 10) {
@@ -229,7 +291,7 @@ export default function TimelineScrollbar() {
     })
   }, [smoothY, trackHeight, milestones, playTick, playMilestoneChime])
 
-  // Sync scroll from page
+  // Sync scroll position from page
   useEffect(() => {
     const handleScroll = () => {
       if (isDraggingRef.current) return
@@ -252,24 +314,24 @@ export default function TimelineScrollbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [trackHeight, targetY])
 
-  // Ruler Ticks
+  // Generate ruler tick segments
   const ticks = useMemo(() => {
     const list = []
     for (let i = 0; i < milestones.length; i++) {
       const current = milestones[i]
-      list.push({ id: `major-${current.id}`, y: current.ratio * trackHeight, isMajor: true, ratio: current.ratio })
+      list.push({ id: `major-${current.id}`, y: current.ratio * trackHeight, isMajor: true })
       if (i < milestones.length - 1) {
         const next = milestones[i + 1]
-        for (let s = 1; s < subdivisionsPerSegment; s++) {
-          const interpRatio = current.ratio + (next.ratio - current.ratio) * (s / subdivisionsPerSegment)
-          list.push({ id: `minor-${i}-${s}`, y: interpRatio * trackHeight, isMajor: false, ratio: interpRatio })
+        for (let s = 1; s < subdivisions; s++) {
+          const interpRatio = current.ratio + (next.ratio - current.ratio) * (s / subdivisions)
+          list.push({ id: `minor-${i}-${s}`, y: interpRatio * trackHeight, isMajor: false })
         }
       }
     }
     return list.sort((a, b) => a.y - b.y)
-  }, [milestones, trackHeight, subdivisionsPerSegment])
+  }, [milestones, trackHeight, subdivisions])
 
-  // User scrub / drag handler
+  // Scrub & drag interaction handler
   const updateFromClientY = useCallback(
     (clientY, smoothWindowScroll = false) => {
       initAudio()
@@ -291,6 +353,7 @@ export default function TimelineScrollbar() {
     [trackHeight, targetY, initAudio]
   )
 
+  // Drag listeners
   useEffect(() => {
     if (!isDragging) return undefined
     const onMove = (e) => {
@@ -306,7 +369,11 @@ export default function TimelineScrollbar() {
     }
   }, [isDragging, updateFromClientY])
 
-  const spinePathD = useMemo(() => buildCurvedSpinePath(renderY, trackHeight), [renderY, trackHeight, buildCurvedSpinePath])
+  // Spine path and wave gradient center percentage
+  const spinePathD = useMemo(
+    () => buildCurvedSpinePath(renderY, trackHeight, SPINE_X, MAX_DEFLECT_X, CURVE_HALF_SPAN),
+    [renderY, trackHeight, SPINE_X, MAX_DEFLECT_X, CURVE_HALF_SPAN]
+  )
   const centerPct = Math.min(96, Math.max(4, (renderY / trackHeight) * 100))
 
   return (
@@ -316,7 +383,7 @@ export default function TimelineScrollbar() {
       className="fixed right-0 top-0 bottom-0 z-50 select-none pointer-events-none touch-none"
       style={{ width: `${CONTAINER_WIDTH}px`, height: '100%' }}
     >
-      {/* Clickable scrub track background placed directly at the right edge */}
+      {/* Clickable scrub track along the right edge */}
       <div
         className="pointer-events-auto absolute right-0 top-0 bottom-0 w-[36px] sm:w-[48px] cursor-ns-resize"
         onPointerDown={(e) => {
@@ -327,7 +394,7 @@ export default function TimelineScrollbar() {
         }}
       />
 
-      {/* Ambient Radial Glow (Lime for Dark Mode, Liquid Blue for Light Mode) */}
+      {/* Ambient Radial Glow */}
       <div
         style={{
           top: renderY,
@@ -359,9 +426,9 @@ export default function TimelineScrollbar() {
           </linearGradient>
         </defs>
 
-        {/* Ruler Ticks displaced smoothly with the Gaussian wave */}
+        {/* Ruler Ticks */}
         {ticks.map((t) => {
-          const deflect = getWaveDisplacement(t.y, renderY)
+          const deflect = getWaveDisplacement(t.y, renderY, MAX_DEFLECT_X, GAUSSIAN_SIGMA)
           const proximity = Math.max(0, 1 - Math.abs(t.y - renderY) / (isMobile ? 65 : 95))
           const rightX = SPINE_X - deflect - (isMobile ? 6 : 8)
           const len = isMobile
@@ -399,10 +466,10 @@ export default function TimelineScrollbar() {
         />
       </svg>
 
-      {/* Deflecting Milestone Labels */}
+      {/* Deflecting Milestone Badges */}
       {milestones.map((m) => {
         const yPos = m.ratio * trackHeight
-        const deflect = getWaveDisplacement(yPos, renderY)
+        const deflect = getWaveDisplacement(yPos, renderY, MAX_DEFLECT_X, GAUSSIAN_SIGMA)
         const proximity = Math.max(0, 1 - Math.abs(yPos - renderY) / (isMobile ? 60 : 90))
 
         const shouldShow = isMobile ? proximity > 0.45 : proximity > 0.2
@@ -459,9 +526,7 @@ export default function TimelineScrollbar() {
           <div
             className={`flex items-center justify-center rounded-full border transition-transform duration-150 active:scale-95 ${
               isMobile ? 'h-8 w-8' : 'h-11 w-11'
-            } ${
-              isDark ? 'border-zinc-800/70' : 'border-blue-200/80'
-            }`}
+            } ${isDark ? 'border-zinc-800/70' : 'border-blue-200/80'}`}
             style={{
               background: isDark
                 ? 'radial-gradient(circle at 35% 30%, #1c222b 0%, #11151c 70%, #0b0e13 100%)'
@@ -511,13 +576,7 @@ export default function TimelineScrollbar() {
         type="button"
         onClick={(e) => {
           e.stopPropagation()
-          const next = !soundEnabled
-          setSoundEnabled(next)
-          localStorage.setItem('portfolio_scroll_sound', String(next))
-          if (next) {
-            initAudio()
-            playTick(1100)
-          }
+          toggleSound()
         }}
         title={soundEnabled ? 'Mute scroll sound' : 'Enable scroll sound'}
         aria-label={soundEnabled ? 'Mute scroll sound' : 'Enable scroll sound'}
