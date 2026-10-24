@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
-function IdeaMark({ className = 'w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 lg:w-12 lg:h-12' }) {
+// ============================================================================
+// STAGE ICONS (RESPONSIVE SVG MARKS)
+// ============================================================================
+
+function IdeaMark({ className = 'w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9' }) {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className={`${className} fill-none stroke-current`} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
       <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-1 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
@@ -14,7 +18,7 @@ function IdeaMark({ className = 'w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 lg:w-12 l
   )
 }
 
-function NextMark({ className = 'w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 lg:w-12 lg:h-12' }) {
+function NextMark({ className = 'w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9' }) {
   return (
     <svg aria-hidden="true" viewBox="0 0 32 32" className={`${className} fill-current`}>
       <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="2" />
@@ -23,7 +27,7 @@ function NextMark({ className = 'w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 lg:w-12 l
   )
 }
 
-function ExpressMark({ className = 'w-11 h-6 sm:w-13 sm:h-8 md:w-16 md:h-10' }) {
+function ExpressMark({ className = 'w-9 h-4 sm:w-12 sm:h-6 md:w-14 md:h-7' }) {
   return (
     <svg aria-hidden="true" viewBox="0 0 64 24" className={`${className} fill-current`}>
       <text x="0" y="18" fontFamily="Arial, sans-serif" fontSize="19" fontWeight="800" letterSpacing="-1">
@@ -33,7 +37,7 @@ function ExpressMark({ className = 'w-11 h-6 sm:w-13 sm:h-8 md:w-16 md:h-10' }) 
   )
 }
 
-function VercelMark({ className = 'w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 lg:w-12 lg:h-12' }) {
+function VercelMark({ className = 'w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9' }) {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className={`${className} fill-current`}>
       <path d="m12 2 11 19H1L12 2Z" />
@@ -41,15 +45,20 @@ function VercelMark({ className = 'w-7 h-7 sm:w-9 sm:h-9 md:w-11 md:h-11 lg:w-12
   )
 }
 
+// ============================================================================
+// PIPELINE PHASES METADATA
+// ============================================================================
+
 const phases = [
   {
     id: '01',
+    shortLabel: 'Idea',
     label: 'Idea & Scope',
     stage: 'Concept & Architecture',
     eyebrow: 'PHASE 01 // PRODUCT DISCOVERY',
     title: 'Concept & System Scoping',
     headline: 'Transforming raw ideas and client requirements into concrete technical roadmaps.',
-    description: 'Analyzing real client requirements, scoping user flows, defining feature scope, and architecting the data model before writing code.',
+    description: 'Analyzing real client requirements, scoping user flows, defining feature scope, and architecting data models before writing code.',
     tags: ['Problem Discovery', 'User Flows', 'System Architecture'],
     command: 'project.init --scope=mvp --architecture=fullstack',
     status: 'SCOPED',
@@ -58,6 +67,7 @@ const phases = [
   },
   {
     id: '02',
+    shortLabel: 'Next.js',
     label: 'Next.js & React',
     stage: 'Client Systems',
     eyebrow: 'PHASE 02 // FRONTEND COMPOSITION',
@@ -72,6 +82,7 @@ const phases = [
   },
   {
     id: '03',
+    shortLabel: 'Express',
     label: 'Node & Express',
     stage: 'Backend & Data',
     eyebrow: 'PHASE 03 // API & MICROSERVICES',
@@ -86,6 +97,7 @@ const phases = [
   },
   {
     id: '04',
+    shortLabel: 'Vercel',
     label: 'Vercel & Cloud',
     stage: 'Production Edge',
     eyebrow: 'PHASE 04 // GLOBAL CI/CD',
@@ -100,8 +112,11 @@ const phases = [
   }
 ]
 
-// Cadence for natural auto-jump
 const JUMP_INTERVAL = 3400
+
+// ============================================================================
+// MAIN COMPONENT: COMPETENCY PIPELINE
+// ============================================================================
 
 export default function CompetencyPipeline() {
   const [activeIndex, setActiveIndex] = useState(0)
@@ -114,6 +129,7 @@ export default function CompetencyPipeline() {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 640)
     }
+    handleResize()
     window.addEventListener('resize', handleResize, { passive: true })
     return () => window.removeEventListener('resize', handleResize)
   }, [])
@@ -142,229 +158,220 @@ export default function CompetencyPipeline() {
   return (
     <section
       id="pipeline"
-      className="w-full"
-      style={{ paddingTop: '5rem', paddingBottom: '5rem' }}
+      className="w-full py-12 sm:py-16 md:py-20"
       aria-labelledby="pipeline-title"
     >
-      <div className="container max-w-[1240px] mx-auto px-4 sm:px-6 md:px-8">
+      <div className="container max-w-[1240px] mx-auto px-4 sm:px-6 md:px-8 pr-7 sm:pr-8 md:pr-10">
 
-        {/* ── SECTION HEADER ── */}
-        <div className="mb-8 md:mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-          <div>
-            <p className="section-label">// Execution Pipeline</p>
-            <h2 id="pipeline-title" className="section-title mt-1.5 text-2xl sm:text-3xl md:text-4xl">
-              From Concept to{' '}
-              <span className="text-accent italic font-serif">
-                Production
-              </span>
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg text-text-2 max-w-[660px] mt-2.5 leading-relaxed">
-              How product vision transforms methodically through four specialized phases from project conception to global edge infrastructure.
+        {/* ── 1. SECTION HEADER (MOBILE-FIRST TYPOGRAPHY & CLEAN SPACING) ── */}
+        <div className="mb-6 sm:mb-8 md:mb-10">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <p className="section-label text-xs sm:text-sm font-mono tracking-wider text-accent font-semibold uppercase">
+              // Execution Pipeline
             </p>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-background-1 border border-border-light text-text-2 font-mono text-[11px] sm:text-xs shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+              <span className="font-semibold text-text-1">PIPELINE ACTIVE</span>
+            </div>
           </div>
 
-          <div className="inline-flex items-center gap-2 self-start md:self-auto px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-background-1 border border-border-light text-text-2 font-mono text-xs shadow-sm">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.7)]" />
-            <span className="font-semibold text-text-1">PIPELINE ACTIVE</span>
-          </div>
+          <h2 id="pipeline-title" className="section-title mt-2 text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight">
+            From Concept to{' '}
+            <span className="text-accent italic font-serif">
+              Production
+            </span>
+          </h2>
+          
+          <p className="mt-2 text-sm sm:text-base text-text-2 max-w-[620px] leading-relaxed">
+            How product vision transforms methodically through four specialized phases from project conception to global edge infrastructure.
+          </p>
         </div>
 
-        {/* ── EXPANSIVE BORDERLESS ANIMATION STAGE (RESPONSIVE ON ALL SCREENS) ── */}
-        <div
-          className="relative overflow-visible w-full pt-16 sm:pt-20 md:pt-24 pb-8 sm:pb-12 md:pb-14 my-2 sm:my-4"
-        >
+        {/* ── 2. INTERACTIVE PIPELINE STAGE (ENCAPSULATED, ZERO OVERFLOW, PERFECT RAIL ALIGNMENT) ── */}
+        <div className="relative w-full rounded-2xl bg-background-1/60 border border-border-light/80 p-4 sm:p-6 mb-6 sm:mb-8 backdrop-blur-sm">
           
-          {/* Open Connecting Rail */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-[92px] sm:top-[116px] md:top-[132px] lg:top-[144px] h-[3px] -translate-y-1/2 bg-border-strong rounded-full overflow-visible"
-          >
-            {/* Active connecting beam */}
-            <motion.div
-              className="absolute inset-y-0 left-0 bg-gradient-to-r from-accent/20 via-accent/80 to-accent rounded-full"
-              animate={{ width: `${(activeIndex / (phases.length - 1)) * 100}%` }}
-              transition={{ type: 'spring', stiffness: 200, damping: 24 }}
-            />
-          </div>
+          {/* Inner Stage Track Container */}
+          <div className="relative w-full max-w-2xl mx-auto pt-7 pb-2 sm:pt-9 sm:pb-3">
 
-          {/* ── THE SOARING JUMPING BALL (RESPONSIVE PARABOLIC ARC) ── */}
-          <motion.div
-            className="absolute top-[64px] sm:top-[82px] md:top-[96px] lg:top-[104px] z-30 pointer-events-none -translate-x-1/2"
-            animate={{
-              left: `${12.5 + activeIndex * 25}%`
-            }}
-            transition={{
-              type: 'spring',
-              stiffness: 170,
-              damping: 22
-            }}
-          >
-            {/* The Bouncing Ball with Generous Clearance & Fluid Physics */}
+            {/* Connecting Rail: Centered directly through the icon centers */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-[52px] sm:top-[64px] md:top-[72px] -translate-y-1/2 h-[3px] bg-border-strong rounded-full overflow-hidden"
+            >
+              <motion.div
+                className="h-full bg-accent rounded-full"
+                animate={{ width: `${(activeIndex / (phases.length - 1)) * 100}%` }}
+                transition={{ type: 'spring', stiffness: 220, damping: 26 }}
+              />
+            </div>
+
+            {/* The Soaring Jumping Ball (Scoped strictly within stage, responsive leap) */}
             <motion.div
-              key={activeIndex}
-              initial={{ y: 0, scaleY: 1, scaleX: 1 }}
+              className="absolute top-[28px] sm:top-[38px] md:top-[44px] z-30 pointer-events-none -translate-x-1/2"
               animate={{
-                y: isMobile ? [0, -45, 0] : [0, -75, 0],
-                scaleY: [1, 1.5, 0.7, 1],
-                scaleX: [1, 0.68, 1.45, 1]
+                left: `${12.5 + activeIndex * 25}%`
               }}
               transition={{
-                duration: 0.62,
-                times: [0, 0.46, 0.9, 1],
-                ease: ['easeOut', 'easeIn', 'easeOut']
+                type: 'spring',
+                stiffness: 180,
+                damping: 22
               }}
-              className="relative flex items-center justify-center"
             >
-              {/* Glowing Energy Orb */}
-              <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-full bg-accent border-2 border-white shadow-[0_0_20px_rgba(200,90,60,0.9),0_0_40px_rgba(200,90,60,0.5)] flex items-center justify-center">
-                <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-white shadow-sm animate-pulse" />
-              </div>
-
-              {/* Dynamic Ground Shadow under ball */}
               <motion.div
-                key={`shadow-${activeIndex}`}
-                initial={{ scale: 1, opacity: 0.85 }}
+                key={activeIndex}
+                initial={{ y: 0, scaleY: 1, scaleX: 1 }}
                 animate={{
-                  scale: [1, 0.15, 1.35, 1],
-                  opacity: [0.85, 0.1, 0.9, 0.7]
+                  y: isMobile ? [0, -32, 0] : [0, -56, 0],
+                  scaleY: [1, 1.4, 0.75, 1],
+                  scaleX: [1, 0.72, 1.35, 1]
                 }}
                 transition={{
-                  duration: 0.62,
-                  times: [0, 0.46, 0.9, 1]
+                  duration: 0.58,
+                  times: [0, 0.46, 0.9, 1],
+                  ease: ['easeOut', 'easeIn', 'easeOut']
                 }}
-                className="absolute -bottom-3 sm:-bottom-3.5 w-7 sm:w-8 h-2 rounded-full bg-accent/60 blur-[3px]"
-              />
+                className="relative flex items-center justify-center"
+              >
+                {/* Energy Orb */}
+                <div className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full bg-accent border-2 border-white shadow-[0_0_16px_rgba(200,90,60,0.9)] flex items-center justify-center">
+                  <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-white shadow-sm animate-pulse" />
+                </div>
+
+                {/* Ground Shadow */}
+                <motion.div
+                  key={`shadow-${activeIndex}`}
+                  initial={{ scale: 1, opacity: 0.8 }}
+                  animate={{
+                    scale: [1, 0.2, 1.3, 1],
+                    opacity: [0.8, 0.15, 0.9, 0.7]
+                  }}
+                  transition={{
+                    duration: 0.58,
+                    times: [0, 0.46, 0.9, 1]
+                  }}
+                  className="absolute -bottom-2.5 w-6 sm:w-7 h-1.5 rounded-full bg-accent/60 blur-[2px]"
+                />
+              </motion.div>
             </motion.div>
-          </motion.div>
 
-          {/* ── BORDERLESS TOOL NODES ── */}
-          <div className="relative z-10 grid grid-cols-4 gap-1 sm:gap-4 md:gap-8 items-center justify-items-center">
-            {phases.map((phase, index) => {
-              const isActive = index === activeIndex
-              return (
-                <button
-                  key={phase.id}
-                  type="button"
-                  onClick={() => setActiveIndex(index)}
-                  className="group relative flex flex-col items-center focus:outline-none cursor-pointer p-1 sm:p-3 md:p-5 text-center transition-transform w-full"
-                >
-                  {/* Floating Icon Base */}
-                  <div className="relative flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28">
-                    
-                    {/* Impact Ripple Ring upon ball landing */}
-                    {isActive && (
+            {/* 4 Tool Nodes with Clean Mobile Hierarchy */}
+            <div className="relative z-10 grid grid-cols-4 gap-1 sm:gap-3 items-start justify-items-center">
+              {phases.map((phase, index) => {
+                const isActive = index === activeIndex
+                return (
+                  <button
+                    key={phase.id}
+                    type="button"
+                    onClick={() => setActiveIndex(index)}
+                    className="group relative flex flex-col items-center focus:outline-none cursor-pointer p-1 text-center transition-transform w-full"
+                  >
+                    {/* Icon Base Circle */}
+                    <div className="relative flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full">
+                      
+                      {/* Active Ripple Ring */}
+                      {isActive && (
+                        <motion.div
+                          key={`impact-${activeIndex}`}
+                          className="pointer-events-none absolute inset-0 rounded-full border-2 border-accent"
+                          initial={{ scale: 0.5, opacity: 1 }}
+                          animate={{ scale: isMobile ? 1.25 : 1.5, opacity: 0 }}
+                          transition={{ duration: 0.6, ease: 'easeOut' }}
+                        />
+                      )}
+
+                      {/* Active Glow Backdrop */}
+                      {isActive && (
+                        <motion.div
+                          layoutId="active-stage-glow"
+                          className="absolute inset-0 rounded-full bg-accent/25 blur-md sm:blur-lg pointer-events-none"
+                          transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                        />
+                      )}
+
+                      {/* Tool SVG Icon */}
                       <motion.div
-                        key={`impact-${activeIndex}`}
-                        className="pointer-events-none absolute inset-0 rounded-full border-2 border-accent"
-                        initial={{ scale: 0.45, opacity: 1 }}
-                        animate={{ scale: isMobile ? 1.35 : 1.6, opacity: 0 }}
-                        transition={{ duration: 0.65, ease: 'easeOut' }}
-                      />
-                    )}
+                        key={`icon-${isActive}`}
+                        animate={
+                          isActive
+                            ? { scale: isMobile ? [1, 1.2, 1.1] : [1, 1.3, 1.15], y: [0, 3, -1] }
+                            : { scale: 0.85, y: 0 }
+                        }
+                        transition={{ duration: 0.45, delay: 0.4, ease: [0.175, 0.885, 0.32, 1.275] }}
+                        className={`relative z-10 flex items-center justify-center drop-shadow transition-colors duration-200 ${
+                          isActive ? 'text-text-1' : 'text-text-3 opacity-40'
+                        }`}
+                      >
+                        <phase.Icon />
+                      </motion.div>
+                    </div>
 
-                    {/* Ambient Aura Glow under active tool */}
-                    {isActive && (
-                      <motion.div
-                        layoutId="active-jump-glow"
-                        className="absolute inset-0 rounded-full bg-accent/30 blur-lg sm:blur-xl pointer-events-none"
-                        transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-                      />
-                    )}
-
-                    {/* Floating Tool Icon */}
-                    <motion.div
-                      key={`icon-${isActive}`}
-                      animate={
-                        isActive
-                          ? {
-                              scale: isMobile ? [1, 1.25, 1.12] : [1, 1.4, 1.18],
-                              y: [0, 4, -2]
-                            }
-                          : {
-                              scale: 0.85,
-                              y: 0
-                            }
-                      }
-                      transition={{
-                        duration: 0.5,
-                        delay: 0.44,
-                        ease: [0.175, 0.885, 0.32, 1.275]
-                      }}
-                      className={`relative z-10 flex items-center justify-center drop-shadow-md transition-opacity duration-300 ${
-                        isActive ? 'opacity-100 text-text-1' : 'opacity-35 text-text-2'
-                      }`}
-                    >
-                      <phase.Icon />
-                    </motion.div>
-                  </div>
-
-                  {/* Metadata Labels */}
-                  <div className="mt-2 sm:mt-3 flex flex-col items-center">
-                    <span
-                      className={`text-xs sm:text-base lg:text-lg font-semibold tracking-tight transition-colors duration-200 text-center leading-tight ${
-                        isActive ? 'text-text-1 font-bold' : 'text-text-3'
-                      }`}
-                    >
-                      {phase.label}
-                    </span>
-                    <span
-                      className={`hidden sm:block text-[10px] md:text-xs font-mono mt-1 transition-colors duration-200 text-center ${
-                        isActive ? 'text-accent font-semibold' : 'text-text-3/60'
-                      }`}
-                    >
-                      {phase.id} · {phase.stage}
-                    </span>
-                  </div>
-                </button>
-              )
-            })}
+                    {/* Stage Label (Short & crisp on mobile, expanded on desktop) */}
+                    <div className="mt-2 flex flex-col items-center">
+                      <span
+                        className={`text-[11px] sm:text-xs md:text-sm font-semibold tracking-tight transition-colors duration-200 text-center ${
+                          isActive ? 'text-text-1 font-bold' : 'text-text-3'
+                        }`}
+                      >
+                        <span className="sm:hidden">{phase.shortLabel}</span>
+                        <span className="hidden sm:inline">{phase.label}</span>
+                      </span>
+                      <span className="hidden md:block text-[10px] font-mono mt-0.5 text-text-3/60">
+                        {phase.id}
+                      </span>
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
           </div>
         </div>
 
-        {/* ── BORDERLESS EDITORIAL EXPLANATION & LIVE FEED ── */}
-        <div className="grid gap-6 lg:gap-8 lg:grid-cols-[1.7fr_1fr] pt-4">
+        {/* ── 3. CONTENT SHOWCASE (MOBILE-FIRST CARD ORDERING) ── */}
+        <div className="grid gap-5 lg:gap-8 lg:grid-cols-[1.55fr_1fr] items-start">
 
-          {/* Clean Stage Description */}
-          <div className="relative flex flex-col justify-between">
+          {/* A. ACTIVE PHASE EDITORIAL CARD */}
+          <div className="relative rounded-2xl bg-background-1/90 border border-border-light p-5 sm:p-6 md:p-7 shadow-sm backdrop-blur-md">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active.id}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                 className="flex flex-col justify-between"
               >
                 <div>
-                  <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
-                    <p className="font-mono text-xs uppercase tracking-[0.22em] text-accent font-semibold">
+                  {/* Phase Eyebrow & Status Header */}
+                  <div className="flex items-center justify-between gap-2 pb-3 border-b border-border-light/60 flex-wrap">
+                    <p className="font-mono text-xs uppercase tracking-wider text-accent font-semibold">
                       {active.eyebrow}
                     </p>
-                    <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 rounded-full bg-background-1 border border-border-light text-[11px] font-mono text-text-2">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-background-2 border border-border-light text-[11px] font-mono text-text-2">
                       <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                       {active.metric}
                     </span>
                   </div>
 
-                  <h3 className="mt-2.5 sm:mt-3 text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-text-1">
+                  {/* Title & Headline */}
+                  <h3 className="mt-3 text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-text-1">
                     {active.title}
                   </h3>
 
-                  <p className="mt-2 text-sm sm:text-base md:text-lg font-medium text-text-2 italic">
+                  <p className="mt-2 text-sm sm:text-base font-medium text-accent italic">
                     "{active.headline}"
                   </p>
 
-                  <p className="mt-3 sm:mt-4 text-sm sm:text-base text-text-3 leading-relaxed max-w-2xl">
+                  <p className="mt-3 text-xs sm:text-sm md:text-base text-text-2 leading-relaxed">
                     {active.description}
                   </p>
                 </div>
 
-                {/* Capability Tags */}
-                <div className="mt-6 sm:mt-8 flex flex-wrap gap-2 sm:gap-2.5">
+                {/* Capability Tag Badges */}
+                <div className="mt-5 sm:mt-6 pt-4 border-t border-border-light/60 flex flex-wrap gap-2">
                   {active.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-background-1 border border-border-light text-xs font-mono font-medium text-text-2 shadow-sm"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full bg-background-2/80 border border-border-light text-[11px] sm:text-xs font-mono font-medium text-text-2"
                     >
                       <span className="w-1 h-1 rounded-full bg-accent" />
                       {tag}
@@ -375,9 +382,9 @@ export default function CompetencyPipeline() {
             </AnimatePresence>
           </div>
 
-          {/* Vercel-Inspired Deployment Feed (Dashed Cadre & Clean CLI Aesthetic) */}
-          <div className="relative rounded-xl border border-dashed border-border-strong bg-background-1/90 backdrop-blur-md p-4 sm:p-5 shadow-sm font-mono flex flex-col justify-between overflow-hidden">
-            {/* Header */}
+          {/* B. VERCEL DEPLOYMENT FEED (CLEAN CLI TERMINAL) */}
+          <div className="relative rounded-2xl border border-dashed border-border-strong bg-background-1/80 backdrop-blur-md p-4 sm:p-5 shadow-sm font-mono overflow-hidden">
+            {/* Terminal Header */}
             <div>
               <div className="flex items-center justify-between pb-3 border-b border-dashed border-border-strong flex-wrap gap-2">
                 <div className="flex items-center gap-2">
@@ -408,17 +415,17 @@ export default function CompetencyPipeline() {
                 </div>
               </div>
 
-              {/* Vercel Metadata Header */}
-              <div className="pt-2.5 pb-1 flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-text-3 border-b border-dashed border-border-light/60 flex-wrap gap-1 sm:gap-2">
+              {/* Vercel Metadata Row */}
+              <div className="pt-2 pb-2 flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-text-3 border-b border-dashed border-border-light/60 flex-wrap gap-1 sm:gap-2">
                 <span>env: <strong className="text-text-2 font-normal">production</strong></span>
                 <span>branch: <strong className="text-text-2 font-normal">main</strong></span>
                 <span>region: <strong className="text-text-2 font-normal">edge</strong></span>
               </div>
             </div>
 
-            {/* Logs Body */}
+            {/* Terminal Logs Body */}
             {showLogs && (
-              <div className="mt-3.5 flex flex-col gap-2 font-mono text-xs leading-relaxed overflow-hidden">
+              <div className="mt-3 flex flex-col gap-1.5 font-mono text-[11px] sm:text-xs leading-relaxed overflow-hidden">
                 {logs.map((log) => {
                   const isCurrent = log.id === active.id
                   return (
@@ -436,14 +443,14 @@ export default function CompetencyPipeline() {
                       <span className={`text-[11px] shrink-0 font-bold ${isCurrent ? 'text-accent' : 'text-emerald-500'}`}>
                         {isCurrent ? '▲' : '✓'}
                       </span>
-                      <span className="truncate text-xs">
+                      <span className="truncate text-[11px] sm:text-xs">
                         {log.raw}
                       </span>
                     </div>
                   )
                 })}
 
-                <div className="flex items-center gap-2 text-text-3 text-[11px] mt-2 pt-2 border-t border-dashed border-border-light/60">
+                <div className="flex items-center gap-2 text-text-3 text-[10px] sm:text-[11px] mt-2 pt-2 border-t border-dashed border-border-light/60">
                   <span className="w-1.5 h-1.5 animate-pulse rounded-full bg-emerald-500" />
                   <span className="font-mono text-text-3">awaiting next trigger_</span>
                 </div>
@@ -453,9 +460,9 @@ export default function CompetencyPipeline() {
 
         </div>
 
-        {/* Footer Guidance */}
-        <p className="mt-8 sm:mt-10 text-center font-mono text-[10px] sm:text-[11px] text-text-3 uppercase tracking-wider">
-          Click any phase node to explore · Auto-cycles every 3.4s
+        {/* ── 4. FOOTER GUIDANCE HINT ── */}
+        <p className="mt-6 sm:mt-8 text-center font-mono text-[10px] sm:text-[11px] text-text-3 uppercase tracking-wider">
+          Tap any phase to explore · Auto-cycles every 3.4s
         </p>
 
       </div>
