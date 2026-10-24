@@ -108,17 +108,16 @@ body {
   transition: background 0.4s ease, color 0.4s ease;
 }
 
+/* ===== HIDE NATIVE BROWSER SCROLLBAR (REPLACED BY TIMELINE SCROLLBAR) ===== */
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-0);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: 3px;
+  display: none;
+  width: 0px;
+  background: transparent;
 }
 
 ::selection {

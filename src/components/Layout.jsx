@@ -4,6 +4,7 @@ import PortfolioIntro from './PortfolioIntro'
 import CustomCursor from './CustomCursor'
 import Navbar from './Navbar'
 import Footer from './Footer'
+import TimelineScrollbar from './TimelineScrollbar'
 
 export default function Layout() {
     const [darkMode, setDarkMode] = useState(() => {
@@ -23,6 +24,7 @@ export default function Layout() {
             <PortfolioIntro />
             <CustomCursor />
             <Navbar darkMode={darkMode} onToggleTheme={toggleTheme} />
+            <TimelineScrollbar />
             <main>
                 <Outlet />
             </main>

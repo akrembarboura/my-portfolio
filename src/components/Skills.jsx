@@ -6,7 +6,7 @@ export default function Skills() {
   const headerRef = useScrollReveal()
 
   return (
-    <section id="skills" className="py-20 md:py-28">
+    <section id="skills" className="w-full" style={{ paddingTop: '5rem', paddingBottom: '6rem' }}>
       <div className="container">
         
         <div ref={headerRef} className="mb-16">
