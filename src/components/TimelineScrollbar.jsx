@@ -50,13 +50,13 @@ export default function TimelineScrollbar() {
     return () => observer.disconnect()
   }, [])
 
-  // Geometry dimensions from template
+  // Geometry dimensions: tight right-edge alignment
   const trackHeight = viewportHeight
-  const CONTAINER_WIDTH = isMobile ? 80 : 310
-  const SPINE_X = isMobile ? 54 : 224
-  const MAX_DEFLECT_X = isMobile ? 22 : 34
-  const CURVE_HALF_SPAN = isMobile ? 58 : 76
-  const GAUSSIAN_SIGMA = isMobile ? 30 : 38
+  const CONTAINER_WIDTH = isMobile ? 60 : 250
+  const SPINE_X = isMobile ? 48 : 226
+  const MAX_DEFLECT_X = isMobile ? 20 : 32
+  const CURVE_HALF_SPAN = isMobile ? 56 : 74
+  const GAUSSIAN_SIGMA = isMobile ? 28 : 36
   const subdivisionsPerSegment = isMobile ? 3 : 6
 
   // Window resize & milestone calibration
@@ -204,9 +204,9 @@ export default function TimelineScrollbar() {
       className="fixed right-0 top-0 bottom-0 z-50 select-none pointer-events-none touch-none"
       style={{ width: `${CONTAINER_WIDTH}px`, height: '100%' }}
     >
-      {/* Clickable scrub track background */}
+      {/* Clickable scrub track background placed directly at the right edge */}
       <div
-        className="pointer-events-auto absolute right-0 top-0 bottom-0 w-[48px] sm:w-[68px] cursor-ns-resize"
+        className="pointer-events-auto absolute right-0 top-0 bottom-0 w-[36px] sm:w-[48px] cursor-ns-resize"
         onPointerDown={(e) => {
           e.preventDefault()
           setIsDragging(true)
@@ -218,12 +218,12 @@ export default function TimelineScrollbar() {
       <div
         style={{
           top: renderY,
-          left: SPINE_X - (isMobile ? 20 : 42),
+          left: SPINE_X - (isMobile ? 12 : 24),
           background: isDark
             ? 'radial-gradient(circle, rgba(132,204,22,0.26) 0%, rgba(132,204,22,0.08) 42%, transparent 72%)'
             : 'radial-gradient(circle, rgba(37,99,235,0.24) 0%, rgba(37,99,235,0.08) 42%, transparent 72%)',
         }}
-        className="pointer-events-none absolute h-44 w-44 sm:h-52 sm:w-52 -translate-x-1/2 -translate-y-1/2 rounded-full blur-xl"
+        className="pointer-events-none absolute h-40 w-40 sm:h-48 sm:w-48 -translate-x-1/2 -translate-y-1/2 rounded-full blur-xl"
       />
 
       {/* SVG Canvas: Spine and Ruler Ticks */}
@@ -250,10 +250,10 @@ export default function TimelineScrollbar() {
         {ticks.map((t) => {
           const deflect = getWaveDisplacement(t.y, renderY)
           const proximity = Math.max(0, 1 - Math.abs(t.y - renderY) / (isMobile ? 65 : 95))
-          const rightX = SPINE_X - deflect - (isMobile ? 8 : 12)
+          const rightX = SPINE_X - deflect - (isMobile ? 6 : 8)
           const len = isMobile
-            ? (t.isMajor ? 14 + proximity * 3 : 6 + proximity * 2)
-            : (t.isMajor ? 22 + proximity * 4 : 9 + proximity * 3)
+            ? (t.isMajor ? 12 + proximity * 3 : 5 + proximity * 2)
+            : (t.isMajor ? 18 + proximity * 4 : 8 + proximity * 3)
 
           const strokeColor = proximity > 0.35
             ? (isDark ? '#a3e635' : '#2563eb')
@@ -305,7 +305,7 @@ export default function TimelineScrollbar() {
             }}
             style={{
               top: yPos,
-              left: SPINE_X - deflect - (isMobile ? 18 : 44),
+              left: SPINE_X - deflect - (isMobile ? 16 : 38),
               transform: 'translate(-100%, -50%)',
               opacity: proximity > 0.45 ? 1 : Math.max(0.2, proximity * 1.6),
             }}
@@ -330,7 +330,7 @@ export default function TimelineScrollbar() {
       <div
         style={{
           top: renderY,
-          left: SPINE_X + (isMobile ? 16 : 34),
+          left: SPINE_X + (isMobile ? 0 : 8),
           transform: 'translate(-50%, -50%)',
         }}
         className="pointer-events-auto absolute z-30 cursor-grab active:cursor-grabbing"
@@ -340,10 +340,10 @@ export default function TimelineScrollbar() {
           updateFromClientY(e.clientY, false)
         }}
       >
-        <div className={`flex items-center justify-center rounded-full ${isMobile ? 'h-14 w-14' : 'h-20 w-20'} bg-zinc-950/30`}>
+        <div className={`flex items-center justify-center rounded-full ${isMobile ? 'h-11 w-11' : 'h-14 w-14'} bg-zinc-950/25`}>
           <div
             className={`flex items-center justify-center rounded-full border transition-transform duration-150 active:scale-95 ${
-              isMobile ? 'h-10 w-10' : 'h-14 w-14'
+              isMobile ? 'h-8 w-8' : 'h-11 w-11'
             } ${
               isDark ? 'border-zinc-800/70' : 'border-blue-200/80'
             }`}
@@ -352,14 +352,14 @@ export default function TimelineScrollbar() {
                 ? 'radial-gradient(circle at 35% 30%, #1c222b 0%, #11151c 70%, #0b0e13 100%)'
                 : 'radial-gradient(circle at 35% 30%, #ffffff 0%, #f1f5f9 70%, #e2e8f0 100%)',
               boxShadow: isDark
-                ? '0 10px 30px rgba(0,0,0,0.85), inset 0 1px 1px rgba(255,255,255,0.08)'
-                : '0 8px 24px rgba(37,99,235,0.18), inset 0 1px 1px rgba(255,255,255,0.9)',
+                ? '0 10px 24px rgba(0,0,0,0.85), inset 0 1px 1px rgba(255,255,255,0.08)'
+                : '0 6px 18px rgba(37,99,235,0.18), inset 0 1px 1px rgba(255,255,255,0.9)',
             }}
           >
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              className={`${isMobile ? 'h-4 w-4' : 'h-6 w-6'} transition-transform duration-300 ${
+              className={`${isMobile ? 'h-3.5 w-3.5' : 'h-5 w-5'} transition-transform duration-300 ${
                 scrollDirection === 'down' ? 'rotate-180' : ''
               }`}
             >

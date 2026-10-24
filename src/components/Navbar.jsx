@@ -63,7 +63,7 @@ export default function Navbar({ darkMode, onToggleTheme }) {
             })}
           </ul>
 
-          <div className="flex items-center gap-3 sm:gap-4 lg:gap-5">
+          <div className="flex items-center gap-3 sm:gap-4 lg:gap-5 ml-4 sm:ml-6 md:ml-8 lg:ml-10">
             <button
               className="w-10 h-10 border border-border-light rounded-[10px] bg-transparent text-text-2 flex items-center justify-center text-[1.1rem] transition-all duration-200 hover:bg-background-2 hover:border-border-strong hover:text-text-1"
               onClick={onToggleTheme}
@@ -73,7 +73,7 @@ export default function Navbar({ darkMode, onToggleTheme }) {
             </button>
             <LiquidFillButton
               href="#contact"
-              className="hidden md:inline-flex btn btn-primary py-[0.55rem] px-6 text-[0.85rem] !rounded-full shadow-editorial hover:shadow-editorial-hover hover:!translate-y-0 lg:ml-3"
+              className="hidden md:inline-flex btn btn-primary py-[0.55rem] px-6 text-[0.85rem] !rounded-full shadow-editorial hover:shadow-editorial-hover hover:!translate-y-0"
             >
               Let's Talk
             </LiquidFillButton>
