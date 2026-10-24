@@ -20,6 +20,9 @@ export default function TimelineScrollbar() {
   const [viewportHeight, setViewportHeight] = useState(() =>
     typeof window !== 'undefined' ? window.innerHeight : 800
   )
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 640 : false
+  )
   const [isDragging, setIsDragging] = useState(false)
 
   // Real-time theme detection (dark vs light mode)
@@ -47,8 +50,8 @@ export default function TimelineScrollbar() {
   }, [])
 
   // Top and bottom track padding in pixels
-  const TOP_PAD = 48
-  const BOT_PAD = 48
+  const TOP_PAD = isMobile ? 36 : 48
+  const BOT_PAD = isMobile ? 36 : 48
   const trackHeight = Math.max(viewportHeight - TOP_PAD - BOT_PAD, 100)
 
   // Direct animated state
@@ -86,6 +89,7 @@ export default function TimelineScrollbar() {
   useEffect(() => {
     const handleResize = () => {
       setViewportHeight(window.innerHeight || document.documentElement.clientHeight || 800)
+      setIsMobile(window.innerWidth < 640)
     }
     handleResize()
     window.addEventListener('resize', handleResize, { passive: true })
@@ -180,11 +184,11 @@ export default function TimelineScrollbar() {
     [trackHeight, TOP_PAD, getScrollMetrics]
   )
 
-  // ── GEOMETRY OF RIGHT-EDGE SCROLLBAR ──
-  const SVG_WIDTH = 80
-  const BASE_X = 66
-  const BULGE_X = 32
-  const CURVE_SPAN = 58
+  // ── RESPONSIVE GEOMETRY OF RIGHT-EDGE SCROLLBAR ──
+  const SVG_WIDTH = isMobile ? 48 : 80
+  const BASE_X = isMobile ? 38 : 66
+  const BULGE_X = isMobile ? 16 : 32
+  const CURVE_SPAN = isMobile ? 42 : 58
 
   const yPos = currentY
   const yStart = Math.max(yPos - CURVE_SPAN, 0)
@@ -199,7 +203,7 @@ export default function TimelineScrollbar() {
   `
 
   // Ruler Ticks
-  const tickCount = Math.floor(trackHeight / 26)
+  const tickCount = Math.floor(trackHeight / (isMobile ? 32 : 26))
   const ticks = Array.from({ length: tickCount + 1 }).map((_, i) => {
     const tickY = TOP_PAD + (i / tickCount) * trackHeight
     const isNearBulge = Math.abs(tickY - yPos) < CURVE_SPAN
@@ -215,12 +219,12 @@ export default function TimelineScrollbar() {
   return (
     <aside
       aria-label="Browser scrollbar replacement"
-      className="fixed right-0 top-0 bottom-0 z-50 select-none pointer-events-auto"
+      className="fixed right-0 top-0 bottom-0 z-50 select-none pointer-events-none"
       style={{ width: `${SVG_WIDTH}px`, touchAction: 'none' }}
     >
-      {/* Clickable scrub track background */}
+      {/* Clickable scrub track right along the edge (never obstructs central page clicks) */}
       <div
-        className="absolute inset-0 cursor-pointer"
+        className="pointer-events-auto absolute right-0 top-0 bottom-0 w-[24px] sm:w-[36px] cursor-pointer"
         onPointerDown={(e) => {
           scrubToClientY(e.clientY)
         }}
@@ -249,9 +253,9 @@ export default function TimelineScrollbar() {
 
         {/* Ambient Radial Glow following the curve */}
         <circle
-          cx={BULGE_X + 16}
+          cx={BULGE_X + (isMobile ? 10 : 16)}
           cy={yPos}
-          r="44"
+          r={isMobile ? 32 : 44}
           fill="url(#scrollbar-bulge-glow)"
           className="transition-opacity duration-200"
         />
@@ -269,11 +273,11 @@ export default function TimelineScrollbar() {
 
         {/* Ruler Minor Ticks */}
         {ticks.map((t) => {
-          const xPos = t.isNearBulge ? BASE_X - 12 : BASE_X
+          const xPos = t.isNearBulge ? BASE_X - (isMobile ? 8 : 12) : BASE_X
           return (
             <line
               key={t.id}
-              x1={xPos - 5}
+              x1={xPos - (isMobile ? 3 : 5)}
               y1={t.y}
               x2={xPos}
               y2={t.y}
@@ -295,18 +299,21 @@ export default function TimelineScrollbar() {
           d={pathD}
           fill="none"
           stroke={strokeColor}
-          strokeWidth="2.5"
+          strokeWidth={isMobile ? '2' : '2.5'}
           strokeLinecap="round"
           style={{ filter: glowFilter }}
         />
       </svg>
 
-      {/* ── CLEAN MILESTONE LABELS (ACTIVE & PROXIMITY WITHOUT HOVER POPUPS) ── */}
-      <div className="absolute inset-y-0 left-0 right-[24px] pointer-events-none hidden sm:block">
+      {/* ── CLEAN MILESTONE LABELS (RESPONSIVE & CLEAN) ── */}
+      <div className="absolute inset-y-0 left-0 right-[20px] sm:right-[24px] pointer-events-none">
         {SECTIONS.map((sec, index) => {
           const secY = TOP_PAD + (index / (SECTIONS.length - 1)) * trackHeight
           const isActive = sec.id === activeSection
           const isNear = Math.abs(secY - yPos) < 40
+
+          // On mobile, only show active milestone to keep screen clean
+          const shouldShow = isMobile ? isActive : isActive || isNear
 
           return (
             <button
@@ -316,13 +323,13 @@ export default function TimelineScrollbar() {
                 e.stopPropagation()
                 scrollToSection(sec.id)
               }}
-              className={`pointer-events-auto absolute right-1 -translate-y-1/2 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono transition-all duration-200 cursor-pointer ${
-                isActive
-                  ? isDark
-                    ? 'bg-[#11161B]/95 text-lime-400 border border-lime-500/50 font-bold shadow-md shadow-lime-950/40 scale-100 opacity-100'
-                    : 'bg-white text-blue-600 border border-blue-500/50 font-bold shadow-md shadow-blue-500/15 scale-100 opacity-100'
-                  : isNear
-                  ? 'bg-background-1/90 text-text-1 border border-border-light opacity-95'
+              className={`pointer-events-auto absolute right-1 -translate-y-1/2 flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-mono transition-all duration-200 cursor-pointer ${
+                shouldShow
+                  ? isActive
+                    ? isDark
+                      ? 'bg-[#11161B]/95 text-lime-400 border border-lime-500/50 font-bold shadow-md shadow-lime-950/40 scale-100 opacity-100'
+                      : 'bg-white text-blue-600 border border-blue-500/50 font-bold shadow-md shadow-blue-500/15 scale-100 opacity-100'
+                    : 'bg-background-1/90 text-text-1 border border-border-light opacity-95'
                   : 'opacity-0 pointer-events-none -translate-x-1'
               }`}
               style={{ top: `${secY}px` }}
@@ -348,8 +355,8 @@ export default function TimelineScrollbar() {
         style={{
           left: `${BASE_X}px`,
           top: `${yPos}px`,
-          width: '38px',
-          height: '38px'
+          width: isMobile ? '32px' : '38px',
+          height: isMobile ? '32px' : '38px'
         }}
         onPointerDown={(e) => {
           e.stopPropagation()
@@ -374,7 +381,7 @@ export default function TimelineScrollbar() {
       >
         {/* Thumb Body (No hover pop scale, pure smooth dragging) */}
         <div
-          className={`relative w-8 h-8 rounded-full shadow-xl backdrop-blur-md flex items-center justify-center transition-transform active:scale-95 group ${
+          className={`relative w-7 h-7 sm:w-8 sm:h-8 rounded-full shadow-xl backdrop-blur-md flex items-center justify-center transition-transform active:scale-95 group ${
             isDark
               ? 'bg-[#11161B]/95 border border-lime-500/60 shadow-lime-950/50 text-lime-400'
               : 'bg-white/95 border border-blue-600/50 shadow-blue-600/15 text-blue-600'
@@ -383,7 +390,7 @@ export default function TimelineScrollbar() {
           {/* Directional Chevrons */}
           <div className="flex flex-col items-center justify-center gap-0.5">
             <svg
-              className="w-3 h-3 stroke-current stroke-[2.5] fill-none"
+              className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-current stroke-[2.5] fill-none"
               viewBox="0 0 24 24"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -391,7 +398,7 @@ export default function TimelineScrollbar() {
               <polyline points="18 15 12 9 6 15" />
             </svg>
             <svg
-              className="-mt-1.5 w-3 h-3 stroke-current stroke-[2.5] fill-none opacity-60"
+              className="-mt-1 sm:-mt-1.5 w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-current stroke-[2.5] fill-none opacity-60"
               viewBox="0 0 24 24"
               strokeLinecap="round"
               strokeLinejoin="round"
