@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
-import { motion, useSpring, useMotionValue } from 'framer-motion'
 
 const SECTIONS = [
   { id: 'about', label: 'About' },
@@ -12,120 +11,126 @@ const SECTIONS = [
 
 export default function TimelineScrollbar() {
   const [activeSection, setActiveSection] = useState('about')
-  const [viewportHeight, setViewportHeight] = useState(800)
+  const [viewportHeight, setViewportHeight] = useState(() =>
+    typeof window !== 'undefined' ? window.innerHeight : 800
+  )
   const [isHovered, setIsHovered] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
 
-  // Track height constraints (padding from absolute top/bottom of screen)
-  const TOP_PAD = 40
-  const BOT_PAD = 40
-  const trackHeight = Math.max(viewportHeight - TOP_PAD - BOT_PAD, 200)
+  // Top and bottom track padding in pixels
+  const TOP_PAD = 48
+  const BOT_PAD = 48
+  const trackHeight = Math.max(viewportHeight - TOP_PAD - BOT_PAD, 100)
 
-  // Motion value for silky spring responsiveness
-  const scrollRatio = useMotionValue(0)
-  const smoothRatio = useSpring(scrollRatio, {
-    stiffness: 180,
-    damping: 24,
-    mass: 0.6
-  })
-
+  // Direct animated state
   const [currentY, setCurrentY] = useState(TOP_PAD)
 
-  // Measure window height
+  // Refs for smooth 60-120fps animation loop
+  const targetProgressRef = useRef(0)
+  const currentProgressRef = useRef(0)
+  const rafIdRef = useRef(null)
+  const isDraggingRef = useRef(false)
+  isDraggingRef.current = isDragging
+
+  // Cross-browser scroll position helper (Chrome, Safari, Firefox, Edge)
+  const getScrollMetrics = useCallback(() => {
+    if (typeof window === 'undefined') return { scrollY: 0, maxScroll: 1, progress: 0 }
+    const scrollY =
+      window.scrollY ??
+      window.pageYOffset ??
+      document.documentElement.scrollTop ??
+      document.body.scrollTop ??
+      0
+
+    const docHeight = Math.max(
+      document.documentElement.scrollHeight || 0,
+      document.body.scrollHeight || 0,
+      document.documentElement.offsetHeight || 0,
+      document.body.offsetHeight || 0
+    )
+    const winHeight = window.innerHeight || document.documentElement.clientHeight || 1
+    const maxScroll = Math.max(docHeight - winHeight, 1)
+    const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1)
+
+    return { scrollY, maxScroll, progress }
+  }, [])
+
+  // Window resize listener
   useEffect(() => {
-    const handleResize = () => setViewportHeight(window.innerHeight)
+    const handleResize = () => {
+      setViewportHeight(window.innerHeight || document.documentElement.clientHeight || 800)
+    }
     handleResize()
     window.addEventListener('resize', handleResize, { passive: true })
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Window scroll sync
+  // Smooth RAF Lerp loop: guaranteed ultra-fluid across all browsers (Chrome, Safari, Firefox)
   useEffect(() => {
-    let ticking = false
+    let lastTime = performance.now()
 
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const docHeight = document.documentElement.scrollHeight
-          const winHeight = window.innerHeight
-          const maxScroll = Math.max(docHeight - winHeight, 1)
-          const scrollY = window.scrollY
-          const ratio = Math.min(Math.max(scrollY / maxScroll, 0), 1)
+    const animateLoop = (time) => {
+      const dt = Math.min((time - lastTime) / 1000, 0.1)
+      lastTime = time
 
-          scrollRatio.set(ratio)
+      // Exponential smoothing (lerp)
+      const target = targetProgressRef.current
+      const current = currentProgressRef.current
+      const diff = target - current
 
-          // Active section lookup
-          for (let i = SECTIONS.length - 1; i >= 0; i--) {
-            const el = document.getElementById(SECTIONS[i].id)
-            if (el) {
-              const rect = el.getBoundingClientRect()
-              if (rect.top <= winHeight * 0.45) {
-                setActiveSection(SECTIONS[i].id)
-                break
-              }
-            }
-          }
-          ticking = false
-        })
-        ticking = true
+      if (Math.abs(diff) > 0.0001) {
+        // Fast, smooth spring-like approach
+        const lerpFactor = 1 - Math.exp(-22 * dt)
+        const next = current + diff * lerpFactor
+        currentProgressRef.current = next
+        setCurrentY(TOP_PAD + next * trackHeight)
+      } else if (current !== target) {
+        currentProgressRef.current = target
+        setCurrentY(TOP_PAD + target * trackHeight)
       }
+
+      rafIdRef.current = requestAnimationFrame(animateLoop)
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [scrollRatio])
-
-  // Sync spring to Y coordinate
-  useEffect(() => {
-    const unsubscribe = smoothRatio.on('change', (latest) => {
-      setCurrentY(TOP_PAD + latest * trackHeight)
-    })
-    return () => unsubscribe()
-  }, [smoothRatio, trackHeight, TOP_PAD])
-
-  // Global drag handler (attaches to window so fast scrub never loses focus)
-  const scrollToClientY = useCallback((clientY) => {
-    const relativeY = Math.min(Math.max(clientY - TOP_PAD, 0), trackHeight)
-    const ratio = relativeY / trackHeight
-    const docHeight = document.documentElement.scrollHeight
-    const winHeight = window.innerHeight
-    const maxScroll = Math.max(docHeight - winHeight, 1)
-
-    window.scrollTo({
-      top: ratio * maxScroll,
-      behavior: 'auto'
-    })
+    rafIdRef.current = requestAnimationFrame(animateLoop)
+    return () => {
+      if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
+    }
   }, [trackHeight, TOP_PAD])
 
+  // Scroll event listener (attaches to both window and document for full Chrome compatibility)
   useEffect(() => {
-    if (!isDragging) return
+    const onScroll = () => {
+      const { progress } = getScrollMetrics()
+      targetProgressRef.current = progress
 
-    const onPointerMove = (e) => {
-      const clientY = e.clientY ?? (e.touches && e.touches[0]?.clientY)
-      if (typeof clientY === 'number') {
-        scrollToClientY(clientY)
+      // Active section detection
+      const winHeight = window.innerHeight || 800
+      for (let i = SECTIONS.length - 1; i >= 0; i--) {
+        const el = document.getElementById(SECTIONS[i].id)
+        if (el) {
+          const rect = el.getBoundingClientRect()
+          if (rect.top <= winHeight * 0.45) {
+            setActiveSection(SECTIONS[i].id)
+            break
+          }
+        }
       }
     }
 
-    const onPointerUp = () => {
-      setIsDragging(false)
-    }
+    // Initial check
+    onScroll()
 
-    window.addEventListener('mousemove', onPointerMove)
-    window.addEventListener('mouseup', onPointerUp)
-    window.addEventListener('touchmove', onPointerMove, { passive: true })
-    window.addEventListener('touchend', onPointerUp)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    document.addEventListener('scroll', onScroll, { passive: true })
 
     return () => {
-      window.removeEventListener('mousemove', onPointerMove)
-      window.removeEventListener('mouseup', onPointerUp)
-      window.removeEventListener('touchmove', onPointerMove)
-      window.removeEventListener('touchend', onPointerUp)
+      window.removeEventListener('scroll', onScroll)
+      document.removeEventListener('scroll', onScroll)
     }
-  }, [isDragging, scrollToClientY])
+  }, [getScrollMetrics])
 
-  // Click on section milestone
+  // Scroll to section helper
   const scrollToSection = (id) => {
     const el = document.getElementById(id)
     if (el) {
@@ -133,25 +138,48 @@ export default function TimelineScrollbar() {
     }
   }
 
+  // Pointer scrub handler (1:1 direct scrolling)
+  const scrubToClientY = useCallback(
+    (clientY) => {
+      const relativeY = Math.min(Math.max(clientY - TOP_PAD, 0), trackHeight)
+      const progress = relativeY / trackHeight
+      const { maxScroll } = getScrollMetrics()
+
+      targetProgressRef.current = progress
+      currentProgressRef.current = progress
+      setCurrentY(TOP_PAD + relativeY)
+
+      window.scrollTo({
+        top: progress * maxScroll,
+        behavior: 'auto'
+      })
+    },
+    [trackHeight, TOP_PAD, getScrollMetrics]
+  )
+
   // ── GEOMETRY OF RIGHT-EDGE SCROLLBAR ──
-  // Container width: 90px at far right of viewport (right: 0)
-  // Base rail: 12px from far right edge -> X = 78
-  const SVG_WIDTH = 90
-  const BASE_X = 76
-  const BULGE_X = 42 // Bulges left by 34px around thumb
-  const CURVE_SPAN = 56 // Vertical extent of curve
+  // Container width: 80px pinned to right edge (right: 0)
+  // Baseline is 12px from right edge -> X = 68
+  const SVG_WIDTH = 80
+  const BASE_X = 66
+  const BULGE_X = 32 // Bulges left by 34px around the circular thumb
+  const CURVE_SPAN = 58 // Vertical span of the curve
 
   const yPos = currentY
+  const yStart = Math.max(yPos - CURVE_SPAN, 0)
+  const yEnd = Math.min(yPos + CURVE_SPAN, viewportHeight)
+
+  // SVG Cubic Bezier Path that curves around thumb
   const pathD = `
     M ${BASE_X} 0
-    L ${BASE_X} ${Math.max(yPos - CURVE_SPAN, 0)}
+    L ${BASE_X} ${yStart}
     C ${BASE_X} ${yPos - CURVE_SPAN * 0.44}, ${BULGE_X} ${yPos - CURVE_SPAN * 0.44}, ${BULGE_X} ${yPos}
-    C ${BULGE_X} ${yPos + CURVE_SPAN * 0.44}, ${BASE_X} ${yPos + CURVE_SPAN * 0.44}, ${BASE_X} ${Math.min(yPos + CURVE_SPAN, viewportHeight)}
+    C ${BULGE_X} ${yPos + CURVE_SPAN * 0.44}, ${BASE_X} ${yPos + CURVE_SPAN * 0.44}, ${BASE_X} ${yEnd}
     L ${BASE_X} ${viewportHeight}
   `
 
-  // Subtle ruler ticks
-  const tickCount = Math.floor(trackHeight / 24)
+  // Ruler Ticks along the vertical rail
+  const tickCount = Math.floor(trackHeight / 26)
   const ticks = Array.from({ length: tickCount + 1 }).map((_, i) => {
     const tickY = TOP_PAD + (i / tickCount) * trackHeight
     const isNearBulge = Math.abs(tickY - yPos) < CURVE_SPAN
@@ -161,34 +189,29 @@ export default function TimelineScrollbar() {
   return (
     <aside
       aria-label="Browser scrollbar replacement"
-      className="fixed right-0 top-0 bottom-0 z-50 hidden md:block select-none pointer-events-auto"
-      style={{ width: `${SVG_WIDTH}px` }}
+      className="fixed right-0 top-0 bottom-0 z-50 select-none pointer-events-auto"
+      style={{ width: `${SVG_WIDTH}px`, touchAction: 'none' }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Clickable scrub track background */}
       <div
         className="absolute inset-0 cursor-pointer"
-        onClick={(e) => scrollToClientY(e.clientY)}
+        onPointerDown={(e) => {
+          scrubToClientY(e.clientY)
+        }}
       />
 
       {/* ── SVG CANVAS: NEON ELASTIC LINE & GLOW ── */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
         viewBox={`0 0 ${SVG_WIDTH} ${viewportHeight}`}
-        preserveAspectRatio="none"
+        style={{ width: `${SVG_WIDTH}px`, height: '100%' }}
       >
         <defs>
-          <filter id="scrollbar-neon-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3.5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-
+          {/* Radial ambient glow behind the curve bulge */}
           <radialGradient id="thumb-ambient-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#84cc16" stopOpacity="0.4" />
+            <stop offset="0%" stopColor="#84cc16" stopOpacity="0.45" />
             <stop offset="100%" stopColor="#84cc16" stopOpacity="0" />
           </radialGradient>
         </defs>
@@ -210,12 +233,12 @@ export default function TimelineScrollbar() {
           y2={viewportHeight}
           stroke="currentColor"
           strokeWidth="1.5"
-          className="text-border-strong opacity-30"
+          className="text-border-strong opacity-25"
         />
 
         {/* Ruler Minor Ticks */}
         {ticks.map((t) => {
-          const xPos = t.isNearBulge ? BASE_X - 14 : BASE_X
+          const xPos = t.isNearBulge ? BASE_X - 12 : BASE_X
           return (
             <line
               key={t.id}
@@ -225,26 +248,28 @@ export default function TimelineScrollbar() {
               y2={t.y}
               stroke="currentColor"
               strokeWidth="1"
-              className={`transition-colors duration-150 ${
-                t.isNearBulge ? 'text-lime-400 opacity-70' : 'text-text-3 opacity-20'
+              className={`transition-all duration-150 ${
+                t.isNearBulge ? 'text-lime-400 opacity-80' : 'text-text-3 opacity-20'
               }`}
             />
           )
         })}
 
-        {/* Dynamic Curved Glowing Line */}
+        {/* Dynamic Curved Glowing Line (using CSS drop-shadow for 100% Chrome/Cross-Browser fidelity) */}
         <path
           d={pathD}
           fill="none"
           stroke="#84cc16"
           strokeWidth="2.5"
           strokeLinecap="round"
-          filter="url(#scrollbar-neon-glow)"
+          style={{
+            filter: 'drop-shadow(0 0 5px #84cc16) drop-shadow(0 0 10px rgba(132, 204, 22, 0.4))'
+          }}
         />
       </svg>
 
       {/* ── CLEAN MILESTONE LABELS (FLOAT TO THE LEFT OF THE CURVE) ── */}
-      <div className="absolute inset-y-0 left-0 right-[28px] pointer-events-none">
+      <div className="absolute inset-y-0 left-0 right-[24px] pointer-events-none hidden sm:block">
         {SECTIONS.map((sec, index) => {
           const secY = TOP_PAD + (index / (SECTIONS.length - 1)) * trackHeight
           const isActive = sec.id === activeSection
@@ -278,7 +303,7 @@ export default function TimelineScrollbar() {
         })}
       </div>
 
-      {/* ── DRAGGABLE GLASSMORPHISM THUMB (SITS RIGHT AT THE BROWSER EDGE) ── */}
+      {/* ── DRAGGABLE GLASSMORPHISM THUMB (RIGHT-EDGE WITH HTML5 POINTER CAPTURE) ── */}
       <div
         className="absolute z-30 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center cursor-grab active:cursor-grabbing pointer-events-auto"
         style={{
@@ -287,14 +312,26 @@ export default function TimelineScrollbar() {
           width: '38px',
           height: '38px'
         }}
-        onMouseDown={(e) => {
+        onPointerDown={(e) => {
           e.stopPropagation()
+          e.currentTarget.setPointerCapture(e.pointerId)
           setIsDragging(true)
+          scrubToClientY(e.clientY)
         }}
-        onTouchStart={(e) => {
-          e.stopPropagation()
-          setIsDragging(true)
+        onPointerMove={(e) => {
+          if (isDragging) {
+            scrubToClientY(e.clientY)
+          }
         }}
+        onPointerUp={(e) => {
+          try {
+            e.currentTarget.releasePointerCapture(e.pointerId)
+          } catch {
+            // Ignore if pointer already released
+          }
+          setIsDragging(false)
+        }}
+        onPointerCancel={() => setIsDragging(false)}
       >
         {/* Thumb Body */}
         <div className="relative w-8 h-8 rounded-full bg-[#11161B]/95 border border-lime-500/60 shadow-xl backdrop-blur-md flex items-center justify-center transition-transform hover:scale-110 active:scale-95 group">
