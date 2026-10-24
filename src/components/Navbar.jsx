@@ -37,7 +37,7 @@ export default function Navbar({ darkMode, onToggleTheme }) {
         <div className="max-w-[1200px] h-full mx-auto px-8 flex items-center justify-between">
           <a href="#about" className="flex items-center gap-3 group transition-transform duration-300 hover:scale-[1.02]">
             <img
-              src="/akrempicture.webp"
+              src="/akrempicture.png"
               alt="Akrem Barboura"
               className="w-[42px] h-[42px] rounded-full object-cover border border-border-strong group-hover:border-accent transition-all duration-300"
             />

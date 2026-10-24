@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import useScrollReveal from '../hooks/useScrollReveal'
-import imageAkrem from '../assets/akrempicture.webp'
+import imageAkrem from '../assets/akrempicture.png'
 import HeroAvatar from './HeroAvatar'
 import useTypewriter from '../hooks/useTypewriter'
 import typewriterPhrases from '../data/typewriter'

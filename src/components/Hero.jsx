@@ -1,7 +1,7 @@
 import useTypewriter from '../hooks/useTypewriter'
 import typewriterPhrases from '../data/typewriter'
 import Button from './Button'
-import imageAkrem from '../assets/akrempicture.webp'
+import imageAkrem from '../assets/akrempicture.png'
 const HERO_IMAGE = imageAkrem
 
 export default function Hero() {
@@ -43,7 +43,7 @@ export default function Hero() {
             <div className="relative w-full max-w-[260px] sm:max-w-[300px] lg:max-w-[380px] aspect-square mx-auto lg:mx-0 mt-8 lg:mt-0">
               <div className="absolute -inset-[16px] sm:-inset-[20px] rounded-full bg-[conic-gradient(from_0deg,var(--accent),var(--accent-2),var(--accent-3),var(--accent))] animate-spin-slow opacity-40" />
               <div className="absolute -inset-[8px] sm:-inset-[12px] rounded-full border border-border-light" />
-              <div className="absolute inset-[4px] sm:inset-[6px] rounded-full overflow-hidden border-[3px] border-background-0">
+              <div className="absolute inset-[4px] sm:inset-[6px] rounded-full overflow-hidden border-[3px] border-background-0 bg-background-1">
                 <img src={HERO_IMAGE} alt="Akrem Barboura" className="w-full h-full object-cover" />
               </div>
               <div className="absolute bottom-[20px] -left-[20px] lg:-left-[50px] bg-card border border-border-light rounded-xl px-4 py-2.5 flex items-center gap-2 text-[0.8rem] font-semibold backdrop-blur-md shadow-2xl whitespace-nowrap animate-float-1">

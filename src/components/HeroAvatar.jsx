@@ -14,28 +14,15 @@ export default function HeroAvatar({ src, alt = 'Profile photo', size = 400 }) {
 
     return (
         <div
-            className="relative"
-            style={{ width: finalSize, height: finalSize * 1.25 }} // Portrait/Editorial crop
+            className="relative flex items-center justify-center"
+            style={{ width: finalSize }}
         >
-            <div 
-                className="absolute inset-0 bg-background-2"
-                style={{ 
-                    transform: 'translate(12px, 12px)',
-                    transition: 'transform 0.3s ease'
-                }}
+            <img
+                src={src}
+                alt={alt}
+                className="w-full h-auto object-contain select-none pointer-events-none drop-shadow-xl"
             />
-            
-            {/* Inner Wrapper (Clipped boundaries) */}
-            <div 
-                className="absolute inset-0 overflow-hidden bg-background-1 border border-border-strong group hover:-translate-y-1 hover:-translate-x-1 transition-transform duration-300 ease-out"
-            >
-                <img
-                    src={src}
-                    alt={alt}
-                    className="w-full h-full object-cover object-top"
-                />
-                
-            </div>
         </div>
     )
 }
+

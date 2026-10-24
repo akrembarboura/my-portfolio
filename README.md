@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/akrempicture.webp" alt="Akrem Barboura" width="110" height="110" style="border-radius: 50%; border: 2px solid rgba(59, 130, 246, 0.5); box-shadow: 0 0 25px rgba(59, 130, 246, 0.25); object-fit: cover;" />
+  <img src="public/akrempicture.png" alt="Akrem Barboura" width="110" height="110" style="border-radius: 50%; border: 2px solid rgba(59, 130, 246, 0.5); box-shadow: 0 0 25px rgba(59, 130, 246, 0.25); object-fit: cover;" />
   <h1 style="margin: 0.5rem 0 0.25rem 0;">Akrem Barboura</h1>
   <p><strong>Full-Stack Software Engineer · React, TypeScript & Node.js Architecture</strong></p>
   <p><em>Modern Portfolio & Headless Content Management System</em></p>
