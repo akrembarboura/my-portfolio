@@ -281,7 +281,7 @@ export default function CompetencyPipeline() {
                         ease: [0.175, 0.885, 0.32, 1.275]
                       }}
                       className={`relative z-10 flex items-center justify-center drop-shadow-md transition-opacity duration-300 ${
-                        isActive ? 'opacity-100 text-text-1' : 'opacity-35 hover:opacity-85 text-text-2'
+                        isActive ? 'opacity-100 text-text-1' : 'opacity-35 text-text-2'
                       }`}
                     >
                       <phase.Icon />
@@ -292,7 +292,7 @@ export default function CompetencyPipeline() {
                   <div className="mt-3 flex flex-col items-center">
                     <span
                       className={`text-base sm:text-lg font-semibold tracking-tight transition-colors duration-200 ${
-                        isActive ? 'text-text-1 font-bold' : 'text-text-3 group-hover:text-text-2'
+                        isActive ? 'text-text-1 font-bold' : 'text-text-3'
                       }`}
                     >
                       {phase.label}

@@ -9,13 +9,42 @@ const SECTIONS = [
   { id: 'contact', label: 'Contact' }
 ]
 
+// Theme accent colors: Lime green for Dark mode (#84cc16), Liquid Blue for Light mode (#2563eb)
+const DARK_ACCENT = '#84cc16'
+const DARK_GLOW = 'rgba(132, 204, 22, 0.45)'
+const LIGHT_ACCENT = '#2563eb'
+const LIGHT_GLOW = 'rgba(37, 99, 235, 0.45)'
+
 export default function TimelineScrollbar() {
   const [activeSection, setActiveSection] = useState('about')
   const [viewportHeight, setViewportHeight] = useState(() =>
     typeof window !== 'undefined' ? window.innerHeight : 800
   )
-  const [isHovered, setIsHovered] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+
+  // Real-time theme detection (dark vs light mode)
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof document !== 'undefined') {
+      return document.documentElement.getAttribute('data-theme') !== 'light'
+    }
+    return true
+  })
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = document.documentElement.getAttribute('data-theme')
+      setIsDark(theme !== 'light')
+    }
+    checkTheme()
+
+    const observer = new MutationObserver(checkTheme)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme', 'class']
+    })
+
+    return () => observer.disconnect()
+  }, [])
 
   // Top and bottom track padding in pixels
   const TOP_PAD = 48
@@ -29,10 +58,8 @@ export default function TimelineScrollbar() {
   const targetProgressRef = useRef(0)
   const currentProgressRef = useRef(0)
   const rafIdRef = useRef(null)
-  const isDraggingRef = useRef(false)
-  isDraggingRef.current = isDragging
 
-  // Cross-browser scroll position helper (Chrome, Safari, Firefox, Edge)
+  // Cross-browser scroll position helper
   const getScrollMetrics = useCallback(() => {
     if (typeof window === 'undefined') return { scrollY: 0, maxScroll: 1, progress: 0 }
     const scrollY =
@@ -65,7 +92,7 @@ export default function TimelineScrollbar() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Smooth RAF Lerp loop: guaranteed ultra-fluid across all browsers (Chrome, Safari, Firefox)
+  // Smooth RAF Lerp loop
   useEffect(() => {
     let lastTime = performance.now()
 
@@ -73,13 +100,11 @@ export default function TimelineScrollbar() {
       const dt = Math.min((time - lastTime) / 1000, 0.1)
       lastTime = time
 
-      // Exponential smoothing (lerp)
       const target = targetProgressRef.current
       const current = currentProgressRef.current
       const diff = target - current
 
       if (Math.abs(diff) > 0.0001) {
-        // Fast, smooth spring-like approach
         const lerpFactor = 1 - Math.exp(-22 * dt)
         const next = current + diff * lerpFactor
         currentProgressRef.current = next
@@ -98,7 +123,7 @@ export default function TimelineScrollbar() {
     }
   }, [trackHeight, TOP_PAD])
 
-  // Scroll event listener (attaches to both window and document for full Chrome compatibility)
+  // Scroll event listener
   useEffect(() => {
     const onScroll = () => {
       const { progress } = getScrollMetrics()
@@ -118,9 +143,7 @@ export default function TimelineScrollbar() {
       }
     }
 
-    // Initial check
     onScroll()
-
     window.addEventListener('scroll', onScroll, { passive: true })
     document.addEventListener('scroll', onScroll, { passive: true })
 
@@ -138,7 +161,7 @@ export default function TimelineScrollbar() {
     }
   }
 
-  // Pointer scrub handler (1:1 direct scrolling)
+  // Pointer scrub handler
   const scrubToClientY = useCallback(
     (clientY) => {
       const relativeY = Math.min(Math.max(clientY - TOP_PAD, 0), trackHeight)
@@ -158,18 +181,15 @@ export default function TimelineScrollbar() {
   )
 
   // ── GEOMETRY OF RIGHT-EDGE SCROLLBAR ──
-  // Container width: 80px pinned to right edge (right: 0)
-  // Baseline is 12px from right edge -> X = 68
   const SVG_WIDTH = 80
   const BASE_X = 66
-  const BULGE_X = 32 // Bulges left by 34px around the circular thumb
-  const CURVE_SPAN = 58 // Vertical span of the curve
+  const BULGE_X = 32
+  const CURVE_SPAN = 58
 
   const yPos = currentY
   const yStart = Math.max(yPos - CURVE_SPAN, 0)
   const yEnd = Math.min(yPos + CURVE_SPAN, viewportHeight)
 
-  // SVG Cubic Bezier Path that curves around thumb
   const pathD = `
     M ${BASE_X} 0
     L ${BASE_X} ${yStart}
@@ -178,7 +198,7 @@ export default function TimelineScrollbar() {
     L ${BASE_X} ${viewportHeight}
   `
 
-  // Ruler Ticks along the vertical rail
+  // Ruler Ticks
   const tickCount = Math.floor(trackHeight / 26)
   const ticks = Array.from({ length: tickCount + 1 }).map((_, i) => {
     const tickY = TOP_PAD + (i / tickCount) * trackHeight
@@ -186,13 +206,17 @@ export default function TimelineScrollbar() {
     return { id: i, y: tickY, isNearBulge }
   })
 
+  // Theme-specific accent and glow filters: Green for Dark Mode, Liquid Blue for Light Mode
+  const strokeColor = isDark ? DARK_ACCENT : LIGHT_ACCENT
+  const glowFilter = isDark
+    ? `drop-shadow(0 0 6px ${DARK_ACCENT}) drop-shadow(0 0 12px ${DARK_GLOW})`
+    : `drop-shadow(0 0 4px rgba(37, 99, 235, 0.45)) drop-shadow(0 0 8px rgba(37, 99, 235, 0.2))`
+
   return (
     <aside
       aria-label="Browser scrollbar replacement"
       className="fixed right-0 top-0 bottom-0 z-50 select-none pointer-events-auto"
       style={{ width: `${SVG_WIDTH}px`, touchAction: 'none' }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Clickable scrub track background */}
       <div
@@ -202,17 +226,24 @@ export default function TimelineScrollbar() {
         }}
       />
 
-      {/* ── SVG CANVAS: NEON ELASTIC LINE & GLOW ── */}
+      {/* ── SVG CANVAS: RESTORED GREEN IN DARK, LIQUID BLUE IN LIGHT ── */}
       <svg
         className="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
         viewBox={`0 0 ${SVG_WIDTH} ${viewportHeight}`}
         style={{ width: `${SVG_WIDTH}px`, height: '100%' }}
       >
         <defs>
-          {/* Radial ambient glow behind the curve bulge */}
-          <radialGradient id="thumb-ambient-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#84cc16" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#84cc16" stopOpacity="0" />
+          <radialGradient id="scrollbar-bulge-glow" cx="50%" cy="50%" r="50%">
+            <stop
+              offset="0%"
+              stopColor={strokeColor}
+              stopOpacity={isDark ? 0.45 : 0.22}
+            />
+            <stop
+              offset="100%"
+              stopColor={strokeColor}
+              stopOpacity={0}
+            />
           </radialGradient>
         </defs>
 
@@ -220,8 +251,8 @@ export default function TimelineScrollbar() {
         <circle
           cx={BULGE_X + 16}
           cy={yPos}
-          r="42"
-          fill="url(#thumb-ambient-glow)"
+          r="44"
+          fill="url(#scrollbar-bulge-glow)"
           className="transition-opacity duration-200"
         />
 
@@ -246,29 +277,31 @@ export default function TimelineScrollbar() {
               y1={t.y}
               x2={xPos}
               y2={t.y}
-              stroke="currentColor"
+              stroke={t.isNearBulge ? strokeColor : 'currentColor'}
               strokeWidth="1"
               className={`transition-all duration-150 ${
-                t.isNearBulge ? 'text-lime-400 opacity-80' : 'text-text-3 opacity-20'
+                t.isNearBulge
+                  ? isDark
+                    ? 'text-lime-400 opacity-90'
+                    : 'text-blue-600 opacity-90'
+                  : 'text-text-3 opacity-20'
               }`}
             />
           )
         })}
 
-        {/* Dynamic Curved Glowing Line (using CSS drop-shadow for 100% Chrome/Cross-Browser fidelity) */}
+        {/* Dynamic Curved Glowing Line */}
         <path
           d={pathD}
           fill="none"
-          stroke="#84cc16"
+          stroke={strokeColor}
           strokeWidth="2.5"
           strokeLinecap="round"
-          style={{
-            filter: 'drop-shadow(0 0 5px #84cc16) drop-shadow(0 0 10px rgba(132, 204, 22, 0.4))'
-          }}
+          style={{ filter: glowFilter }}
         />
       </svg>
 
-      {/* ── CLEAN MILESTONE LABELS (FLOAT TO THE LEFT OF THE CURVE) ── */}
+      {/* ── CLEAN MILESTONE LABELS (ACTIVE & PROXIMITY WITHOUT HOVER POPUPS) ── */}
       <div className="absolute inset-y-0 left-0 right-[24px] pointer-events-none hidden sm:block">
         {SECTIONS.map((sec, index) => {
           const secY = TOP_PAD + (index / (SECTIONS.length - 1)) * trackHeight
@@ -283,19 +316,25 @@ export default function TimelineScrollbar() {
                 e.stopPropagation()
                 scrollToSection(sec.id)
               }}
-              className={`pointer-events-auto absolute right-1 -translate-y-1/2 flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-mono transition-all duration-200 cursor-pointer ${
+              className={`pointer-events-auto absolute right-1 -translate-y-1/2 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? 'bg-background-1 text-lime-400 border border-lime-500/40 font-bold shadow-md shadow-lime-950/20 scale-100 opacity-100'
+                  ? isDark
+                    ? 'bg-[#11161B]/95 text-lime-400 border border-lime-500/50 font-bold shadow-md shadow-lime-950/40 scale-100 opacity-100'
+                    : 'bg-white text-blue-600 border border-blue-500/50 font-bold shadow-md shadow-blue-500/15 scale-100 opacity-100'
                   : isNear
-                  ? 'bg-background-1/90 text-text-1 border border-border-light opacity-90'
-                  : isHovered
-                  ? 'text-text-3 hover:text-text-1 opacity-70 hover:opacity-100'
-                  : 'opacity-0 -translate-x-1'
+                  ? 'bg-background-1/90 text-text-1 border border-border-light opacity-95'
+                  : 'opacity-0 pointer-events-none -translate-x-1'
               }`}
               style={{ top: `${secY}px` }}
             >
               {isActive && (
-                <span className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse shadow-[0_0_6px_#84cc16]" />
+                <span
+                  className={`w-1.5 h-1.5 rounded-full animate-pulse ${
+                    isDark
+                      ? 'bg-lime-400 shadow-[0_0_8px_#84cc16]'
+                      : 'bg-blue-600 shadow-[0_0_8px_#2563eb]'
+                  }`}
+                />
               )}
               <span className="whitespace-nowrap">{sec.label}</span>
             </button>
@@ -303,7 +342,7 @@ export default function TimelineScrollbar() {
         })}
       </div>
 
-      {/* ── DRAGGABLE GLASSMORPHISM THUMB (RIGHT-EDGE WITH HTML5 POINTER CAPTURE) ── */}
+      {/* ── DRAGGABLE THUMB (RESTORED LIME GREEN IN DARK, LIQUID BLUE IN LIGHT) ── */}
       <div
         className="absolute z-30 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center cursor-grab active:cursor-grabbing pointer-events-auto"
         style={{
@@ -327,17 +366,22 @@ export default function TimelineScrollbar() {
           try {
             e.currentTarget.releasePointerCapture(e.pointerId)
           } catch {
-            // Ignore if pointer already released
+            // Ignore
           }
           setIsDragging(false)
         }}
         onPointerCancel={() => setIsDragging(false)}
       >
-        {/* Thumb Body */}
-        <div className="relative w-8 h-8 rounded-full bg-[#11161B]/95 border border-lime-500/60 shadow-xl backdrop-blur-md flex items-center justify-center transition-transform hover:scale-110 active:scale-95 group">
-          
-          {/* Animated Directional Chevrons */}
-          <div className="flex flex-col items-center justify-center gap-0.5 text-lime-400">
+        {/* Thumb Body (No hover pop scale, pure smooth dragging) */}
+        <div
+          className={`relative w-8 h-8 rounded-full shadow-xl backdrop-blur-md flex items-center justify-center transition-transform active:scale-95 group ${
+            isDark
+              ? 'bg-[#11161B]/95 border border-lime-500/60 shadow-lime-950/50 text-lime-400'
+              : 'bg-white/95 border border-blue-600/50 shadow-blue-600/15 text-blue-600'
+          }`}
+        >
+          {/* Directional Chevrons */}
+          <div className="flex flex-col items-center justify-center gap-0.5">
             <svg
               className="w-3 h-3 stroke-current stroke-[2.5] fill-none"
               viewBox="0 0 24 24"
@@ -356,8 +400,12 @@ export default function TimelineScrollbar() {
             </svg>
           </div>
 
-          {/* Active Ping Glow */}
-          <span className="absolute inset-0 rounded-full border border-lime-400/40 animate-ping pointer-events-none" />
+          {/* Active Liquid / Neon Ping Glow */}
+          <span
+            className={`absolute inset-0 rounded-full animate-ping pointer-events-none ${
+              isDark ? 'border border-lime-400/50' : 'border border-blue-500/50'
+            }`}
+          />
         </div>
       </div>
     </aside>
