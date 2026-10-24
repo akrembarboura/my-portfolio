@@ -50,6 +50,93 @@ export default function TimelineScrollbar() {
     return () => observer.disconnect()
   }, [])
 
+  // ── SYNTHESIZED HAPTIC WEB AUDIO ENGINE ──
+  const audioCtxRef = useRef(null)
+  const lastSoundYRef = useRef(0)
+  const lastMilestoneIdxRef = useRef(-1)
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('portfolio_scroll_sound')
+      return saved !== null ? saved === 'true' : true
+    }
+    return true
+  })
+
+  // Initialize or resume AudioContext safely on user gesture
+  const initAudio = useCallback(() => {
+    if (typeof window === 'undefined') return null
+    try {
+      if (!audioCtxRef.current) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext
+        if (AudioCtx) {
+          audioCtxRef.current = new AudioCtx()
+        }
+      }
+      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume()
+      }
+      return audioCtxRef.current
+    } catch {
+      return null
+    }
+  }, [])
+
+  // Play micro mechanical haptic tick (ratchet feel)
+  const playTick = useCallback((pitch = 950) => {
+    if (!soundEnabled) return
+    const ctx = initAudio()
+    if (!ctx) return
+
+    try {
+      const now = ctx.currentTime
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+
+      osc.type = 'triangle'
+      osc.frequency.setValueAtTime(pitch, now)
+      osc.frequency.exponentialRampToValueAtTime(pitch * 0.45, now + 0.007)
+
+      gain.gain.setValueAtTime(0.032, now)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.007)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+
+      osc.start(now)
+      osc.stop(now + 0.008)
+    } catch {
+      // Audio safety fallback
+    }
+  }, [soundEnabled, initAudio])
+
+  // Play resonant milestone chime when entering a section
+  const playMilestoneChime = useCallback(() => {
+    if (!soundEnabled) return
+    const ctx = initAudio()
+    if (!ctx) return
+
+    try {
+      const now = ctx.currentTime
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(587.33, now) // D5
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.04) // Harmonic lift
+
+      gain.gain.setValueAtTime(0.05, now)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08)
+
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+
+      osc.start(now)
+      osc.stop(now + 0.09)
+    } catch {
+      // Audio safety fallback
+    }
+  }, [soundEnabled, initAudio])
+
   // Geometry dimensions: tight right-edge alignment
   const trackHeight = viewportHeight
   const CONTAINER_WIDTH = isMobile ? 60 : 250
@@ -114,9 +201,33 @@ export default function TimelineScrollbar() {
   const smoothY = useSpring(targetY, { stiffness: 220, damping: 26, mass: 0.55 })
   const [renderY, setRenderY] = useState(initialY)
 
+  // Spring animation change listener & audio trigger
   useEffect(() => {
-    return smoothY.on('change', (latest) => setRenderY(latest))
-  }, [smoothY])
+    return smoothY.on('change', (latest) => {
+      setRenderY(latest)
+
+      // Play haptic tick every 24px of smooth displacement
+      const diff = Math.abs(latest - lastSoundYRef.current)
+      if (diff >= 24) {
+        const isScrollingDown = latest >= lastSoundYRef.current
+        const pitch = isScrollingDown ? 1020 : 860
+        playTick(pitch)
+        lastSoundYRef.current = latest
+      }
+
+      // Check proximity to milestone markers for resonant chime
+      for (let i = 0; i < milestones.length; i++) {
+        const mY = milestones[i].ratio * trackHeight
+        if (Math.abs(latest - mY) < 10) {
+          if (lastMilestoneIdxRef.current !== i) {
+            playMilestoneChime()
+            lastMilestoneIdxRef.current = i
+          }
+          break
+        }
+      }
+    })
+  }, [smoothY, trackHeight, milestones, playTick, playMilestoneChime])
 
   // Sync scroll from page
   useEffect(() => {
@@ -161,6 +272,7 @@ export default function TimelineScrollbar() {
   // User scrub / drag handler
   const updateFromClientY = useCallback(
     (clientY, smoothWindowScroll = false) => {
+      initAudio()
       const localY = Math.min(trackHeight - 24, Math.max(24, clientY))
       const nextRatio = Math.min(1, Math.max(0, localY / trackHeight))
       const prevY = targetY.get()
@@ -176,7 +288,7 @@ export default function TimelineScrollbar() {
         behavior: smoothWindowScroll ? 'smooth' : 'auto',
       })
     },
-    [trackHeight, targetY]
+    [trackHeight, targetY, initAudio]
   )
 
   useEffect(() => {
@@ -209,6 +321,7 @@ export default function TimelineScrollbar() {
         className="pointer-events-auto absolute right-0 top-0 bottom-0 w-[36px] sm:w-[48px] cursor-ns-resize"
         onPointerDown={(e) => {
           e.preventDefault()
+          initAudio()
           setIsDragging(true)
           updateFromClientY(e.clientY, false)
         }}
@@ -301,6 +414,7 @@ export default function TimelineScrollbar() {
             type="button"
             onPointerDown={(e) => {
               e.stopPropagation()
+              initAudio()
               updateFromClientY(yPos, true)
             }}
             style={{
@@ -336,6 +450,7 @@ export default function TimelineScrollbar() {
         className="pointer-events-auto absolute z-30 cursor-grab active:cursor-grabbing"
         onPointerDown={(e) => {
           e.stopPropagation()
+          initAudio()
           setIsDragging(true)
           updateFromClientY(e.clientY, false)
         }}
@@ -390,6 +505,45 @@ export default function TimelineScrollbar() {
           </div>
         </div>
       </div>
+
+      {/* Discrete Haptic Sound Toggle Button */}
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation()
+          const next = !soundEnabled
+          setSoundEnabled(next)
+          localStorage.setItem('portfolio_scroll_sound', String(next))
+          if (next) {
+            initAudio()
+            playTick(1100)
+          }
+        }}
+        title={soundEnabled ? 'Mute scroll sound' : 'Enable scroll sound'}
+        aria-label={soundEnabled ? 'Mute scroll sound' : 'Enable scroll sound'}
+        className={`pointer-events-auto absolute bottom-3 right-1.5 sm:right-2.5 z-40 p-1.5 rounded-full backdrop-blur-md border transition-all duration-200 cursor-pointer ${
+          soundEnabled
+            ? isDark
+              ? 'bg-[#11161B]/85 text-lime-400 border-lime-500/40 hover:scale-110 shadow-sm shadow-lime-950/30'
+              : 'bg-white/85 text-blue-600 border-blue-500/40 hover:scale-110 shadow-sm shadow-blue-500/10'
+            : isDark
+            ? 'bg-zinc-950/60 text-zinc-500 border-zinc-800/60 hover:text-zinc-300'
+            : 'bg-white/60 text-slate-400 border-slate-200 hover:text-slate-600'
+        }`}
+      >
+        {soundEnabled ? (
+          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+          </svg>
+        ) : (
+          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <line x1="23" y1="9" x2="17" y2="15" />
+            <line x1="17" y1="9" x2="23" y2="15" />
+          </svg>
+        )}
+      </button>
     </aside>
   )
 }
