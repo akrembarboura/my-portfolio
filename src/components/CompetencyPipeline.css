@@ -1,0 +1,215 @@
+/* ============================================================================
+   EXECUTION PIPELINE — scoped layout & spacing
+   NOTE: index.css ships an unlayered `* { margin:0; padding:0 }` reset which
+   overrides Tailwind v4 spacing utilities. All spacing for this section lives
+   here (class selectors beat the universal reset).
+   ========================================================================== */
+
+#pipeline.pipeline {
+  --node: 56px;
+  --ball: 22px;
+  --ball-gap: 6px;
+  --arc-room: 4.5rem;
+  padding: 3.5rem 0 3rem;
+}
+
+@media (min-width: 640px) {
+  #pipeline.pipeline { --node: 76px; --ball: 28px; --ball-gap: 8px; --arc-room: 6rem; }
+}
+
+@media (min-width: 1024px) {
+  #pipeline.pipeline { --node: 92px; --ball: 32px; --ball-gap: 10px; --arc-room: 7rem; padding: 4.5rem 0 4rem; }
+}
+
+/* ── 1. Header ─────────────────────────────────────────────────────────── */
+.pipeline-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+@media (min-width: 768px) {
+  .pipeline-header { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 2rem; }
+}
+.pipeline-header .section-title { margin-top: 0.5rem; }
+.pipeline-sub { margin-top: 0.875rem; max-width: 640px; }
+
+.pipeline-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-1);
+  white-space: nowrap;
+  align-self: flex-start;
+}
+@media (min-width: 768px) { .pipeline-status { align-self: auto; } }
+
+/* ── 2. Animation stage ────────────────────────────────────────────────── */
+.pipeline-stage {
+  position: relative;
+  margin-top: 2.5rem;
+  padding-top: var(--arc-room);   /* clear airspace for the ball's arc */
+}
+@media (min-width: 1024px) { .pipeline-stage { margin-top: 3rem; } }
+
+.pipeline-track {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.pipeline-rail {
+  position: absolute;
+  left: 12.5%;
+  right: 12.5%;
+  top: calc(var(--node) / 2);
+  height: 2px;
+  transform: translateY(-50%);
+  background: var(--border-strong);
+  border-radius: 999px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.pipeline-ball-lane {
+  position: absolute;
+  top: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+.pipeline-ball-offset {
+  transform: translate(-50%, calc(-100% - var(--ball-gap)));
+}
+.pipeline-ball {
+  width: var(--ball);
+  height: var(--ball);
+}
+
+.pipeline-node-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0.25rem;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  border-radius: 12px;
+}
+.pipeline-node-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+
+.pipeline-node {
+  position: relative;
+  width: var(--node);
+  height: var(--node);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-0);              /* masks the rail behind the icon */
+  border: 1px solid var(--border-strong);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.pipeline-node.is-active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 6px var(--accent-glow), 0 10px 30px -10px rgba(200, 90, 60, 0.55);
+}
+.pipeline-node.is-done { border-color: rgba(200, 90, 60, 0.45); }
+
+.pipeline-node-label { margin-top: 1rem; }
+@media (min-width: 1024px) { .pipeline-node-label { margin-top: 1.25rem; } }
+.pipeline-node-stage { margin-top: 0.3rem; }
+
+/* ── 3. Details: editorial + deployment feed ───────────────────────────── */
+.pipeline-details {
+  display: grid;
+  gap: 2rem;
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 1024px) {
+  .pipeline-details { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 3.5rem; margin-top: 4.5rem; padding-top: 3rem; }
+}
+
+.pipeline-editorial { display: flex; flex-direction: column; }
+.pipeline-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; }
+.pipeline-title { margin-top: 1rem; }
+.pipeline-quote {
+  margin-top: 0.875rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--accent);
+}
+.pipeline-desc { margin-top: 1rem; max-width: 60ch; }
+.pipeline-tags { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 1.75rem; }
+
+.pipeline-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-1);
+  line-height: 1.4;
+}
+
+.pipeline-timer {
+  height: 2px;
+  margin-top: 2rem;
+  border-radius: 999px;
+  background: var(--border);
+  overflow: hidden;
+}
+
+/* Terminal */
+.pipeline-terminal {
+  border-radius: 14px;
+  border: 1px dashed var(--border-strong);
+  background: var(--bg-1);
+  padding: 1.25rem;
+  overflow: hidden;
+  align-self: start;
+}
+@media (min-width: 640px) { .pipeline-terminal { padding: 1.5rem; } }
+
+.pipeline-term-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-bottom: 0.875rem;
+  border-bottom: 1px dashed var(--border-strong);
+}
+.pipeline-term-env {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed var(--border);
+}
+.pipeline-term-logs { display: flex; flex-direction: column; gap: 0.375rem; padding-top: 0.875rem; }
+.pipeline-term-line {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  border-left: 2px solid transparent;
+}
+.pipeline-term-line.is-current { background: var(--accent-glow); border-left-color: var(--accent); }
+.pipeline-term-foot {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border);
+}
+.pipeline-chip { padding: 0.15rem 0.55rem; border-radius: 999px; }
+.pipeline-toggle { padding: 0.15rem 0.55rem; border-radius: 6px; border: 1px dashed var(--border-strong); background: none; cursor: pointer; }
+
+.pipeline-hint { margin-top: 2.5rem; }
