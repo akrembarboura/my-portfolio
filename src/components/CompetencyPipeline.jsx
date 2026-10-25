@@ -183,7 +183,7 @@ export default function CompetencyPipeline() {
 
         {/* ── EXPANSIVE BORDERLESS ANIMATION STAGE (NO CADRES / GENEROUS ELEVATION) ── */}
         <div
-          className="relative overflow-visible w-full pt-14 sm:pt-20 md:pt-24 pb-8 sm:pb-12 md:pb-14 my-2 sm:my-4"
+          className="relative overflow-visible w-full pt-14 sm:pt-20 md:pt-24 pb-12 sm:pb-18 md:pb-24 mt-2 sm:mt-4 mb-4 sm:mb-8 md:mb-12"
         >
           {/* Inner Grid with Anchored Center Rail & Jumping Ball */}
           <div className="relative z-10 grid grid-cols-4 gap-1 sm:gap-4 md:gap-8 items-start justify-items-center">
@@ -335,7 +335,7 @@ export default function CompetencyPipeline() {
         </div>
 
         {/* ── BORDERLESS EDITORIAL EXPLANATION & LIVE FEED (NO HEAVY BOXES / CADRES) ── */}
-        <div className="grid gap-6 lg:gap-8 lg:grid-cols-[1.7fr_1fr] pt-4">
+        <div className="grid gap-6 lg:gap-8 lg:grid-cols-[1.7fr_1fr] pt-6 sm:pt-10 md:pt-14">
 
           {/* Clean Borderless Stage Description */}
           <div className="relative flex flex-col justify-between">
