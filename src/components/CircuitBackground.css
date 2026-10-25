@@ -159,6 +159,153 @@
   50% { opacity: 0; }
 }
 
+/* ── Circuit Section Dividers ────────────────────────────────────────────── */
+.circuit-divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 0.65rem;
+  opacity: 0.55;
+  transition: opacity 0.5s ease;
+}
+
+.circuit-divider.visible {
+  opacity: 1;
+}
+
+.circuit-divider-terminal {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  flex-shrink: 0;
+  transition: background-color 0.5s ease, transform 0.5s ease;
+}
+
+.circuit-divider.visible .circuit-divider-terminal {
+  background: var(--circuit-line-primary);
+}
+
+.circuit-divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  transform: scaleX(0.35);
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.5s ease;
+}
+
+.circuit-divider-line--left {
+  transform-origin: right center;
+}
+
+.circuit-divider-line--right {
+  transform-origin: left center;
+}
+
+.circuit-divider.visible .circuit-divider-line {
+  transform: scaleX(1);
+}
+
+.circuit-divider-via {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  background: var(--bg-0);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transform: scale(0.8);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.circuit-divider-via-core {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  transition: background-color 0.5s ease;
+}
+
+.circuit-divider.visible .circuit-divider-via {
+  transform: scale(1);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.circuit-divider.visible .circuit-divider-via-core {
+  background: var(--accent);
+}
+
+/* ── Hero Avatar Circuit Halo & About Spacing ────────────────────────────── */
+.about-role-line {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-avatar-frame {
+  position: relative;
+}
+
+.hero-avatar-halo {
+  position: absolute;
+  inset: -4%;
+  width: 108%;
+  height: 108%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.75;
+}
+
+.hero-avatar-img {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-avatar-ring-spin {
+  transform-origin: 200px 200px;
+  animation: avatarHaloSpin 42s linear infinite;
+}
+
+@keyframes avatarHaloSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── Timeline Concentric Circuit Via Nodes ───────────────────────────────── */
+.timeline-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  left: calc(-2.5rem - 1px);
+  background: var(--bg-0);
+  border: 1.75px solid var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-glow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.timeline-dot-core {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.timeline-item:hover .timeline-dot {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 6px var(--accent-glow);
+}
+
+/* ── Light Mode Badge Contrast Fix ───────────────────────────────────────── */
+:root[data-theme="light"] .badge-type-personal {
+  background: rgba(26, 26, 25, 0.07);
+  color: var(--text-1);
+  border: 1px solid rgba(26, 26, 25, 0.18);
+}
+
 /* Ensure main content sits cleanly above fixed background */
 main {
   position: relative;
@@ -171,7 +318,8 @@ main {
 
 @media (prefers-reduced-motion: reduce) {
   .circuit-pulse-trace,
-  .portfolio-intro-cursor {
+  .portfolio-intro-cursor,
+  .hero-avatar-ring-spin {
     animation: none;
   }
   .circuit-pulse-trace {

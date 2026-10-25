@@ -21,6 +21,7 @@ export default function Contact() {
   })
 
   const headerRef = useScrollReveal()
+  const infoRef = useScrollReveal()
   const formRef = useScrollReveal()
 
   const handleChange = (e) => {
@@ -104,7 +105,7 @@ export default function Contact() {
   return (
     <section id="contact">
       <div className="container">
-        <div ref={headerRef}>
+        <div ref={headerRef} className="reveal">
           <p className="section-label">Get In Touch</p>
           <h2 className="section-title">
             Let's Build Something<br />Together
@@ -116,13 +117,13 @@ export default function Contact() {
         </div>
 
         <div className="contact-grid">
-          <div className="contact-info">
+          <div className="contact-info reveal-left" ref={infoRef}>
             {contactInfo.map((item) => (
               <ContactInfoItem key={item.id} {...item} />
             ))}
           </div>
 
-          <div className="contact-form" ref={formRef}>
+          <div className="contact-form reveal-right" ref={formRef}>
             {!submitted ? (
               <form id="formContent" onSubmit={handleSubmit}>
                 <h3 className="form-title" style={{ fontSize: '1.125rem' }}>Start a conversation</h3>

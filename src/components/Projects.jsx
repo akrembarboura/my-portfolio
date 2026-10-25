@@ -40,7 +40,7 @@ export default function Projects() {
     <section id="projects">
       <div className="container">
         
-        <div ref={headerRef}>
+        <div ref={headerRef} className="reveal">
           <p className="section-label">Selected Work</p>
           <h2 className="section-title">Featured Projects</h2>
           <p className="section-sub">

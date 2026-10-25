@@ -9,7 +9,7 @@ export default function Experience() {
   return (
     <section id="experience" className="experience-section">
       <div className="container">
-        <div ref={headerRef}>
+        <div ref={headerRef} className="reveal">
           <p className="section-label">Journey</p>
           <h2 className="section-title">Experience & Background</h2>
           <p className="section-sub">
@@ -19,8 +19,8 @@ export default function Experience() {
         </div>
 
         <div className="timeline" ref={listRef}>
-          {timeline.map((item) => (
-            <TimelineItem key={item.id} {...item} />
+          {timeline.map((item, idx) => (
+            <TimelineItem key={item.id} index={idx} {...item} />
           ))}
         </div>
       </div>

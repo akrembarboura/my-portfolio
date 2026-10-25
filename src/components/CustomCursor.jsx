@@ -1,79 +1,93 @@
 import { useEffect, useRef } from 'react'
 
+const INTERACTIVE_SELECTOR = 'a, button, input, textarea, [role="button"]'
+
 // Custom cursor with smooth trailing ring — only visible on non-touch/pointer devices
 export default function CustomCursor() {
   const cursorRef = useRef(null)
   const ringRef = useRef(null)
 
-  // Store the ACTUAL mouse position
   const mouse = useRef({ x: -100, y: -100 })
-  // Store the LAGGED ring position for smooth follow
   const ring = useRef({ x: -100, y: -100 })
   const animId = useRef(null)
 
   useEffect(() => {
-    // Hide on touch devices
     if ('ontouchstart' in window || !window.matchMedia('(pointer: fine)').matches) return
 
     const cursor = cursorRef.current
     const ringEl = ringRef.current
     if (!cursor || !ringEl) return
 
-    // Make both cursors visible initially
     cursor.style.opacity = '1'
-    ringEl.style.opacity = '1'
+    ringEl.style.opacity = '0.55'
 
     const handleMove = (e) => {
       mouse.current = { x: e.clientX, y: e.clientY }
-      // Move the dot instantly (no delay)
-      cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
+      cursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`
     }
 
-    // Smooth lerp loop for the trailing ring
     const lerp = (a, b, t) => a + (b - a) * t
-    const LERP_FACTOR = 0.12 // lower = more lag, higher = snappier
+    const LERP_FACTOR = 0.14
 
     const animate = () => {
       ring.current.x = lerp(ring.current.x, mouse.current.x, LERP_FACTOR)
       ring.current.y = lerp(ring.current.y, mouse.current.y, LERP_FACTOR)
-      ringEl.style.transform = `translate(${ring.current.x}px, ${ring.current.y}px)`
+      ringEl.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0)`
       animId.current = requestAnimationFrame(animate)
     }
 
-    // Hover effects — scale cursor/ring on interactive elements
-    const handleEnter = () => {
-      cursor.style.width = '6px'
-      cursor.style.height = '6px'
-      ringEl.style.width = '52px'
-      ringEl.style.height = '52px'
-      ringEl.style.borderColor = 'var(--accent-2)'
-      ringEl.style.opacity = '0.8'
-    }
-    const handleLeave = () => {
-      cursor.style.width = '10px'
-      cursor.style.height = '10px'
-      ringEl.style.width = '36px'
-      ringEl.style.height = '36px'
-      ringEl.style.borderColor = 'var(--accent)'
-      ringEl.style.opacity = '0.5'
+    const setHoverState = (active) => {
+      if (active) {
+        cursor.style.width = '6px'
+        cursor.style.height = '6px'
+        cursor.style.marginLeft = '-3px'
+        cursor.style.marginTop = '-3px'
+        ringEl.style.width = '48px'
+        ringEl.style.height = '48px'
+        ringEl.style.marginLeft = '-24px'
+        ringEl.style.marginTop = '-24px'
+        ringEl.style.borderColor = 'var(--accent)'
+        ringEl.style.opacity = '0.85'
+      } else {
+        cursor.style.width = '9px'
+        cursor.style.height = '9px'
+        cursor.style.marginLeft = '-4.5px'
+        cursor.style.marginTop = '-4.5px'
+        ringEl.style.width = '34px'
+        ringEl.style.height = '34px'
+        ringEl.style.marginLeft = '-17px'
+        ringEl.style.marginTop = '-17px'
+        ringEl.style.borderColor = 'var(--accent)'
+        ringEl.style.opacity = '0.55'
+      }
     }
 
-    document.addEventListener('mousemove', handleMove)
+    const handlePointerOver = (e) => {
+      if (e.target instanceof Element && e.target.closest(INTERACTIVE_SELECTOR)) {
+        setHoverState(true)
+      }
+    }
+
+    const handlePointerOut = (e) => {
+      if (
+        e.target instanceof Element &&
+        e.target.closest(INTERACTIVE_SELECTOR) &&
+        (!(e.relatedTarget instanceof Element) || !e.relatedTarget.closest(INTERACTIVE_SELECTOR))
+      ) {
+        setHoverState(false)
+      }
+    }
+
+    document.addEventListener('mousemove', handleMove, { passive: true })
+    document.addEventListener('mouseover', handlePointerOver, { passive: true })
+    document.addEventListener('mouseout', handlePointerOut, { passive: true })
     animId.current = requestAnimationFrame(animate)
-
-    const hoverTargets = document.querySelectorAll('a, button, .project-card, .skill-category')
-    hoverTargets.forEach((el) => {
-      el.addEventListener('mouseenter', handleEnter)
-      el.addEventListener('mouseleave', handleLeave)
-    })
 
     return () => {
       document.removeEventListener('mousemove', handleMove)
-      cancelAnimationFrame(animId.current)
-      hoverTargets.forEach((el) => {
-        el.removeEventListener('mouseenter', handleEnter)
-        el.removeEventListener('mouseleave', handleLeave)
-      })
+      document.removeEventListener('mouseover', handlePointerOver)
+      document.removeEventListener('mouseout', handlePointerOut)
+      if (animId.current) cancelAnimationFrame(animId.current)
     }
   }, [])
 
@@ -87,17 +101,16 @@ export default function CustomCursor() {
           position: 'fixed',
           top: 0,
           left: 0,
-          width: '10px',
-          height: '10px',
+          width: '9px',
+          height: '9px',
           background: 'var(--accent)',
           borderRadius: '50%',
           pointerEvents: 'none',
           zIndex: 9998,
-          transform: 'translate(-100px, -100px)',
-          marginLeft: '-5px',
-          marginTop: '-5px',
-          transition: 'width 0.2s ease, height 0.2s ease',
-          mixBlendMode: 'screen',
+          transform: 'translate3d(-100px, -100px, 0)',
+          marginLeft: '-4.5px',
+          marginTop: '-4.5px',
+          transition: 'width 0.2s ease, height 0.2s ease, margin 0.2s ease',
           opacity: 0,
           willChange: 'transform',
         }}
@@ -110,16 +123,16 @@ export default function CustomCursor() {
           position: 'fixed',
           top: 0,
           left: 0,
-          width: '36px',
-          height: '36px',
+          width: '34px',
+          height: '34px',
           border: '1.5px solid var(--accent)',
           borderRadius: '50%',
           pointerEvents: 'none',
           zIndex: 9997,
-          transform: 'translate(-100px, -100px)',
-          marginLeft: '-18px',
-          marginTop: '-18px',
-          transition: 'width 0.25s ease, height 0.25s ease, border-color 0.2s ease, opacity 0.2s ease',
+          transform: 'translate3d(-100px, -100px, 0)',
+          marginLeft: '-17px',
+          marginTop: '-17px',
+          transition: 'width 0.22s ease, height 0.22s ease, margin 0.22s ease, border-color 0.2s ease, opacity 0.2s ease',
           opacity: 0,
           willChange: 'transform',
         }}

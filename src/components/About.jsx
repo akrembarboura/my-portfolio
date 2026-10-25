@@ -35,7 +35,7 @@ export default function About() {
         <div className="about-grid">
 
           {/* ── Text Column ── */}
-          <div className="about-text reveal-right" ref={textRef}>
+          <div className="about-text reveal-left" ref={textRef}>
             <p className="section-label">About Me</p>
 
             <h2 className="section-title">
@@ -45,7 +45,7 @@ export default function About() {
               </span>
             </h2>
 
-            <p className="text-[clamp(1rem,1.2vw,1.25rem)] text-text-2 mb-7 min-h-[2em] mt-4 font-mono">
+            <p className="about-role-line text-[clamp(1rem,1.2vw,1.25rem)] text-text-2 min-h-[2em] font-mono">
               {'>'} I'm a <span className="text-text-1 font-semibold">{typedText}</span>
               <span className="inline-block w-[6px] h-[1em] bg-accent ml-[4px] align-text-bottom animate-pulse" />
             </p>
@@ -55,8 +55,6 @@ export default function About() {
               MongoDB — writing code that connects clean user interfaces to well-structured APIs.
               I care about both sides of the stack equally.
             </p>
-
-            
 
             {/* Action buttons — clear primary / secondary hierarchy */}
             <div className="about-actions">
@@ -77,9 +75,10 @@ export default function About() {
             </div>
           </div>
 
-          {/* ── Image Column: HeroAvatar with orbital icons ── */}
+          {/* ── Image Column: HeroAvatar with circuit halo ── */}
           <div
             ref={imageRef}
+            className="reveal-right"
             style={{
               display: 'flex',
               justifyContent: 'center',
