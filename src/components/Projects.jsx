@@ -2,16 +2,20 @@ import { useEffect, useState } from 'react'
 import useScrollReveal from '../hooks/useScrollReveal'
 import ProjectCard from './ProjectCard'
 import featuredProjects from '../data/featuredProjects'
-import { supabase } from '../supabaseClient'
+import { supabase, BACKEND_ENABLED } from '../supabaseClient'
 
 export default function Projects() {
   const headerRef = useScrollReveal()
   const gridRef = useScrollReveal()
   
   const [experiments, setExperiments] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(BACKEND_ENABLED)
 
   useEffect(() => {
+    if (!BACKEND_ENABLED || !supabase) {
+      return
+    }
+
     async function fetchExperiments() {
       try {
         const { data, error } = await supabase

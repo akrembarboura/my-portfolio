@@ -2,7 +2,7 @@ import { useState } from 'react'
 import useScrollReveal from '../hooks/useScrollReveal'
 import ContactInfoItem from './ContactInfoItem'
 import contactInfo from '../data/contact.jsx'
-import { supabase } from '../supabaseClient'
+import { supabase, BACKEND_ENABLED } from '../supabaseClient'
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false)
@@ -56,11 +56,34 @@ export default function Contact() {
     setSending(true)
     setErrorMessage('')
 
+    const fullName = `${formData.firstName} ${formData.lastName}`.trim()
+
+    // When backend is hidden/disabled, fall back cleanly to mailto without network errors
+    if (!BACKEND_ENABLED || !supabase) {
+      const subject = encodeURIComponent(
+        formData.subject ? `[Portfolio] ${formData.subject} — ${fullName}` : `[Portfolio Inquiry] from ${fullName}`
+      )
+      const bodyLines = [
+        `Name: ${fullName}`,
+        `Email: ${formData.email}`,
+        formData.location ? `Location: ${formData.location}` : null,
+        formData.subject ? `Project Type: ${formData.subject}` : null,
+        '',
+        formData.message
+      ].filter((line) => line !== null)
+      const body = encodeURIComponent(bodyLines.join('\n'))
+
+      window.location.href = `mailto:akrembarboura@gmail.com?subject=${subject}&body=${body}`
+      setSending(false)
+      setSubmitted(true)
+      return
+    }
+
     const { error } = await supabase
       .from('contact_messages')
       .insert([
         {
-          name: `${formData.firstName} ${formData.lastName}`.trim(),
+          name: fullName,
           email: formData.email,
           location: formData.location,
           projectType: formData.subject,
@@ -243,4 +266,4 @@ export default function Contact() {
       </div>
     </section>
   )
-}
+}
