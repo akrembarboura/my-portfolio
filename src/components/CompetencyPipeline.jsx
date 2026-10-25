@@ -143,7 +143,6 @@ function useIsMobile(breakpoint = 640) {
 export default function CompetencyPipeline() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [showLogs, setShowLogs] = useState(true)
-  const [paused, setPaused] = useState(false)
   const isMobile = useIsMobile()
   const reduceMotion = useReducedMotion()
   const tabRefs = useRef([])
@@ -161,14 +160,13 @@ export default function CompetencyPipeline() {
     [activeIndex]
   )
 
-  // Auto-advance (paused on hover / keyboard focus — WCAG 2.2.2)
+  // Auto-advance continuously (keeps running while the user is in the section)
   useEffect(() => {
-    if (paused) return undefined
     const timer = setTimeout(() => {
       setActiveIndex((curr) => (curr + 1) % phases.length)
     }, JUMP_INTERVAL)
     return () => clearTimeout(timer)
-  }, [activeIndex, paused])
+  }, [activeIndex])
 
   // Arrow-key navigation between phase tabs
   const onTabKeyDown = useCallback((e) => {
@@ -187,12 +185,6 @@ export default function CompetencyPipeline() {
       id="pipeline"
       className="pipeline w-full"
       aria-labelledby="pipeline-title"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) setPaused(false)
-      }}
     >
       <div className="container">
 
@@ -210,10 +202,8 @@ export default function CompetencyPipeline() {
           </div>
 
           <div className="pipeline-status font-mono text-xs text-text-2" aria-live="polite">
-            <span className={`w-2 h-2 rounded-full bg-emerald-500 ${paused ? '' : 'animate-pulse'}`} />
-            <span className="font-semibold text-text-1 tracking-wider">
-              {paused ? 'PIPELINE PAUSED' : 'PIPELINE ACTIVE'}
-            </span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-semibold text-text-1 tracking-wider">PIPELINE ACTIVE</span>
             <span className="text-text-3">{active.id}/0{phases.length}</span>
           </div>
         </header>
@@ -376,7 +366,7 @@ export default function CompetencyPipeline() {
 
             {/* Auto-advance progress (makes the timing visible & predictable) */}
             <div className="pipeline-timer" aria-hidden="true">
-              {!paused && !reduceMotion && (
+              {!reduceMotion && (
                 <motion.div
                   key={`timer-${activeIndex}`}
                   className="h-full bg-accent/70"
@@ -450,7 +440,7 @@ export default function CompetencyPipeline() {
         </div>
 
         <p className="pipeline-hint text-center font-mono text-[11px] text-text-3 uppercase tracking-wider">
-          {isMobile ? 'Tap a phase to explore' : 'Click a phase or use ← → keys'} · Hover to pause
+          {isMobile ? 'Tap a phase to explore' : 'Click a phase or use ← → keys'} · Auto-cycles every {JUMP_INTERVAL / 1000}s
         </p>
       </div>
     </section>
