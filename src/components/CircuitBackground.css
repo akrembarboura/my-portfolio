@@ -1,0 +1,180 @@
+/* ============================================================================
+   CIRCUIT SYSTEM — Shared Styles for Full-Page Background & Opening Intro
+   Adapts automatically to Dark Mode ([data-theme="dark"]) and
+   Light Mode ([data-theme="light"]).
+   ========================================================================== */
+
+:root[data-theme="dark"] {
+  --circuit-line-primary: rgba(252, 250, 248, 0.11);
+  --circuit-line-secondary: rgba(252, 250, 248, 0.055);
+  --circuit-line-faint: rgba(252, 250, 248, 0.03);
+  --circuit-intro-primary: rgba(252, 250, 248, 0.22);
+  --circuit-intro-secondary: rgba(252, 250, 248, 0.11);
+  --circuit-node-fill: #1A1A19;
+  --circuit-pulse: rgba(200, 90, 60, 0.45);
+  --circuit-ambient-top: rgba(16, 185, 129, 0.06);
+  --circuit-ambient-side: rgba(200, 90, 60, 0.045);
+}
+
+:root[data-theme="light"],
+:root {
+  --circuit-line-primary: rgba(26, 26, 25, 0.10);
+  --circuit-line-secondary: rgba(26, 26, 25, 0.055);
+  --circuit-line-faint: rgba(26, 26, 25, 0.03);
+  --circuit-intro-primary: rgba(26, 26, 25, 0.20);
+  --circuit-intro-secondary: rgba(26, 26, 25, 0.10);
+  --circuit-node-fill: #FCFAF8;
+  --circuit-pulse: rgba(200, 90, 60, 0.42);
+  --circuit-ambient-top: rgba(200, 90, 60, 0.05);
+  --circuit-ambient-side: rgba(26, 26, 25, 0.035);
+}
+
+/* ── Persistent Viewport Background ──────────────────────────────────────── */
+.circuit-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  user-select: none;
+  background:
+    radial-gradient(ellipse 45% 22% at 50% 0%, var(--circuit-ambient-top) 0%, transparent 75%),
+    radial-gradient(ellipse 40% 50% at 0% 55%, var(--circuit-ambient-side) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 50% at 100% 45%, var(--circuit-ambient-side) 0%, transparent 70%);
+}
+
+.circuit-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+/* ── Shared Trace Layers ─────────────────────────────────────────────────── */
+.circuit-layer-faint {
+  stroke: var(--circuit-line-faint);
+  color: var(--circuit-line-faint);
+  transition: stroke 0.4s ease, color 0.4s ease;
+}
+
+.circuit-layer-secondary {
+  stroke: var(--circuit-line-secondary);
+  color: var(--circuit-line-secondary);
+  transition: stroke 0.4s ease, color 0.4s ease;
+}
+
+.circuit-layer-primary {
+  stroke: var(--circuit-line-primary);
+  color: var(--circuit-line-primary);
+  transition: stroke 0.4s ease, color 0.4s ease;
+}
+
+/* Slightly higher contrast when rendered inside the opening intro */
+.circuit-svg--intro .circuit-layer-secondary {
+  stroke: var(--circuit-intro-secondary);
+  color: var(--circuit-intro-secondary);
+}
+
+.circuit-svg--intro .circuit-layer-primary {
+  stroke: var(--circuit-intro-primary);
+  color: var(--circuit-intro-primary);
+}
+
+.circuit-node-ring {
+  fill: var(--circuit-node-fill);
+  transition: fill 0.4s ease, stroke 0.4s ease;
+}
+
+.circuit-node-core {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* ── Traveling Signal Pulses ─────────────────────────────────────────────── */
+.circuit-pulse-trace {
+  fill: none;
+  stroke: var(--circuit-pulse);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 90 900;
+  stroke-dashoffset: 990;
+  animation: circuitSignalFlow 11s linear infinite;
+}
+
+.circuit-svg--intro .circuit-pulse-trace {
+  stroke: var(--accent, #C85A3C);
+  animation-duration: 2.2s;
+}
+
+.circuit-pulse-trace.delay-1 {
+  animation-delay: -3.5s;
+}
+
+.circuit-pulse-trace.delay-2 {
+  animation-delay: -7s;
+}
+
+.circuit-pulse-trace.delay-3 {
+  animation-delay: -10.5s;
+}
+
+@keyframes circuitSignalFlow {
+  0% {
+    stroke-dashoffset: 990;
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  85% {
+    opacity: 0.9;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+/* ── Opening Intro Overlay & Cursor ──────────────────────────────────────── */
+.portfolio-intro-overlay {
+  background-color: var(--bg-0, #1A1A19);
+  color: var(--text-1, #FCFAF8);
+}
+
+.portfolio-intro-cursor {
+  display: inline-block;
+  width: 2.5px;
+  height: 1.12em;
+  background-color: var(--accent, #C85A3C);
+  margin-left: 0.18em;
+  vertical-align: middle;
+  box-shadow: 0 0 12px var(--accent, #C85A3C);
+  animation: introCursorBlink 0.75s ease-in-out infinite;
+}
+
+@keyframes introCursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Ensure main content sits cleanly above fixed background */
+main {
+  position: relative;
+  z-index: 1;
+}
+
+#experience.experience-section {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circuit-pulse-trace,
+  .portfolio-intro-cursor {
+    animation: none;
+  }
+  .circuit-pulse-trace {
+    opacity: 0;
+  }
+}

@@ -1,0 +1,202 @@
+/* ============================================================================
+   TECHNICAL STACK SECTION — Minimal Technology-Logo Grid
+   Scoped class rules ensure spacing works cleanly alongside index.css resets
+   and uses the portfolio's established design tokens.
+   ========================================================================== */
+
+#skills.stack-section {
+  padding: 5rem 0 5.5rem;
+}
+
+@media (min-width: 768px) {
+  #skills.stack-section {
+    padding: 6rem 0 6.5rem;
+  }
+}
+
+/* ── Section Header ──────────────────────────────────────────────────────── */
+.stack-header {
+  max-width: 620px;
+  margin-bottom: 2.75rem;
+}
+
+@media (min-width: 768px) {
+  .stack-header {
+    margin-bottom: 3.5rem;
+  }
+}
+
+.stack-header .section-sub {
+  margin-bottom: 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+@media (min-width: 640px) {
+  .stack-header .section-sub {
+    font-size: 1.0625rem;
+  }
+}
+
+/* ── Category Groups ─────────────────────────────────────────────────────── */
+.stack-groups {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border-strong);
+}
+
+.stack-group {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (min-width: 640px) {
+  .stack-group {
+    gap: 1.5rem;
+    padding: 2.25rem 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .stack-group {
+    grid-template-columns: 220px minmax(0, 1fr);
+    align-items: start;
+    gap: 2.5rem;
+    padding: 2.5rem 0;
+  }
+}
+
+/* ── Category Meta (Left Column) ─────────────────────────────────────────── */
+.stack-group-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stack-group-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 0.625rem;
+}
+
+.stack-group-index {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.stack-group-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-1);
+}
+
+.stack-group-caption {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--text-3);
+}
+
+/* ── Logo Grid (Right Column) ────────────────────────────────────────────── */
+.stack-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 0.625rem;
+}
+
+@media (min-width: 480px) {
+  .stack-grid {
+    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+    gap: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .stack-grid {
+    grid-template-columns: repeat(auto-fill, minmax(116px, 1fr));
+    gap: 0.875rem;
+  }
+}
+
+/* ── Individual Technology Tile ──────────────────────────────────────────── */
+.stack-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  min-height: 88px;
+  padding: 1.125rem 0.625rem 0.95rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-1);
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .stack-item {
+    min-height: 96px;
+    padding: 1.25rem 0.75rem 1.05rem;
+    gap: 0.7rem;
+  }
+}
+
+/* ── Logo Icon (Always Real Brand Colors) ────────────────────────────────── */
+.stack-item-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--skill-color, var(--text-1));
+  opacity: 1;
+  flex-shrink: 0;
+}
+
+.stack-item-logo svg {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .stack-item-logo {
+    width: 30px;
+    height: 30px;
+  }
+  .stack-item-logo svg {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ── Technology Label ────────────────────────────────────────────────────── */
+.stack-item-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  color: var(--text-2);
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 640px) {
+  .stack-item-name {
+    font-size: 0.8125rem;
+  }
+}
+

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import PortfolioIntro from './PortfolioIntro'
 import CustomCursor from './CustomCursor'
+import CircuitBackground from './CircuitBackground'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import TimelineScrollbar from './TimelineScrollbar'
@@ -23,6 +24,7 @@ export default function Layout() {
         <>
             <PortfolioIntro />
             <CustomCursor />
+            <CircuitBackground />
             <Navbar darkMode={darkMode} onToggleTheme={toggleTheme} />
             <TimelineScrollbar />
             <main>
