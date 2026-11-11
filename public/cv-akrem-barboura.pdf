@@ -1,0 +1,114 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 6944 >>
+stream
+BT /F2 20 Tf 40 800 Td (AKREM BARBOURA) Tj ET
+0.145 0.388 0.922 RG 2 w 40 794 m 555 794 l S
+BT /F1 11 Tf 0.145 0.388 0.922 rg 40 782 Td (Full-Stack Web Engineer | Distributed Systems & Architecture Specialist) Tj ET
+BT /F1 8.5 Tf 0.28 0.33 0.41 rg 40 768 Td (Tunis, Tunisia \(UTC+1 / CET\) | Open to Remote Worldwide | akrembarboura316@gmail.com | github.com/akrembarboura) Tj ET
+BT /F2 10.5 Tf 0.06 0.09 0.16 rg 40 748 Td (EXECUTIVE SUMMARY) Tj ET
+0.85 0.88 0.92 RG 0.75 w 40 745 m 555 745 l S
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg
+40 734 Td (Full-Stack Engineer with extensive production experience building resilient web applications using React 19,) Tj
+0 0 Td
+40 722 Td (Next.js 15, TypeScript, and Node.js. Proven ability to design robust backend APIs and scalable) Tj
+0 0 Td
+40 710 Td (PostgreSQL/MongoDB architectures, backed by modern responsive interfaces. Experienced in asynchronous remote) Tj
+0 0 Td
+40 698 Td (collaboration with full European overlap and 4-6 hours active overlap with US East Coast engineering teams.) Tj
+ET
+BT /F2 10.5 Tf 0.06 0.09 0.16 rg 40 681.5 Td (TECHNICAL PROFICIENCIES) Tj ET
+0.85 0.88 0.92 RG 0.75 w 40 678.5 m 555 678.5 l S
+BT /F2 8.5 Tf 0.1 0.15 0.25 rg 40 667.5 Td (Frontend:) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 130 667.5 Td (React 19, Next.js 15 \(App Router, RSC, Server Actions\), TypeScript, TanStack Start, Tailwind CSS v4, Framer Motion) Tj ET
+BT /F2 8.5 Tf 0.1 0.15 0.25 rg 40 655 Td (Backend & DB:) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 130 655 Td (Node.js, Express.js, RESTful APIs, Supabase \(Auth, RLS, Storage\), PostgreSQL, Prisma ORM, MongoDB) Tj ET
+BT /F2 8.5 Tf 0.1 0.15 0.25 rg 40 642.5 Td (DevOps & Tools:) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 130 642.5 Td (Git, GitHub, Vercel, Docker basics, Vite 8, ESLint, Postman, CI/CD automated workflows) Tj ET
+BT /F2 8.5 Tf 0.1 0.15 0.25 rg 40 630 Td (Remote Delivery:) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 130 630 Td (Async-first communication, clear PR documentation, Loom video walk-throughs, Linear, Slack, Notion) Tj ET
+BT /F2 10.5 Tf 0.06 0.09 0.16 rg 40 613.5 Td (PRODUCTION EXPERIENCE) Tj ET
+0.85 0.88 0.92 RG 0.75 w 40 610.5 m 555 610.5 l S
+BT /F2 9.5 Tf 0.06 0.09 0.16 rg 40 599.5 Td (Freelance Full-Stack Developer) Tj ET
+BT /F1 9 Tf 0.145 0.388 0.922 rg 180 599.5 Td ( |  Remote Worldwide) Tj ET
+BT /F1 8.5 Tf 0.4 0.45 0.55 rg 480 599.5 Td (2024  Present) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 587.5 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 587.5 Td (Engineered and shipped 5+ full-stack web applications for commercial clients across North Africa and Europe.) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 576 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 576 Td (Designed performant SSR & static generation architectures with Next.js 15, reducing FCP to <0.8s.) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 564.5 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 564.5 Td (Implemented role-based access control \(RBAC\) and row-level security policies with Supabase and PostgreSQL.) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 553 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 553 Td (Led complete technical delivery from scoping and database schema design to automated Vercel deployments.) Tj ET
+BT /F2 9.5 Tf 0.06 0.09 0.16 rg 40 537.5 Td (Full-Stack Architecture & Systems) Tj ET
+BT /F1 9 Tf 0.145 0.388 0.922 rg 180 537.5 Td ( |  Self-Directed Deep Dive) Tj ET
+BT /F1 8.5 Tf 0.4 0.45 0.55 rg 480 537.5 Td (2023  2024) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 525.5 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 525.5 Td (Completed rigorous specialization in scalable distributed architectures and strict TypeScript engineering.) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 514 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 514 Td (Architected end-to-end full-stack prototypes focusing on database indexing, API security, and state management.) Tj ET
+BT /F2 10.5 Tf 0.06 0.09 0.16 rg 40 494.5 Td (FEATURED PROJECTS) Tj ET
+0.85 0.88 0.92 RG 0.75 w 40 491.5 m 555 491.5 l S
+BT /F2 9.5 Tf 0.06 0.09 0.16 rg 40 480.5 Td (LOC MAISON) Tj ET
+BT /F1 9 Tf 0.145 0.388 0.922 rg 180 480.5 Td ( |  Rental Marketplace) Tj ET
+BT /F1 8.5 Tf 0.4 0.45 0.55 rg 480 480.5 Td (Next.js 15, React 19, TS, MongoDB) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 468.5 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 468.5 Td (Tunisian managed rental platform connecting tenants with verified property listings \(location-match.vercel.app\).) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 457 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 457 Td (Built faceted search filters, responsive photo galleries, and automated landlord inquiry pipelines.) Tj ET
+BT /F2 9.5 Tf 0.06 0.09 0.16 rg 40 442.5 Td (EDUPOWER PORTAL) Tj ET
+BT /F1 9 Tf 0.145 0.388 0.922 rg 180 442.5 Td ( |  Full-Stack LMS Platform) Tj ET
+BT /F1 8.5 Tf 0.4 0.45 0.55 rg 480 442.5 Td (TanStack Start, React 19, Supabase, Postgres) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 430.5 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 430.5 Td (Structured course management with interactive student quizzes, analytics tracking, and AI study flashcards.) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 419 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 419 Td (Implemented strict Supabase PostgreSQL Row Level Security to isolate student and instructor privileges.) Tj ET
+BT /F2 9.5 Tf 0.06 0.09 0.16 rg 40 404.5 Td (CAFÉ 716+) Tj ET
+BT /F1 9 Tf 0.145 0.388 0.922 rg 180 404.5 Td ( |  Digital Hospitality Platform) Tj ET
+BT /F1 8.5 Tf 0.4 0.45 0.55 rg 480 404.5 Td (React 19, Three.js, Prisma, Tailwind) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 392.5 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 392.5 Td (Student café venue platform managing digital menus, PS5 lounge reservations, and live seating availability.) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 381 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 381 Td (Integrated interactive 3D lounge visualizer using Three.js for immersive space exploration.) Tj ET
+BT /F2 9.5 Tf 0.06 0.09 0.16 rg 40 366.5 Td (7ATA.TN) Tj ET
+BT /F1 9 Tf 0.145 0.388 0.922 rg 180 366.5 Td ( |  Luxury Streetwear E-Commerce) Tj ET
+BT /F1 8.5 Tf 0.4 0.45 0.55 rg 480 366.5 Td (Next.js 15, RSC, Prisma, Tailwind CSS) Tj ET
+BT /F1 8.5 Tf 0.145 0.388 0.922 rg 45 354.5 Td (\267) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 55 354.5 Td (Editorial luxury e-commerce platform with inventory variants and multilingual RTL layout support.) Tj ET
+BT /F2 10.5 Tf 0.06 0.09 0.16 rg 40 339 Td (EDUCATION & LANGUAGES) Tj ET
+0.85 0.88 0.92 RG 0.75 w 40 336 m 555 336 l S
+BT /F2 8.5 Tf 0.1 0.15 0.25 rg 40 325 Td (Education:) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 130 325 Td (Computer Science & Software Development foundations) Tj ET
+BT /F2 8.5 Tf 0.1 0.15 0.25 rg 40 312.5 Td (Languages:) Tj ET
+BT /F1 8.5 Tf 0.2 0.25 0.33 rg 130 312.5 Td (English \(Fluent / Professional\), French \(Fluent / Professional\), Arabic \(Native\)) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000257 00000 n 
+0000007253 00000 n 
+0000007323 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+7398
+%%EOF

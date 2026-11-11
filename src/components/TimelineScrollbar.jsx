@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useMotionValue, useSpring } from 'framer-motion'
 
 // ============================================================================
@@ -13,6 +13,9 @@ const DEFAULT_MILESTONES = [
   { id: 'projects', label: 'Projects', ratio: 0.76 },
   { id: 'contact', label: 'Contact', ratio: 0.94 },
 ]
+
+const TOP_OFFSET = 76
+const BOTTOM_OFFSET = 16
 
 // ============================================================================
 // PURE MATHEMATICAL WAVE & PATH UTILITIES
@@ -70,7 +73,7 @@ function useHapticAudio() {
     }
   }, [])
 
-  // Auto-unlock AudioContext on the very first user interaction (wheel, touch, click, key)
+  // Auto-unlock AudioContext on the very first user interaction
   useEffect(() => {
     const unlock = () => {
       try {
@@ -86,7 +89,6 @@ function useHapticAudio() {
       }
     }
 
-    // Capture standard interaction gestures before the first scroll is processed
     const events = ['wheel', 'touchstart', 'pointerdown', 'mousedown', 'keydown']
     events.forEach((ev) => window.addEventListener(ev, unlock, { passive: true, capture: true }))
 
@@ -180,7 +182,10 @@ export default function TimelineScrollbar() {
   const containerRef = useRef(null)
   const isDraggingRef = useRef(false)
   const [isDragging, setIsDragging] = useState(false)
-  isDraggingRef.current = isDragging
+
+  useEffect(() => {
+    isDraggingRef.current = isDragging
+  }, [isDragging])
 
   // Viewport & screen responsiveness
   const [viewportHeight, setViewportHeight] = useState(() =>
@@ -223,14 +228,14 @@ export default function TimelineScrollbar() {
     return () => observer.disconnect()
   }, [])
 
-  // Geometry dimensions
-  const trackHeight = viewportHeight
-  const CONTAINER_WIDTH = isMobile ? 60 : 250
-  const SPINE_X = isMobile ? 48 : 226
-  const MAX_DEFLECT_X = isMobile ? 20 : 32
-  const CURVE_HALF_SPAN = isMobile ? 56 : 74
-  const GAUSSIAN_SIGMA = isMobile ? 28 : 36
-  const subdivisions = isMobile ? 3 : 6
+  // Geometry dimensions — clean minimal rail positioned below navbar
+  const trackHeight = Math.max(200, viewportHeight - TOP_OFFSET - BOTTOM_OFFSET)
+  const CONTAINER_WIDTH = isMobile ? 44 : 54
+  const SPINE_X = isMobile ? 26 : 32
+  const MAX_DEFLECT_X = isMobile ? 8 : 12
+  const CURVE_HALF_SPAN = isMobile ? 40 : 52
+  const GAUSSIAN_SIGMA = isMobile ? 20 : 26
+  const subdivisions = isMobile ? 2 : 4
 
   // Window resize & milestone position calibration
   useEffect(() => {
@@ -258,8 +263,8 @@ export default function TimelineScrollbar() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  // Spring motion physics for smooth 120 FPS interpolation
-  const initialY = 0.08 * trackHeight
+  // Spring motion physics for smooth interpolation
+  const initialY = Math.max(16, 0.04 * trackHeight)
   const targetY = useMotionValue(initialY)
   const smoothY = useSpring(targetY, { stiffness: 220, damping: 26, mass: 0.55 })
   const [renderY, setRenderY] = useState(initialY)
@@ -301,7 +306,7 @@ export default function TimelineScrollbar() {
       const maxWinScroll = Math.max(docHeight - winHeight, 1)
       const ratio = Math.min(1, Math.max(0, scrollY / maxWinScroll))
 
-      const nextY = Math.min(trackHeight - 24, Math.max(24, ratio * trackHeight))
+      const nextY = Math.min(trackHeight - 16, Math.max(16, ratio * trackHeight))
       const current = targetY.get()
       if (Math.abs(nextY - current) > 0.5) {
         setScrollDirection(nextY >= current ? 'down' : 'up')
@@ -331,11 +336,11 @@ export default function TimelineScrollbar() {
     return list.sort((a, b) => a.y - b.y)
   }, [milestones, trackHeight, subdivisions])
 
-  // Scrub & drag interaction handler
+  // Scrub & drag interaction handler (accounts for TOP_OFFSET below navbar)
   const updateFromClientY = useCallback(
     (clientY, smoothWindowScroll = false) => {
       initAudio()
-      const localY = Math.min(trackHeight - 24, Math.max(24, clientY))
+      const localY = Math.min(trackHeight - 16, Math.max(16, clientY - TOP_OFFSET))
       const nextRatio = Math.min(1, Math.max(0, localY / trackHeight))
       const prevY = targetY.get()
       setScrollDirection(localY >= prevY ? 'down' : 'up')
@@ -380,12 +385,16 @@ export default function TimelineScrollbar() {
     <aside
       ref={containerRef}
       aria-label="Interactive timeline scrollbar"
-      className="fixed right-0 top-0 bottom-0 z-50 select-none pointer-events-none touch-none"
-      style={{ width: `${CONTAINER_WIDTH}px`, height: '100%' }}
+      className="fixed right-0 z-40 select-none pointer-events-none touch-none"
+      style={{
+        top: `${TOP_OFFSET}px`,
+        bottom: `${BOTTOM_OFFSET}px`,
+        width: `${CONTAINER_WIDTH}px`,
+      }}
     >
       {/* Clickable scrub track along the right edge */}
       <div
-        className="pointer-events-auto absolute right-0 top-0 bottom-0 w-[36px] sm:w-[48px] cursor-ns-resize"
+        className="pointer-events-auto absolute right-0 top-0 bottom-0 w-[36px] sm:w-[44px] cursor-ns-resize"
         onPointerDown={(e) => {
           e.preventDefault()
           initAudio()
@@ -394,16 +403,16 @@ export default function TimelineScrollbar() {
         }}
       />
 
-      {/* Ambient Radial Glow */}
+      {/* Subtle Ambient Radial Glow */}
       <div
         style={{
           top: renderY,
-          left: SPINE_X - (isMobile ? 12 : 24),
+          left: SPINE_X,
           background: isDark
-            ? 'radial-gradient(circle, rgba(132,204,22,0.26) 0%, rgba(132,204,22,0.08) 42%, transparent 72%)'
-            : 'radial-gradient(circle, rgba(37,99,235,0.24) 0%, rgba(37,99,235,0.08) 42%, transparent 72%)',
+            ? 'radial-gradient(circle, rgba(132,204,22,0.22) 0%, rgba(132,204,22,0.06) 45%, transparent 72%)'
+            : 'radial-gradient(circle, rgba(37,99,235,0.20) 0%, rgba(37,99,235,0.06) 45%, transparent 72%)',
         }}
-        className="pointer-events-none absolute h-40 w-40 sm:h-48 sm:w-48 -translate-x-1/2 -translate-y-1/2 rounded-full blur-xl"
+        className="pointer-events-none absolute h-24 w-24 -translate-x-1/2 -translate-y-1/2 rounded-full blur-lg"
       />
 
       {/* SVG Canvas: Spine and Ruler Ticks */}
@@ -429,11 +438,11 @@ export default function TimelineScrollbar() {
         {/* Ruler Ticks */}
         {ticks.map((t) => {
           const deflect = getWaveDisplacement(t.y, renderY, MAX_DEFLECT_X, GAUSSIAN_SIGMA)
-          const proximity = Math.max(0, 1 - Math.abs(t.y - renderY) / (isMobile ? 65 : 95))
-          const rightX = SPINE_X - deflect - (isMobile ? 6 : 8)
+          const proximity = Math.max(0, 1 - Math.abs(t.y - renderY) / (isMobile ? 50 : 70))
+          const rightX = SPINE_X - deflect - 4
           const len = isMobile
-            ? (t.isMajor ? 12 + proximity * 3 : 5 + proximity * 2)
-            : (t.isMajor ? 18 + proximity * 4 : 8 + proximity * 3)
+            ? (t.isMajor ? 8 + proximity * 3 : 4 + proximity * 2)
+            : (t.isMajor ? 12 + proximity * 4 : 6 + proximity * 2)
 
           const strokeColor = proximity > 0.35
             ? (isDark ? '#a3e635' : '#2563eb')
@@ -449,8 +458,8 @@ export default function TimelineScrollbar() {
               x2={rightX}
               y2={t.y}
               stroke={strokeColor}
-              strokeOpacity={t.isMajor ? 0.55 + proximity * 0.4 : 0.38 + proximity * 0.35}
-              strokeWidth={t.isMajor ? '1.15' : '0.85'}
+              strokeOpacity={t.isMajor ? 0.6 + proximity * 0.4 : 0.35 + proximity * 0.35}
+              strokeWidth={t.isMajor ? '1.2' : '0.8'}
               strokeLinecap="round"
             />
           )
@@ -466,52 +475,11 @@ export default function TimelineScrollbar() {
         />
       </svg>
 
-      {/* Deflecting Milestone Badges */}
-      {milestones.map((m) => {
-        const yPos = m.ratio * trackHeight
-        const deflect = getWaveDisplacement(yPos, renderY, MAX_DEFLECT_X, GAUSSIAN_SIGMA)
-        const proximity = Math.max(0, 1 - Math.abs(yPos - renderY) / (isMobile ? 60 : 90))
-
-        const shouldShow = isMobile ? proximity > 0.45 : proximity > 0.2
-        if (!shouldShow) return null
-
-        return (
-          <button
-            key={m.id}
-            type="button"
-            onPointerDown={(e) => {
-              e.stopPropagation()
-              initAudio()
-              updateFromClientY(yPos, true)
-            }}
-            style={{
-              top: yPos,
-              left: SPINE_X - deflect - (isMobile ? 16 : 38),
-              transform: 'translate(-100%, -50%)',
-              opacity: proximity > 0.45 ? 1 : Math.max(0.2, proximity * 1.6),
-            }}
-            className={`pointer-events-auto absolute z-20 rounded-full font-mono transition-all duration-200 cursor-pointer ${
-              isMobile ? 'px-2 py-0.5 text-[10px]' : 'px-3 py-1 text-[12px] font-medium'
-            } ${
-              proximity > 0.45
-                ? isDark
-                  ? 'bg-zinc-900/90 text-white border border-lime-500/50 font-bold shadow-lg shadow-black/60 scale-100'
-                  : 'bg-white text-blue-600 border border-blue-500/50 font-bold shadow-md shadow-blue-500/15 scale-100'
-                : isDark
-                ? 'bg-zinc-950/70 text-zinc-400 border border-zinc-800/60'
-                : 'bg-white/80 text-slate-600 border border-slate-200/80'
-            }`}
-          >
-            {m.label}
-          </button>
-        )
-      })}
-
-      {/* Floating Circular Triple-Chevron Orb */}
+      {/* Floating Circular Triple-Chevron Orb (Centered on Spine) */}
       <div
         style={{
           top: renderY,
-          left: SPINE_X + (isMobile ? 0 : 8),
+          left: SPINE_X,
           transform: 'translate(-50%, -50%)',
         }}
         className="pointer-events-auto absolute z-30 cursor-grab active:cursor-grabbing"
@@ -522,24 +490,24 @@ export default function TimelineScrollbar() {
           updateFromClientY(e.clientY, false)
         }}
       >
-        <div className={`flex items-center justify-center rounded-full ${isMobile ? 'h-11 w-11' : 'h-14 w-14'} bg-zinc-950/25`}>
+        <div className={`flex items-center justify-center rounded-full ${isMobile ? 'h-9 w-9' : 'h-11 w-11'} bg-zinc-950/20`}>
           <div
             className={`flex items-center justify-center rounded-full border transition-transform duration-150 active:scale-95 ${
-              isMobile ? 'h-8 w-8' : 'h-11 w-11'
+              isMobile ? 'h-7 w-7' : 'h-8 w-8'
             } ${isDark ? 'border-zinc-800/70' : 'border-blue-200/80'}`}
             style={{
               background: isDark
                 ? 'radial-gradient(circle at 35% 30%, #1c222b 0%, #11151c 70%, #0b0e13 100%)'
                 : 'radial-gradient(circle at 35% 30%, #ffffff 0%, #f1f5f9 70%, #e2e8f0 100%)',
               boxShadow: isDark
-                ? '0 10px 24px rgba(0,0,0,0.85), inset 0 1px 1px rgba(255,255,255,0.08)'
-                : '0 6px 18px rgba(37,99,235,0.18), inset 0 1px 1px rgba(255,255,255,0.9)',
+                ? '0 6px 16px rgba(0,0,0,0.85), inset 0 1px 1px rgba(255,255,255,0.08)'
+                : '0 4px 14px rgba(37,99,235,0.18), inset 0 1px 1px rgba(255,255,255,0.9)',
             }}
           >
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              className={`${isMobile ? 'h-3.5 w-3.5' : 'h-5 w-5'} transition-transform duration-300 ${
+              className={`${isMobile ? 'h-3 w-3' : 'h-4 w-4'} transition-transform duration-300 ${
                 scrollDirection === 'down' ? 'rotate-180' : ''
               }`}
             >
@@ -580,7 +548,7 @@ export default function TimelineScrollbar() {
         }}
         title={soundEnabled ? 'Mute scroll sound' : 'Enable scroll sound'}
         aria-label={soundEnabled ? 'Mute scroll sound' : 'Enable scroll sound'}
-        className={`pointer-events-auto absolute bottom-3 right-1.5 sm:right-2.5 z-40 p-1.5 rounded-full backdrop-blur-md border transition-all duration-200 cursor-pointer ${
+        className={`pointer-events-auto absolute bottom-2 right-1 z-40 p-1.5 rounded-full backdrop-blur-md border transition-all duration-200 cursor-pointer ${
           soundEnabled
             ? isDark
               ? 'bg-[#11161B]/85 text-lime-400 border-lime-500/40 hover:scale-110 shadow-sm shadow-lime-950/30'
@@ -591,12 +559,12 @@ export default function TimelineScrollbar() {
         }`}
       >
         {soundEnabled ? (
-          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
             <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
           </svg>
         ) : (
-          <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
             <line x1="23" y1="9" x2="17" y2="15" />
             <line x1="17" y1="9" x2="23" y2="15" />

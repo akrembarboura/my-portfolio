@@ -2,21 +2,21 @@
 const timeline = [
   {
     id: 1,
-    role: 'Freelance Full-Stack Developer',
+    role: 'Independent Full-Stack Engineer',
     date: '2024 — Present',
-    org: 'Remote',
+    org: 'Remote · Commercial Clients',
     description:
-      'Built and shipped full-stack web apps for clients. Handled everything from database schema to deployment. Projects include custom CMS solutions with Supabase auth, media libraries, and API integrations.',
-    tags: ['React', 'Node.js', 'MongoDB', 'PostgreSQL', 'Tailwind CSS'],
+      'Architected and delivered 5+ full-stack production web applications for clients across Europe and North Africa. Spearheaded end-to-end technical execution: database modeling with PostgreSQL & MongoDB, serverless API design, Supabase auth with Row-Level Security, and high-performance React 19 / Next.js frontends. Managed client roadmaps with async PR reviews and zero-downtime Vercel deployments.',
+    tags: ['React 19', 'Next.js 15', 'TypeScript', 'Node.js', 'PostgreSQL', 'Supabase', 'Tailwind CSS'],
   },
   {
     id: 2,
-    role: 'Full Stack Development',
+    role: 'Full-Stack Systems & Architecture Specialization',
     date: '2023 — 2024',
-    org: 'Self-Directed Architecture Study',
+    org: 'Self-Directed Engineering Specialization',
     description:
-      'Mastered the MERN stack through intensive project-based building. Focused on robust backend architecture (Node/Express), database modeling (MongoDB), and state management in React.',
-    tags: ['Architecture', 'API Design', 'State Management'],
+      'Completed rigorous engineering deep dives into modern web architecture, strict TypeScript patterns, database indexing, and reactive user interfaces. Built and benchmarked multi-tier full-stack applications with an emphasis on sub-second render times, resilient RESTful APIs, and clean code principles.',
+    tags: ['Distributed Systems', 'TypeScript', 'REST APIs', 'PostgreSQL', 'Performance Optimization'],
   },
 ];
 

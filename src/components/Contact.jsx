@@ -74,7 +74,7 @@ export default function Contact() {
       ].filter((line) => line !== null)
       const body = encodeURIComponent(bodyLines.join('\n'))
 
-      window.location.href = `mailto:akrembarboura@gmail.com?subject=${subject}&body=${body}`
+      window.location.href = `mailto:akrembarboura316@gmail.com?subject=${subject}&body=${body}`
       setSending(false)
       setSubmitted(true)
       return

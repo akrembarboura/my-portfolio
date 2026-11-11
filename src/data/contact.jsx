@@ -4,11 +4,11 @@ import { FaEnvelope, FaGithub, FaLinkedin, FaMapMarkerAlt } from 'react-icons/fa
 const contactInfo = [
   {
     id: 1,
-    icon: <FaEnvelope className="w-6 h-6" />, // You can add Tailwind classes directly to the icons!
+    icon: <FaEnvelope className="w-6 h-6" />,
     iconClass: 'mail',
     label: 'Email',
-    value: 'akrembarboura@gmail.com',
-    href: 'mailto:akrembarboura@gmail.com',
+    value: 'akrembarboura316@gmail.com',
+    href: 'mailto:akrembarboura316@gmail.com',
   },
   {
     id: 2,
@@ -30,8 +30,8 @@ const contactInfo = [
     id: 4,
     icon: <FaMapMarkerAlt className="w-6 h-6" />,
     iconClass: 'location',
-    label: 'Location',
-    value: 'Tunisia 🇹🇳 · Open to Remote',
+    label: 'Location & Remote',
+    value: 'Tunis (UTC+1 / CET) · US & EU Overlap',
     href: null,
   },
 ];

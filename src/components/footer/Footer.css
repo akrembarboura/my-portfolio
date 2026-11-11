@@ -1,0 +1,227 @@
+/* ============================================================================
+   WORKSTATION FOOTER — UNIFIED PORTFOLIO BACKGROUND, LARGER & HIGHLY VISIBLE
+   ========================================================================== */
+
+.footer-container {
+  width: 100%;
+  background: transparent; /* Uses the portfolio's persistent circuit background */
+  color: var(--text-1);
+  position: relative;
+  z-index: 10;
+  padding: 0 1.25rem 2.75rem 1.25rem;
+  transition: color 0.4s ease;
+}
+
+@media (min-width: 640px) {
+  .footer-container {
+    padding: 0 2rem 3rem 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer-container {
+    padding: 0 3.5rem 3.5rem 3.5rem;
+  }
+}
+
+/* ── Top Horizontal Line (Prominent & Visible) ───────────────────────────── */
+.footer-top-line {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto 2.25rem auto;
+  height: 1px;
+  background: var(--border-strong);
+  position: relative;
+}
+
+.footer-top-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.5;
+}
+
+/* ── Inner Content Container ─────────────────────────────────────────────── */
+.footer-inner-wrap {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+}
+
+/* ── Main Row: Brand & Pills ─────────────────────────────────────────────── */
+.footer-main-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+@media (min-width: 860px) {
+  .footer-main-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+/* ── Left Brand Identity ─────────────────────────────────────────────────── */
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.footer-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.footer-brand-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--border-strong);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-brand-link:hover .footer-brand-avatar {
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+.footer-brand-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  color: var(--text-1);
+}
+
+@media (min-width: 640px) {
+  .footer-brand-name {
+    font-size: 1.35rem;
+  }
+}
+
+.footer-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 9999px;
+  background: var(--tag-bg);
+  border: 1px solid var(--border-strong);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.footer-status-dot {
+  width: 7.5px;
+  height: 7.5px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+  flex-shrink: 0;
+  animation: pulse 2s infinite;
+}
+
+/* ── Right Pills Row (Bigger, Highly Visible & Clickable) ─────────────────── */
+.footer-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.footer-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  height: 40px; /* Big, accessible 40px height */
+  padding: 0 1.05rem;
+  border-radius: 10px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-strong);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem; /* Clean 14px size */
+  font-weight: 600;
+  color: var(--text-1);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.footer-pill-btn:hover {
+  background: var(--bg-2);
+  border-color: var(--accent);
+  color: var(--text-1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+}
+
+.footer-pill-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.footer-pill-icon {
+  width: 15.5px;
+  height: 15.5px;
+  color: var(--text-2);
+  flex-shrink: 0;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-pill-btn:hover .footer-pill-icon {
+  color: var(--accent);
+  transform: scale(1.08);
+}
+
+/* ── Bottom Row: Copyright & Metadata (Prominent & Legible) ──────────────── */
+.footer-bottom-row {
+  margin-top: 1.85rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.775rem; /* Upgraded size for effortless readability */
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+@media (min-width: 640px) {
+  .footer-bottom-row {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.footer-copyright {
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.footer-discipline {
+  color: var(--text-3);
+  white-space: nowrap;
+}

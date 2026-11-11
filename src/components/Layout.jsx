@@ -6,6 +6,7 @@ import CircuitBackground from './CircuitBackground'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import TimelineScrollbar from './TimelineScrollbar'
+import RecruiterQuickBar from './RecruiterQuickBar'
 
 export default function Layout() {
     const [darkMode, setDarkMode] = useState(() => {
@@ -30,6 +31,7 @@ export default function Layout() {
             <main>
                 <Outlet />
             </main>
+            <RecruiterQuickBar />
             <Footer />
         </>
     )

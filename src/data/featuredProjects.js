@@ -11,6 +11,8 @@ const featuredProjects = [
     tags: ['Next.js 15', 'React 19', 'TypeScript', 'Tailwind CSS', 'MongoDB'],
     github: 'https://github.com/akrembarboura/location-match',
     demo: 'https://location-match.vercel.app',
+    metrics: ['Sub-second SSR FCP', 'Faceted regional search', 'Mobile data optimized'],
+    architecture: 'Built with Next.js 15 App Router using React Server Components for SEO and fast indexing. Utilizes MongoDB for flexible property attributes with structured schema validation.',
   },
   {
     id: '02',
@@ -24,6 +26,8 @@ const featuredProjects = [
     tags: ['TanStack Start', 'React 19', 'TypeScript', 'Supabase', 'PostgreSQL'],
     github: 'https://github.com/akrembarboura/edupower',
     demo: '#',
+    metrics: ['Postgres RLS Security', 'AI study prompts', 'Realtime progress sync'],
+    architecture: 'Engineered with TanStack Start and Supabase PostgreSQL. Implements Row-Level Security (RLS) for multi-tier authorization between students, instructors, and administrators.',
   },
   {
     id: '03',
@@ -37,6 +41,8 @@ const featuredProjects = [
     tags: ['React 19', 'TanStack Start', 'Three.js', 'Tailwind CSS', 'Prisma'],
     github: 'https://github.com/akrembarboura/cafe-website',
     demo: '#',
+    metrics: ['Interactive 3D lounge', 'Real-time reservation engine', 'Prisma ORM'],
+    architecture: 'Combines React 19 and Three.js for interactive 3D spatial lounge visualization. Prisma ORM handles seat reservations, menu order queues, and gaming lounge bookings.',
   },
   {
     id: '04',
@@ -50,6 +56,8 @@ const featuredProjects = [
     tags: ['Next.js 15', 'RSC', 'TypeScript', 'Prisma', 'Tailwind CSS'],
     github: null,
     demo: '#',
+    metrics: ['Multi-currency & RTL', 'Variant inventory engine', 'Editorial lookbook UX'],
+    architecture: 'Next.js 15 server-rendered store with micro-interactions, responsive lookbook layouts, and variant management across apparel collections with complete RTL layout support.',
   },
   {
     id: '05',
@@ -63,6 +71,8 @@ const featuredProjects = [
     tags: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'Supabase'],
     github: null,
     demo: '#',
+    metrics: ['Zero-shift image grid', 'Automated quote inquiry', 'Client showcase'],
+    architecture: 'Single-page application powered by Vite, React, and Supabase for client inquiries and rich media asset presentation with progressive image loading.',
   }
 ];
 

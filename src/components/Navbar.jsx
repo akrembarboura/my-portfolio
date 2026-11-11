@@ -34,7 +34,7 @@ export default function Navbar({ darkMode, onToggleTheme }) {
   return (
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 h-[70px] bg-nav backdrop-blur-xl border-b border-border-light transition-all duration-300 ${scrolled ? 'shadow-xl' : ''}`}>
-        <div className="w-full max-w-[1780px] h-full mx-auto px-5 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 flex items-center justify-between">
+        <div className="w-full max-w-[1780px] h-full mx-auto px-5 sm:px-8 lg:px-12 pr-6 sm:pr-8 md:pr-14 lg:pr-16 flex items-center justify-between">
           <a href="#about" className="flex items-center gap-3 group transition-transform duration-300 hover:scale-[1.02]">
             <img
               src="/akrempicture.png"
@@ -63,7 +63,7 @@ export default function Navbar({ darkMode, onToggleTheme }) {
             })}
           </ul>
 
-          <div className="flex items-center gap-3 sm:gap-4 lg:gap-5 ml-4 sm:ml-6 md:ml-8 lg:ml-10">
+          <div className="flex items-center gap-3 sm:gap-4 ml-4 sm:ml-6 md:ml-8 lg:ml-10">
             <button
               className="w-10 h-10 border border-border-light rounded-[10px] bg-transparent text-text-2 flex items-center justify-center text-[1.1rem] transition-all duration-200 hover:bg-background-2 hover:border-border-strong hover:text-text-1"
               onClick={onToggleTheme}
